@@ -29,7 +29,7 @@ void loadingScene::update()
 	//로딩완료후 화면 변경
 	if (_loading->loadingDone())
 	{
-		SCENEMANAGER->loadScene("픽셀충돌");
+		SCENEMANAGER->loadScene("맵툴기초");
 	}
 }
 

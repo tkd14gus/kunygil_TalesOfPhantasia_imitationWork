@@ -6,9 +6,16 @@ class maptoolScene : public gameNode
 {
 private:
 	tagTile _tiles[TILEX * TILEY];	//인게임화면에 사용되는 타일 총 400개
-	tagSampleTile _sampleTile[SAMPLETILEX * SAMPLETILEY]; //샘플타일 총 160개
+	tagSampleTile _sampleTile[60]; //샘플타일 총 (12-2)*6 = 60개
 	tagCurrentTile _currentTile;	//현재타일
 
+	
+	
+	RECT _rcScreen;		//화면 카메라 Rect;
+						//이 Rect와 충돌한 타일만 화면에 그려진다.
+	RECT _rcArrow[2];		//샘플타일을 변경할 화살표를 그려주는 Rect
+						//0번 : LeftArrow, 1번 : RightArrow
+	RECT _rcPalette;	//샘플타일을 그려줄 Rect;
 	RECT _rcSave;		//세이브
 	RECT _rcLoad;		//로드
 	RECT _rcTerrain;	//지형
@@ -27,6 +34,7 @@ public:
 	//맵툴세팅
 	void maptoolSetup();
 	void setMap();
+	void uiMove();
 	void save();
 	void load();
 

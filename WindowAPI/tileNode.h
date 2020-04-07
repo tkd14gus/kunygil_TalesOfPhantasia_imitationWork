@@ -1,15 +1,15 @@
 #pragma once
 
 //게임화면 타일
-#define TILESIZE 32
-#define TILEX 20
-#define TILEY 20
+#define TILESIZE 48
+#define TILEX 120
+#define TILEY 150
 #define TILESIZEX (TILEX * TILESIZE)
 #define TILESIZEY (TILEY * TILESIZE)
 
 //이미지 타일(화면 우측상단에 붙여놓을 샘플타일)
-#define SAMPLETILEX 20
-#define SAMPLETILEY 8
+#define SAMPLETILEX 12
+#define SAMPLETILEY 6
 
 //맵툴에서 사용할 컨트롤들
 enum CTRL
