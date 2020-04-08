@@ -1,2 +1,0 @@
-C:\Users\user\Documents\kunygil_TalesOfPhantasia_imitationWork\WindowAPI\Debug\GameFramework2D.exe
-C:\Users\user\Documents\kunygil_TalesOfPhantasia_imitationWork\WindowAPI\Debug\GameFramework2D.pdb

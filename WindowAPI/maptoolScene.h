@@ -6,10 +6,13 @@ class maptoolScene : public gameNode
 {
 private:
 	bool _tileSetting;
+	bool _canMove;
 	char _fileName[128];	//파일 이름(맵, 맵 데이터)을 받아올 변수
 	int _startFile;			/*파일 명은 0번부터 시작
 							ex) MAP0.map	MAP0.mapdata
 							*/
+	unsigned int _palettePage;
+	bool _layer[3];
 private:
 	tagTile _tiles[TILEX * TILEY];	//인게임화면에 사용되는 타일 총 400개
 	tagSampleTile _sampleTile[60]; //샘플타일 총 (12-2)*6 = 60개
@@ -26,9 +29,6 @@ private:
 	RECT _rcObject;		//오브젝트
 	RECT _rcEraser;		//지우개(오브젝트만 지운다, 지형은 덮어씌운다)
 
-	CTRL _ctrlSelect;	//현재 어떤 컨트롤 상태인지
-
-
 public:
 	HRESULT init();
 	void release();
@@ -42,9 +42,12 @@ public:
 	void save();
 	void load();
 
+	void selectLayer1();
+	void selectLayer2();
+	void selectLayer3();
+
 	//지형, 오브젝트 세터
-	TERRAIN terrainSelect(int frameX, int frameY);
-	OBJECT objectSelect(int frameX, int frameY);
+	TERRAIN terrainSelect(int frameX, int frameY, int page);
 
 	maptoolScene() {}
 	~maptoolScene() {}
