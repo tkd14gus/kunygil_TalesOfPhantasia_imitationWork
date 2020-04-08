@@ -95,7 +95,6 @@ void maptoolScene::update()
 	}
 }
 
-
 void maptoolScene::render()
 {
 	for (int i = 0; i < TILEX * TILEY; i++)
@@ -135,9 +134,6 @@ void maptoolScene::render()
 		}
 		else { continue; }
 	}
-
-
-
 	for (int i = 0; i < TILEX * TILEY; i++)
 	{
 		RECT rc;
@@ -162,10 +158,7 @@ void maptoolScene::render()
 	for (int i = 0; i < 60; i++)
 	{
 		Rectangle(getMemDC(), _sampleTile[i].rc);
-		IMAGEMANAGER->findImage("citytile")->scaleFrameRender(getMemDC(), _sampleTile[i].rc.left, _sampleTile[i].rc.top,i%10,i/10,3.0f);
 	}
-
-
 	Rectangle(getMemDC(), _rcSave);
 	Rectangle(getMemDC(), _rcLoad);
 	Rectangle(getMemDC(), _rcTerrain);
@@ -174,8 +167,6 @@ void maptoolScene::render()
 	IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top);
 	IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top);
 }
-
-
 void maptoolScene::maptoolSetup()
 {
 	_rcPalette = RectMakeCenter((_rcScreen.left + _rcScreen.right) / 2, _rcScreen.bottom - 192, 576, 288);
