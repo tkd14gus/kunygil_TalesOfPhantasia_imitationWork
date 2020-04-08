@@ -14,9 +14,9 @@ HRESULT maptoolScene::init()
 	_currentTile.x = 3;
 	_currentTile.y = 0;
 
-	_layer[0] = true;
-	_layer[1] = false;
-	_layer[2] = false;
+	//지형그리기 속성으로 시작하기
+	_ctrlSelect = CTRL_TERRAIN;
+
 	return S_OK;
 }
 
@@ -32,10 +32,6 @@ void maptoolScene::update()
 	}
 	else
 	{
-		if (INPUT->GetKeyDown(0x31)) { selectLayer1(); }
-		if (INPUT->GetKeyDown(0x32)) { selectLayer2(); }
-		if (INPUT->GetKeyDown(0x33)) { selectLayer3(); }
-
 		if (INPUT->GetKey(VK_UP))
 		{
 			for (int i = 0; i < TILEX * TILEY; i++)
@@ -71,6 +67,31 @@ void maptoolScene::update()
 
 
 		if (INPUT->GetKey(VK_LBUTTON)) this->setMap();
+		if (INPUT->GetKeyDown(VK_LBUTTON))
+		{
+			if (PtInRect(&_rcSave, _ptMouse))
+			{
+				_ctrlSelect = CTRL_SAVE;
+				this->save();
+			}
+			if (PtInRect(&_rcLoad, _ptMouse))
+			{
+				_ctrlSelect = CTRL_LOAD;
+				this->load();
+			}
+			if (PtInRect(&_rcTerrain, _ptMouse))
+			{
+				_ctrlSelect = CTRL_TERRAIN;
+			}
+			if (PtInRect(&_rcObject, _ptMouse))
+			{
+				_ctrlSelect = CTRL_OBJECT;
+			}
+			if (PtInRect(&_rcEraser, _ptMouse))
+			{
+				_ctrlSelect = CTRL_ERASER;
+			}
+		}
 	}
 }
 
@@ -79,7 +100,7 @@ void maptoolScene::render()
 	for (int i = 0; i < TILEX * TILEY; i++)
 	{
 		RECT rc;
-		if (IntersectRect(&rc, &_rcScreen, &_tiles[i].rc))
+		if (IntersectRect(&rc, &_rcScreen, &_tiles[i].rc)) 
 		{
 			if (_tiles[i].imagePage[0] == -1)
 				//하단 레이어에 그림이 없을 때 빈 사각형을 그려준다.
@@ -143,13 +164,8 @@ void maptoolScene::render()
 	Rectangle(getMemDC(), _rcTerrain);
 	Rectangle(getMemDC(), _rcObject);
 	Rectangle(getMemDC(), _rcEraser);
-	if (_layer[0]) { IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
-	if (_layer[1]) { IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
-	if (_layer[2])
-	{
-		IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top);
-		IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top);
-	}
+	IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top);
+	IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top);
 }
 void maptoolScene::maptoolSetup()
 {
@@ -184,52 +200,44 @@ void maptoolScene::maptoolSetup()
 
 void maptoolScene::setMap()
 {
-	if (PtInRect(&_rcPalette, _ptMouse))
+	/*for (int i = 0; i < SAMPLETILEX * SAMPLETILEY; i++)
 	{
-		for (int i = 0; i < SAMPLETILEX * SAMPLETILEY; i++)
+		if (PtInRect(&_sampleTile[i].rc, _ptMouse))
 		{
-			if (PtInRect(&_sampleTile[i].rc, _ptMouse))
-			{
-				_currentTile.pageNumber = _palettePage;
-				_currentTile.x = _sampleTile[i].tileFrameX;
-				_currentTile.y = _sampleTile[i].tileFrameY;
-				_canMove = _sampleTile[i].canMove;
-				break;
-			}
+			_currentTile.x = _sampleTile[i].terrainFrameX;
+			_currentTile.y = _sampleTile[i].terrainFrameY;
+			break;
 		}
-	}
-	else
-	{
-		for (int i = 0; i < TILEX * TILEY; i++)
-		{
-			if (PtInRect(&_tiles[i].rc, _ptMouse))
-			{
-				if (_layer[0])
-				{
-					_tiles[i].canMove[0] = _canMove;
-					_tiles[i].tileFrameX[0] = _currentTile.x;
-					_tiles[i].tileFrameY[0] = _currentTile.y;
-					_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y, _currentTile.pageNumber);
-				}
-				//현재버튼이 오브젝트냐?
-				if (_layer[1])
-				{
-					_tiles[i].canMove[1] = _canMove;
-					_tiles[i].tileFrameX[1] = _currentTile.x;
-					_tiles[i].tileFrameY[1] = _currentTile.y;
-					_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y, _currentTile.pageNumber);
-				}
-				//현재버튼이 지우개냐?
-				if (_layer[2])
-				{
-					_tiles[i].canMove[2] = _canMove;
-					_tiles[i].tileFrameX[2] = _currentTile.x;
-					_tiles[i].tileFrameY[2] = _currentTile.y;
-					_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y, _currentTile.pageNumber);
-				}
-			}
-		}
-	}
+	}*/
+
+	//인게임화면 렉트틀과 충돌했냐?
+	//for (int i = 0; i < TILEX * TILEY; i++)
+	//{
+	//	if (PtInRect(&_tiles[i].rc, _ptMouse))
+	//	{
+	//		//현재버튼이 지형이냐?
+	//		if (_ctrlSelect == CTRL_TERRAIN)
+	//		{
+	//			_tiles[i].terrainFrameX = _currentTile.x;
+	//			_tiles[i].terrainFrameY = _currentTile.y;
+	//			_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y);
+	//		}
+	//		//현재버튼이 오브젝트냐?
+	//		if (_ctrlSelect == CTRL_OBJECT)
+	//		{
+	//			_tiles[i].objFrameX = _currentTile.x;
+	//			_tiles[i].objFrameY = _currentTile.y;
+	//			_tiles[i].obj = objectSelect(_currentTile.x, _currentTile.y);
+	//		}
+	//		//현재버튼이 지우개냐?
+	//		if (_ctrlSelect == CTRL_ERASER)
+	//		{
+	//			_tiles[i].objFrameX = 0;
+	//			_tiles[i].objFrameY = 0;
+	//			_tiles[i].obj = OBJ_NONE;
+	//		}
+	//	}
+	//}
 
 }
 
@@ -266,33 +274,34 @@ void maptoolScene::load()
 	CloseHandle(file);
 }
 
-void maptoolScene::selectLayer1()
+TERRAIN maptoolScene::terrainSelect(int frameX, int frameY)
 {
-	_layer[0] = true;
-	_layer[1] = false;
-	_layer[2] = false;
+	//시멘트
+	if (frameX == 1 && frameY == 0)
+	{
+		return TR_CEMENT;
+	}
+	//땅
+	if (frameX == 2 && frameY == 0)
+	{
+		return TR_GROUND;
+	}
+	//잔디
+	if (frameX == 3 && frameY == 0)
+	{
+		return TR_GRASS;
+	}
+	//물
+	if (frameX == 4 && frameY == 0)
+	{
+		return TR_WATER;
+	}
+
+	//기타
+	return TR_GROUND;
 }
 
-void maptoolScene::selectLayer2()
+OBJECT maptoolScene::objectSelect(int frameX, int frameY)
 {
-	_layer[0] = false;
-	_layer[1] = true;
-	_layer[2] = false;
-}
-
-void maptoolScene::selectLayer3()
-{
-	_layer[0] = false;
-	_layer[1] = false;
-	_layer[2] = true;
-}
-
-TERRAIN maptoolScene::terrainSelect(int frameX, int frameY, int page)
-{
-	TERRAIN t;
-	t.x = frameX;
-	t.y = frameY;
-	t._palettePage = page;
-
-	return t;
+	return OBJ_BLOCKS;
 }
