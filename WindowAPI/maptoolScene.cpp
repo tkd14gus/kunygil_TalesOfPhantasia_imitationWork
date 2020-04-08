@@ -31,29 +31,32 @@ void maptoolScene::update()
 
 	if (_setSaveLoad == true) // 세이브 확인창이 켜졌을때
 	{
-		if (!PtInRect(&_rcSaveWindow, _ptMouse)) // 세이브 확인창 밖을 클릭하면 세이브창 닫기
+		if (INPUT->GetKeyDown(VK_LBUTTON))
 		{
-			_setSaveLoad = false;
-			return;
-		}
-		else if (PtInRect(&_rcSaveSlot[0], _ptMouse)) { sprintf_s(_fileName, "save1.mapsave"); }	//슬롯1번선택
-		else if (PtInRect(&_rcSaveSlot[1], _ptMouse)) { sprintf_s(_fileName, "save2.mapsave"); }	//슬롯2번선택
-		else if (PtInRect(&_rcSaveSlot[2], _ptMouse)) { sprintf_s(_fileName, "save3.mapsave"); }	//슬롯3번선택
-		else if (PtInRect(&_rcSave, _ptMouse))
-		{
-			this->save(_fileName);
-			_setSaveLoad = false;
-			return;
-		}
-		//세이브완료
-		else if (PtInRect(&_rcLoad, _ptMouse))
-		{
-			this->load(_fileName);
-			_setSaveLoad = false;
-			return;
-		}
-		//로드완료
+			if (!PtInRect(&_rcSaveWindow, _ptMouse)) // 세이브 확인창 밖을 클릭하면 세이브창 닫기
+			{
+				_setSaveLoad = false;
+				return;
+			}
+			else if (PtInRect(&_rcSaveSlot[0], _ptMouse)) { sprintf_s(_fileName, "save1.mapsave"); }	//슬롯1번선택
+			else if (PtInRect(&_rcSaveSlot[1], _ptMouse)) { sprintf_s(_fileName, "save2.mapsave"); }	//슬롯2번선택
+			else if (PtInRect(&_rcSaveSlot[2], _ptMouse)) { sprintf_s(_fileName, "save3.mapsave"); }	//슬롯3번선택
+			else if (PtInRect(&_rcSave, _ptMouse))
+			{
+				this->save(_fileName);
+				_setSaveLoad = false;
+				return;
+			}
+			//세이브완료
+			else if (PtInRect(&_rcLoad, _ptMouse))
+			{
+				this->load(_fileName);
+				_setSaveLoad = false;
+				return;
+			}
+			//로드완료
 
+		}
 	}
 	else
 	{
