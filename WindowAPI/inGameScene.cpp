@@ -27,14 +27,7 @@ HRESULT inGameScene::init()
 }
 
 void inGameScene::release()
-{
-	//플레이어 클래스 해제
-	_player->release();
-	SAFE_DELETE(_player);
-
-	//적매니져 클래스 해제
-	_enemyManager->release();
-	SAFE_DELETE(_enemyManager);
+{	
 }
 
 void inGameScene::update()

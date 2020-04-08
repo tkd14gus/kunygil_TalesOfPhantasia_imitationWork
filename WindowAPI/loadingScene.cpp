@@ -46,28 +46,28 @@ void loadingScene::loadingImage()
 	//_loading->loadImage();
 	//_loading->loadFrameImage();
 
-	/*
+	
 	//백그라운드 이미지 초기화
-	IMAGEMANAGER->addImage("백그라운드", "Images/background.bmp", WINSIZEX, WINSIZEY);
+	//IMAGEMANAGER->addImage("백그라운드", "Images/background.bmp", WINSIZEX, WINSIZEY);
 	//UFO 프레임 이미지 초기화
-	IMAGEMANAGER->addFrameImage("ufo", "Images/ufo.bmp", 530, 32, 10, 1);
+	//IMAGEMANAGER->addFrameImage("ufo", "Images/ufo.bmp", 530, 32, 10, 1);
 	//총알 이미지
-	IMAGEMANAGER->addImage("bullet", "Images/bullet.bmp", 21, 21);
-	*/
-	_loading->loadImage("백그라운드", "Images/background.bmp", WINSIZEX, WINSIZEY);
-	_loading->loadFrameImage("ufo", "Images/ufo.bmp", 530, 32, 10, 1);
-	_loading->loadImage("bullet", "Images/bullet.bmp", 21, 21);
+	//IMAGEMANAGER->addImage("bullet", "Images/bullet.bmp", 21, 21);
+	
 
-	//로딩이 너무 빠르게 진행되서 천천히 돌아가도록 테스트용으로 만들기
-	for (int i = 0; i < 1; i++)
-	{
-		_loading->loadImage("테스트", WINSIZEX, WINSIZEY);
-	}
+	_loading->loadFrameImage("citytile", "map/citytile.bmp", 160, 96, 10, 6); //타일 10x6 이밑에 다른타일 추가해줄 것
 
-	_loading->loadImage("mountain", "mountain.bmp", WINSIZEX, WINSIZEY);
-	_loading->loadImage("ball", "ball.bmp", 60, 60);
-
-	_loading->loadFrameImage("citytile", "map/citytile.bmp", 160, 96, 10, 6);
+	_loading->loadImage("FrameLT", "Images/UI/FrameLT.bmp", 17, 17);	 //프레임 모서리부분 키우려면 스케일랜더 사용할 것
+	_loading->loadImage("FrameRT", "Images/UI/FrameRT.bmp", 17, 17);	 //프레임 모서리부분 키우려면 스케일랜더 사용할 것
+	_loading->loadImage("FrameLB", "Images/UI/FrameLB.bmp", 17, 17);	 //프레임 모서리부분 키우려면 스케일랜더 사용할 것
+	_loading->loadImage("FrameRB", "Images/UI/FrameRB.bmp", 17, 17);	 //프레임 모서리부분 키우려면 스케일랜더 사용할 것
+	
+	
+	_loading->loadImage("FrameL", "Images/UI/FrameL.bmp", 17, 275);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
+	_loading->loadImage("FrameR", "Images/UI/FrameR.bmp", 17, 275);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
+	_loading->loadImage("FrameT", "Images/UI/FrameT.bmp", 17, 575);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
+	_loading->loadImage("FrameB", "Images/UI/FrameB.bmp", 17, 575);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
+		   
 }
 
 //로딩사운드 함수(이곳에 사운드를 전부 넣어라)
