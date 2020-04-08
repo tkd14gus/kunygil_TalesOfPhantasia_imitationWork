@@ -221,7 +221,7 @@ void maptoolScene::render()
 		Rectangle(getMemDC(), _rcSave);
 		Rectangle(getMemDC(), _rcLoad);
 
-		
+		//frameBoxRender(_rcPalette.left + 480, _rcPalette.top, 96, 48, 1.0f); //함수 확인용
 	}
 }
 
