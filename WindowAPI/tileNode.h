@@ -12,27 +12,11 @@
 #define SAMPLETILEX 12
 #define SAMPLETILEY 6
 
-//맵툴에서 사용할 컨트롤들
-enum CTRL
-{
-	CTRL_SAVE, CTRL_LOAD,
-	CTRL_TERRAIN, CTRL_OBJECT, CTRL_ERASER,
-	CTRL_MAP1, CTRL_MAP2, CTRL_MAP3, CTRL_END
-};
-
 //지형
-enum TERRAIN
+struct TERRAIN
 {
-	TR_CEMENT, TR_GROUND, TR_GRASS, TR_WATER, TR_END
-};
-
-//오브젝트
-enum OBJECT
-{
-	OBJ_BLOCK1, OBJ_BLOCK3, OBJ_BLOCKS,
-	OBJ_TANK1, OBJ_TANK2,
-	OBJ_FLAG1, OBJ_FLAG2,
-	OBJ_NONE
+	int _palettePage;
+	int x, y;
 };
 
 //타일구조체
@@ -40,7 +24,6 @@ enum OBJECT
 struct tagTile
 {
 	TERRAIN terrain;
-	OBJECT obj;
 	RECT rc;
 	bool canMove[LAYERCOUNT] = { false, };	//이 타일 위를 이동할 수 있는지 확인해주는 bool 변수
 											//기본값 false
@@ -70,5 +53,6 @@ struct tagSampleTile
 //현재타일 구조체
 struct tagCurrentTile
 {
+	int pageNumber;
 	int x, y;
 };
