@@ -160,7 +160,6 @@ bool soundManager::isPlaySound(string keyName)
 	}
 	return isPlay;
 }
-
 bool soundManager::isPauseSound(string keyName)
 {
 	bool isPause;
