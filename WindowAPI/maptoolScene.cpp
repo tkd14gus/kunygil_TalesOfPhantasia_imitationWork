@@ -6,6 +6,7 @@ HRESULT maptoolScene::init()
 	//타일맵 이미지 초기화
 	//IMAGEMANAGER->addFrameImage("tilemap", "tilemap.bmp", 640, 256, SAMPLETILEX, SAMPLETILEY);
 	_rcScreen = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2, 600, 800);
+	_tileSetting = false;
 	//맵툴세팅
 	this->maptoolSetup();
 
@@ -25,64 +26,71 @@ void maptoolScene::release()
 
 void maptoolScene::update()
 {
-	if (INPUT->GetKey(VK_UP))
+	if (_tileSetting)
 	{
-		for (int i = 0; i < TILEX * TILEY; i++)
-		{
-			_tiles[i].rc.top--;
-			_tiles[i].rc.bottom--;
-		}
+
 	}
-	if (INPUT->GetKey(VK_DOWN))
+	else
 	{
-		for (int i = 0; i < TILEX * TILEY; i++)
+		if (INPUT->GetKey(VK_UP))
 		{
-			_tiles[i].rc.top++;
-			_tiles[i].rc.bottom++;
+			for (int i = 0; i < TILEX * TILEY; i++)
+			{
+				_tiles[i].rc.top--;
+				_tiles[i].rc.bottom--;
+			}
 		}
-	}
-	if (INPUT->GetKey(VK_RIGHT))
-	{
-		for (int i = 0; i < TILEX * TILEY; i++)
+		if (INPUT->GetKey(VK_DOWN))
 		{
-			_tiles[i].rc.left++;
-			_tiles[i].rc.right++;
+			for (int i = 0; i < TILEX * TILEY; i++)
+			{
+				_tiles[i].rc.top++;
+				_tiles[i].rc.bottom++;
+			}
 		}
-	}
-	if (INPUT->GetKey(VK_LEFT))
-	{
-		for (int i = 0; i < TILEX * TILEY; i++)
+		if (INPUT->GetKey(VK_RIGHT))
 		{
-			_tiles[i].rc.left--;
-			_tiles[i].rc.right--;
+			for (int i = 0; i < TILEX * TILEY; i++)
+			{
+				_tiles[i].rc.left++;
+				_tiles[i].rc.right++;
+			}
 		}
-	}
+		if (INPUT->GetKey(VK_LEFT))
+		{
+			for (int i = 0; i < TILEX * TILEY; i++)
+			{
+				_tiles[i].rc.left--;
+				_tiles[i].rc.right--;
+			}
+		}
 
 
-	if (INPUT->GetKey(VK_LBUTTON)) this->setMap();
-	if (INPUT->GetKeyDown(VK_LBUTTON))
-	{
-		if (PtInRect(&_rcSave, _ptMouse))
+		if (INPUT->GetKey(VK_LBUTTON)) this->setMap();
+		if (INPUT->GetKeyDown(VK_LBUTTON))
 		{
-			_ctrlSelect = CTRL_SAVE;
-			this->save();
-		}
-		if (PtInRect(&_rcLoad, _ptMouse))
-		{
-			_ctrlSelect = CTRL_LOAD;
-			this->load();
-		}
-		if (PtInRect(&_rcTerrain, _ptMouse))
-		{
-			_ctrlSelect = CTRL_TERRAIN;
-		}
-		if (PtInRect(&_rcObject, _ptMouse))
-		{
-			_ctrlSelect = CTRL_OBJECT;
-		}
-		if (PtInRect(&_rcEraser, _ptMouse))
-		{
-			_ctrlSelect = CTRL_ERASER;
+			if (PtInRect(&_rcSave, _ptMouse))
+			{
+				_ctrlSelect = CTRL_SAVE;
+				this->save();
+			}
+			if (PtInRect(&_rcLoad, _ptMouse))
+			{
+				_ctrlSelect = CTRL_LOAD;
+				this->load();
+			}
+			if (PtInRect(&_rcTerrain, _ptMouse))
+			{
+				_ctrlSelect = CTRL_TERRAIN;
+			}
+			if (PtInRect(&_rcObject, _ptMouse))
+			{
+				_ctrlSelect = CTRL_OBJECT;
+			}
+			if (PtInRect(&_rcEraser, _ptMouse))
+			{
+				_ctrlSelect = CTRL_ERASER;
+			}
 		}
 	}
 }
@@ -92,8 +100,59 @@ void maptoolScene::render()
 	for (int i = 0; i < TILEX * TILEY; i++)
 	{
 		RECT rc;
-		if (IntersectRect(&rc, &_rcScreen, &_tiles[i].rc)) { Rectangle(getMemDC(), _tiles[i].rc); }
+		if (IntersectRect(&rc, &_rcScreen, &_tiles[i].rc)) 
+		{
+			if (_tiles[i].imagePage[0] == -1)
+				//하단 레이어에 그림이 없을 때 빈 사각형을 그려준다.
+				//이미지 추가되면 #FF00FF 사각형으로 칠해버릴 예정
+			{
+				Rectangle(getMemDC(), _tiles[i].rc);
+			}
+			else
+			{
+
+			}
+		}
+		else { continue; }
 	}
+
+	for (int i = 0; i < TILEX * TILEY; i++)
+	{
+		RECT rc;
+		if (IntersectRect(&rc, &_rcScreen, &_tiles[i].rc))
+		{
+			if (_tiles[i].imagePage[1] == -1)
+				//하단 레이어에 그림이 없을 때 빈 사각형을 그려준다.
+				//이미지 추가되면 #FF00FF 사각형으로 칠해버릴 예정
+			{
+				Rectangle(getMemDC(), _tiles[i].rc);
+			}
+			else
+			{
+
+			}
+		}
+		else { continue; }
+	}
+	for (int i = 0; i < TILEX * TILEY; i++)
+	{
+		RECT rc;
+		if (IntersectRect(&rc, &_rcScreen, &_tiles[i].rc))
+		{
+			if (_tiles[i].imagePage[2] == -1)
+				//하단 레이어에 그림이 없을 때 빈 사각형을 그려준다.
+				//이미지 추가되면 #FF00FF 사각형으로 칠해버릴 예정
+			{
+				Rectangle(getMemDC(), _tiles[i].rc);
+			}
+			else
+			{
+
+			}
+		}
+		else { continue; }
+	}
+
 
 	Rectangle(getMemDC(), _rcPalette);
 	for (int i = 0; i < 60; i++)
@@ -117,8 +176,8 @@ void maptoolScene::maptoolSetup()
 		for (int j = 0; j < 10; j++)
 		{
 			_sampleTile[i * 10 + j].rc = RectMake(_rcPalette.left + (j * 48), _rcPalette.top + (i * 48), 48, 48);
-			_sampleTile[i * 10 + j].terrainFrameX = j;
-			_sampleTile[i * 10 + j].terrainFrameY = i;
+			_sampleTile[i * 10 + j].tileFrameX = j;
+			_sampleTile[i * 10 + j].tileFrameY = i;
 		}
 	}
 
@@ -194,6 +253,12 @@ void maptoolScene::save()
 
 	file = CreateFile("save.map", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
 		FILE_ATTRIBUTE_NORMAL, NULL);
+	/*
+	while(true)
+	{
+		sprintf_s(str, "map%d.map"
+	}
+	*/
 	WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &write, NULL);
 	CloseHandle(file);
 }
