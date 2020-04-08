@@ -106,6 +106,7 @@ public:
 
 	//스케일렌더 (이미지 크기)
 	void scaleRender(HDC hdc, int destX, int destY, float scale = 1.0f);
+	void scaleRender(HDC hdc, int destX, int destY, int sourX, int sourY, int sourWidth, int sourHeight, float scale = 1.0f);
 	void scaleFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float scale = 1.0f);
 
 	//로테이트렌더 (이미지 회전)

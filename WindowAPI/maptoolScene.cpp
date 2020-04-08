@@ -195,7 +195,7 @@ void maptoolScene::render()
 		Rectangle(getMemDC(), _sampleTile[i].rc);
 
 		//하단의 샘플타일 랜더 스케일랜더로 16->48픽셀로 확대
-		IMAGEMANAGER->findImage("citytile")->scaleFrameRender(getMemDC(), _sampleTile[i].rc.left, _sampleTile[i].rc.top,i%10,i/10,3.0f);
+		IMAGEMANAGER->findImage("map1")->scaleFrameRender(getMemDC(), _sampleTile[i].rc.left, _sampleTile[i].rc.top,i%10,i/10,3.0f);
 	}
 
 	Rectangle(getMemDC(), _rcSaveLoad);
@@ -220,6 +220,8 @@ void maptoolScene::render()
 		Rectangle(getMemDC(), _rcSaveSlot[2]);	
 		Rectangle(getMemDC(), _rcSave);
 		Rectangle(getMemDC(), _rcLoad);
+
+		
 	}
 }
 
@@ -350,10 +352,18 @@ void maptoolScene::load(char* str)
 
 void maptoolScene::frameBoxRender(int left, int top, int width, int height,float scale)
 {
+	IMAGEMANAGER->findImage("FrameL")->scaleRender(getMemDC(), left, top, 0, 0, 17*scale, height , scale);
+	IMAGEMANAGER->findImage("FrameR")->scaleRender(getMemDC(), left+ width - (17 * scale), top, 0, 0, 17 * scale, height, scale);
+	IMAGEMANAGER->findImage("FrameT")->scaleRender(getMemDC(), left, top, 0, 0, width, 17 * scale, scale);
+	IMAGEMANAGER->findImage("FrameB")->scaleRender(getMemDC(), left, top+height-(17*scale), 0, 0, width, 17 * scale, scale);
+
+
+	//프레임바디
 	IMAGEMANAGER->findImage("FrameLT")->scaleRender(getMemDC(), left, top, scale);
 	IMAGEMANAGER->findImage("FrameRT")->scaleRender(getMemDC(), left + width -(17*scale), top, scale);
 	IMAGEMANAGER->findImage("FrameLB")->scaleRender(getMemDC(), left, top+height - (17*scale), scale);
 	IMAGEMANAGER->findImage("FrameRB")->scaleRender(getMemDC(), left + width - (17 * scale), top + height - (17 * scale), scale);
+	//모서리
 
 }
 void maptoolScene::selectLayer1()

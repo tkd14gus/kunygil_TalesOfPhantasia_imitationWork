@@ -745,6 +745,44 @@ void image::scaleRender(HDC hdc, int destX, int destY, float scale)
 	}
 }
 
+void image::scaleRender(HDC hdc, int destX, int destY, int sourX, int sourY, int sourWidth, int sourHeight,float scale)
+{
+	//스트레치이미지 처음 사용하냐?
+		//이미지 스케일링을 사용할 수 있도록 초기화 해라
+	if (!_scaleImage) this->initForStretchBlt();
+
+	_scaleImage->width = _imageInfo->width * scale;
+	_scaleImage->height = _imageInfo->height * scale;
+
+	if (_isTrans) //배경색 없앨꺼냐?
+	{
+		//원본이미지를 Scale값 만큼 확대/축소시켜서 그려준다
+		SetStretchBltMode(getMemDC(), COLORONCOLOR);
+		StretchBlt(_scaleImage->hMemDC, 0, 0, _scaleImage->width, _scaleImage->height,
+			_imageInfo->hMemDC, 0, 0, _imageInfo->width, _imageInfo->height, SRCCOPY);
+
+		//GdiTransparentBlt : 비트맵의 특정색상을 제외하고 고속복사 해주는 함수
+		GdiTransparentBlt(
+			hdc,					//복사할 장소의 DC
+			destX,					//복사될 좌표 시작점 X
+			destY,					//복사될 좌표 시작점 Y
+			sourWidth,	//복사될 이미지 가로크기
+			sourHeight,	//복사될 이미지 세로크기
+			_scaleImage->hMemDC,	//복사될 대상 DC
+			sourX, sourY,					//복사 시작지점
+			sourWidth,	//복사 영역 가로크기
+			sourHeight,	//복사 영역 세로크기
+			_transColor);			//복사할때 제외할 색상 (마젠타)
+
+	}
+	else //원본 이미지 그래도 출력할꺼냐?
+	{
+		//원본 이미지의 크기를 확대/축소 해서 렌더 시킨다
+		StretchBlt(hdc, destX, destY, sourWidth, sourHeight,
+			_imageInfo->hMemDC, 0, 0, sourX, sourY, SRCCOPY);
+	}
+}
+
 void image::scaleFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float scale)
 {
 	//스트레치이미지 처음 사용하냐?
