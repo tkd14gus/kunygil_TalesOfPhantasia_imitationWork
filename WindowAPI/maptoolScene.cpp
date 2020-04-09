@@ -199,12 +199,11 @@ void maptoolScene::render()
 		Rectangle(getMemDC(), _sampleTile[i].rc);
 
 		//하단의 샘플타일 랜더 스케일랜더로 16->48픽셀로 확대
-<<<<<<< HEAD
-=======
+
 		_sampleTile[i].tileFrameX = i % 10;
 		_sampleTile[i].tileFrameY = i / 10;
 		_sampleTile[i].imagePage = _palettePage;
->>>>>>> Jiho-Choi
+
 		IMAGEMANAGER->findImage("map1")->scaleFrameRender(getMemDC(), _sampleTile[i].rc.left, _sampleTile[i].rc.top,i%10,i/10,3.0f);
 	}
 
