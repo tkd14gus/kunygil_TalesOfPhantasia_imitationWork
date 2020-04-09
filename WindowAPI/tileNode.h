@@ -45,7 +45,7 @@ struct tagSampleTile
 	int tileFrameX;
 	int tileFrameY;
 	
-	bool canMove;
+	bool canMove = false;
 	bool direct[4];
 };
 

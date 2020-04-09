@@ -7,14 +7,21 @@ HRESULT maptoolScene::init()
 	//IMAGEMANAGER->addFrameImage("tilemap", "tilemap.bmp", 640, 256, SAMPLETILEX, SAMPLETILEY);
 	_rcScreen = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2, 600, 800);
 	_rcPalette = RectMakeCenter((_rcScreen.left + _rcScreen.right) / 2, _rcScreen.bottom - 192, 576, 288);
-	_tileSetting = false;
+	_editMode = false;
+	_editMoveDirect = false;
 	_setSaveLoad = false;
 	_slideTool = true;
 	//맵툴세팅
 	this->maptoolSetup();
-
+	for (int i = 0; i < TILEY; i++)
+	{
+		for (int j = 0; j < TILEX; j++)
+		{
+			_tiles[i * TILEX + j].rc = RectMake(48 * j, 48 * i, 48, 48);
+		}
+	}
 	_palettePage = 1;
-
+	sprintf_s(_dataName, "MapData\\map%d.txt", _palettePage);
 	//현재타일 초기화 (지형 = 잔디)
 	_currentTile.x = 3;
 	_currentTile.y = 0;
@@ -22,6 +29,7 @@ HRESULT maptoolScene::init()
 	_layer[0] = true;
 	_layer[1] = false;
 	_layer[2] = false;
+	loadMapData(_dataName);
 	return S_OK;
 }
 
@@ -31,9 +39,23 @@ void maptoolScene::release()
 
 void maptoolScene::update()
 {
-
-
-	if (_setSaveLoad == true) // 세이브 확인창이 켜졌을때
+	if (_editMode)
+	{
+		if (INPUT->GetKeyDown(VK_D)) 
+		{
+			_editMode = false; 
+			saveMapData(_dataName);
+		}
+		if (INPUT->GetKeyDown(0x31))
+		{
+			_editMoveDirect = false;
+		}
+		if (INPUT->GetKeyDown(0x32))
+		{
+			_editMoveDirect = true;
+		}
+	}
+	else if (_setSaveLoad == true) // 세이브 확인창이 켜졌을때
 	{
 		if (INPUT->GetKeyDown(VK_LBUTTON))
 		{
@@ -59,11 +81,19 @@ void maptoolScene::update()
 				return;
 			}
 			//로드완료
-
 		}
 	}
 	else
 	{
+		//#====================================================================================================
+		//#				※※※ 필독 ※※※ 사용 방법
+		//#				에디터를 사용하기 전에 칠한 타일은 에디터를 사용하더라도 데이터 변경 X
+		//#				추후에 적용 되도록 작업할 예정이며
+		//#				그 전에 에디터 맵 저장하면 인게임에서 난리납니다
+		//#=====================================================================================================
+
+		if (INPUT->GetKeyDown(VK_D)) { _editMode = true; }	//샘플타일 데이터 에디트 
+
 		this->maptoolSetup();
 
 		if (_rcPalette.top > WINSIZEY) // 최소화시 화면밖으로 나가면서 이하만큼남앗을때 버튼생성(이동) ※맵툴 셋업보다 밑에있어야함
@@ -87,7 +117,6 @@ void maptoolScene::update()
 			_rcPalette.top -= 5;
 			_rcPalette.bottom -= 5;
 		}
-
 
 		if (INPUT->GetKeyDown(0x31)) { selectLayer1(); }
 		if (INPUT->GetKeyDown(0x32)) { selectLayer2(); }
@@ -156,9 +185,21 @@ void maptoolScene::update()
 				if (_slideTool == false) { _slideTool = true; }
 				else if (_slideTool == true ) { _slideTool = false; }
 			}
+			if (PtInRect(&_rcArrow[0], _ptMouse) && _palettePage > 1)
+			{
+				_palettePage--;
+				sprintf_s(_imageName, "map%d", _palettePage);
+				sprintf_s(_dataName, "MapData\\map%d.txt", _palettePage);
+				loadMapData(_dataName);
+			}
+			if (PtInRect(&_rcArrow[1], _ptMouse) && _palettePage < 3)
+			{
+				_palettePage++;
+				sprintf_s(_imageName, "map%d", _palettePage);
+				sprintf_s(_dataName, "MapData\\map%d.txt", _palettePage);
+				loadMapData(_dataName);
+			}
 		}
-	
-
 	}
 }
 
@@ -236,8 +277,14 @@ void maptoolScene::render()
 		_sampleTile[i].tileFrameX = i % 10;
 		_sampleTile[i].tileFrameY = i / 10;
 		_sampleTile[i].imagePage = _palettePage;
-
+		if (_sampleTile[i].canMove == true) { sprintf_s(_editModechar, "%d", 1); }
+		else { sprintf_s(_editModechar, "%d", 0); }
 		IMAGEMANAGER->findImage("map1")->scaleFrameRender(getMemDC(), _sampleTile[i].rc.left, _sampleTile[i].rc.top,i%10,i/10,3.0f);
+
+		if (_editMode == true)
+		{
+			TextOut(getMemDC(), _sampleTile[i].rc.left, _sampleTile[i].rc.top, _editModechar, strlen(_editModechar));
+		}
 	}
 
 	Rectangle(getMemDC(), _rcSaveLoad);
@@ -246,13 +293,8 @@ void maptoolScene::render()
 	Rectangle(getMemDC(), _rcDummy3);
 	Rectangle(getMemDC(), _rcslide);
 
-	if (_layer[0]) { IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
-	if (_layer[1]) { IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
-	if (_layer[2])
-	{
-		IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top);
-		IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top);
-	}
+	if (_palettePage > 1) { IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
+	if (_palettePage < 3) { IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
 	
 	if (_setSaveLoad == true)
 	{
@@ -271,7 +313,6 @@ void maptoolScene::render()
 void maptoolScene::maptoolSetup()
 {
 	//_rcPalette = RectMakeCenter((_rcScreen.left + _rcScreen.right) / 2, _rcScreen.bottom - 192, 576, 288);
-
 	for (int i = 0; i < 6; i++)
 	{
 		for (int j = 0; j < 10; j++)
@@ -299,16 +340,7 @@ void maptoolScene::maptoolSetup()
 	_rcLoad = RectMakeCenter(WINSIZEX/2+70,WINSIZEY/2+35,80,40);								    //세이브로드UI
 
 
-	for (int i = 0; i < TILEY; i++)
-	{
-		for (int j = 0; j < TILEX; j++)
-		{
-			_tiles[i * TILEX + j].rc = RectMake(48 * j, 48 * i, 48, 48);
-		}
-	}
-
-
-
+	
 }
 
 void maptoolScene::setMap()
@@ -362,7 +394,6 @@ void maptoolScene::setMap()
 			}
 		}
 	}
-
 }
 
 void maptoolScene::uiMove()
@@ -386,8 +417,47 @@ void maptoolScene::load(char* str)
 	DWORD read;
 
 	file = CreateFile(str, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
 	ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
 	CloseHandle(file);
+}
+
+void maptoolScene::saveMapData(char *str)
+{
+	HANDLE file;
+	DWORD write;
+
+	file = CreateFile(str, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	WriteFile(file, _sampleTile, sizeof(tagSampleTile) * SAMPLETILEX * SAMPLETILEY, &write, NULL);
+	CloseHandle(file);
+}
+
+void maptoolScene::loadMapData(char* str)
+{
+	HANDLE file;
+	DWORD read;
+
+	file = CreateFile(str, GENERIC_READ, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, _sampleTile, sizeof(tagSampleTile) * SAMPLETILEX * SAMPLETILEY, &read, NULL);
+	CloseHandle(file);
+}
+
+void maptoolScene::editCanMove()
+{
+
+	for (int i = 0; i < SAMPLETILEX * SAMPLETILEY; i++)
+	{
+		if (PtInRect(&_sampleTile[i].rc, _ptMouse))
+		{
+			if (INPUT->GetKeyDown(VK_LBUTTON))
+			{
+				_sampleTile[i].canMove = !_sampleTile[i].canMove;
+				break;
+			}
+		}
+	}
 }
 
 void maptoolScene::frameBoxRender(int left, int top, int width, int height,float scale)
@@ -406,7 +476,6 @@ void maptoolScene::frameBoxRender(int left, int top, int width, int height,float
 	//모서리
 
 }
-
 void maptoolScene::frameBoxRender(RECT rc, float scale)
 {
 	IMAGEMANAGER->findImage("FrameL")->scaleRender(getMemDC(), rc.left-17 * scale, rc.top, 0, 0, 17 * scale, rc.bottom - rc.top, scale);
