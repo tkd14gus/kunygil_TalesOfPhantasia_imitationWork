@@ -5,12 +5,21 @@
 class maptoolScene : public gameNode
 {
 private:
-	bool _tileSetting;
+	bool _editMode;			//맵파일 속성 입력 모드.
+	bool _eitCanMove;
+	bool _editMoveDirect;
 	bool _canMove;
 	bool _setSaveLoad;		//세이브/로드창 띄워져있는가 없는가 판단
 	bool _slideTool;		//맵툴창이 최대화되어있는지 최소화되어있는지 판단
+
 	int _setSaveSlot;		//세이브 슬롯 활성화
-	char _fileName[128];	//파일 이름(맵, 맵 데이터)을 받아올 변수
+
+	char _editModechar[128] = { 0, };
+	char _fileName[128] = { 0, };	//맵 파일의 이름을 받아올 변수 
+									//파일 이름(맵, 맵 데이터)을 받아올 변수
+	char _imageName[128] = { 0, };	//맵 이미지 파일의 이름을 받아올 변수
+	char _dataName[128] = { 0, };	//맵 데이터 파일의 이름을 받아올 변수
+
 	int _startFile;			/*파일 명은 0번부터 시작
 							ex) MAP0.map	MAP0.mapdata
 							*/
@@ -54,6 +63,10 @@ public:
 	void uiMove();
 	void save(char* str);
 	void load(char* str);
+	void saveMapData(char *str);
+	void loadMapData(char *str);
+	void editCanMove();
+
 
 	void frameBoxRender(int left, int top, int width, int height, float scale);			//팝업창(텍스트등)에 프레임씌우기
 																						

@@ -7,7 +7,8 @@ HRESULT maptoolScene::init()
 	//IMAGEMANAGER->addFrameImage("tilemap", "tilemap.bmp", 640, 256, SAMPLETILEX, SAMPLETILEY);
 	_rcScreen = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2, 600, 800);
 	_rcPalette = RectMakeCenter((_rcScreen.left + _rcScreen.right) / 2, _rcScreen.bottom - 192, 576, 288);
-	_tileSetting = false;
+	_editMode = false;
+	_editMoveDirect = false;
 	_setSaveLoad = false;
 	_slideTool = true;
 	_setSaveSlot = 3;
@@ -23,7 +24,7 @@ HRESULT maptoolScene::init()
 	}
 
 	_palettePage = 1;
-
+	sprintf_s(_dataName, "MapData\\map%d.txt", _palettePage);
 	//현재타일 초기화 (지형 = 잔디)
 	_currentTile.x = 3;
 	_currentTile.y = 0;
@@ -31,6 +32,8 @@ HRESULT maptoolScene::init()
 	_layer[0] = true;
 	_layer[1] = false;
 	_layer[2] = false;
+	loadMapData(_dataName);
+
 	return S_OK;
 }
 
@@ -40,146 +43,203 @@ void maptoolScene::release()
 
 void maptoolScene::update()
 {
-
-
-	if (_setSaveLoad == true) // 세이브 확인창이 켜졌을때
+	if (_editMode)
 	{
 		if (INPUT->GetKeyDown(VK_LBUTTON))
 		{
-			
+			_editMode = false;
+			saveMapData(_dataName);
+		}
+		if (INPUT->GetKeyDown(0x31))
+		{
+			_editMoveDirect = false;
+		}
+		if (INPUT->GetKeyDown(0x32))
+		{
+			_editMoveDirect = true;
+		}
+	}
+	else if (_setSaveLoad == true) // 세이브 확인창이 켜졌을때
+	{
+		if (INPUT->GetKeyDown(VK_LBUTTON))
+		{
+
 			if (PtInRect(&_rcSaveSlot[0], _ptMouse)) { _setSaveSlot = 0; }	//슬롯1번선택
 			else if (PtInRect(&_rcSaveSlot[1], _ptMouse)) { _setSaveSlot = 1; }	//슬롯2번선택
 			else if (PtInRect(&_rcSaveSlot[2], _ptMouse)) { _setSaveSlot = 2; }	//슬롯3번선택
 
-			if ( _setSaveSlot == 0) { sprintf_s(_fileName, "save1.mapsave"); }	//슬롯1번파일으로 이름변경
-			else if ( _setSaveSlot == 1) { sprintf_s(_fileName, "save2.mapsave"); }	//슬롯2번파일으로 이름변경
-			else if ( _setSaveSlot == 2) { sprintf_s(_fileName, "save3.mapsave"); }	//슬롯3번파일으로 이름변경
-			
+			if (_setSaveSlot == 0) { sprintf_s(_fileName, "save1.mapsave"); }	//슬롯1번파일으로 이름변경
+			else if (_setSaveSlot == 1) { sprintf_s(_fileName, "save2.mapsave"); }	//슬롯2번파일으로 이름변경
+			else if (_setSaveSlot == 2) { sprintf_s(_fileName, "save3.mapsave"); }	//슬롯3번파일으로 이름변경
+
 		}
 		if (INPUT->GetKeyUp(VK_LBUTTON))
 		{
-		if (!PtInRect(&_rcSaveWindow, _ptMouse)) // 세이브 확인창 밖을 클릭하면 세이브창 닫기
-		{
-			_setSaveLoad = false;
-			_setSaveSlot = 3;
-			return;
-		}
-		else if (PtInRect(&_rcSave, _ptMouse))
-		{
-			this->save(_fileName);
-			_setSaveLoad = false;
-			_setSaveSlot = 3;
-			return;
-		}
-		//세이브완료
-		else if (PtInRect(&_rcLoad, _ptMouse))
-		{
-			this->load(_fileName);
-			_setSaveLoad = false;
-			_setSaveSlot = 3;
-			return;
-		}
-		//로드완료
+			if (!PtInRect(&_rcSaveWindow, _ptMouse)) // 세이브 확인창 밖을 클릭하면 세이브창 닫기
+			{
+				_setSaveLoad = false;
+				_setSaveSlot = 3;
+				return;
+			}
+			else if (PtInRect(&_rcSave, _ptMouse))
+			{
+				this->save(_fileName);
+				_setSaveLoad = false;
+				_setSaveSlot = 3;
+				return;
+			}
+			//세이브완료
+			else if (PtInRect(&_rcLoad, _ptMouse))
+			{
+				this->load(_fileName);
+				_setSaveLoad = false;
+				_setSaveSlot = 3;
+				return;
+			}
+			//로드완료
+			if (!PtInRect(&_rcSaveWindow, _ptMouse)) // 세이브 확인창 밖을 클릭하면 세이브창 닫기
+			{
+				_setSaveLoad = false;
+				return;
+			}
+			else if (PtInRect(&_rcSaveSlot[0], _ptMouse)) { sprintf_s(_fileName, "save1.mapsave"); }	//슬롯1번선택
+			else if (PtInRect(&_rcSaveSlot[1], _ptMouse)) { sprintf_s(_fileName, "save2.mapsave"); }	//슬롯2번선택
+			else if (PtInRect(&_rcSaveSlot[2], _ptMouse)) { sprintf_s(_fileName, "save3.mapsave"); }	//슬롯3번선택
+			else if (PtInRect(&_rcSave, _ptMouse))
+			{
+				this->save(_fileName);
+				_setSaveLoad = false;
+				return;
+			}
+			//세이브완료
+			else if (PtInRect(&_rcLoad, _ptMouse))
+			{
+				this->load(_fileName);
+				_setSaveLoad = false;
+				return;
+			}
+			//로드완료
 		}
 	}
-	else
-	{
-		this->maptoolSetup();
-
-		if (_rcPalette.top > WINSIZEY) // 최소화시 화면밖으로 나가면서 이하만큼남앗을때 버튼생성(이동) ※맵툴 셋업보다 밑에있어야함
+		else
 		{
-			_rcSaveLoad = RectMake(_rcPalette.left, WINSIZEY - 48, 96, 48);							//맵툴 UI
-			_rcDummy1 = RectMake(_rcPalette.left + 96, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcDummy2 = RectMake(_rcPalette.left + 96 * 2, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcDummy3 = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcslide = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcArrow[0] = RectMake(_rcPalette.left + 96 * 5, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
-			_rcArrow[1] = RectMake(_rcPalette.left + 96 * 5.5f, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
-		}
+			//#====================================================================================================
+			//#				※※※ 필독 ※※※ 사용 방법
+			//#				에디터를 사용하기 전에 칠한 타일은 에디터를 사용하더라도 데이터 변경 X
+			//#				추후에 적용 되도록 작업할 예정이며
+			//#				그 전에 에디터 맵 저장하면 인게임에서 난리납니다
+			//#=====================================================================================================
 
-		if (_slideTool == false && _rcPalette.top < WINSIZEY+17) // 최소화시=>화면밖까지 내리기 (맨위에 일정이상 내려갔을시 버튼이동하는 이프문있음)
-		{
-			_rcPalette.top += 5;
-			_rcPalette.bottom += 5;
-		}
-		else if (_slideTool == true && _rcPalette.top > _rcScreen.bottom - 336) //최대화시=>초기위치까지 올리기 (336은 초기위치)
-		{
-			_rcPalette.top -= 5;
-			_rcPalette.bottom -= 5;
-		}
+			if (INPUT->GetKeyDown(0x44)) { _editMode = true; }	//샘플타일 데이터 에디트 
+
+			this->maptoolSetup();
+
+			if (_rcPalette.top > WINSIZEY) // 최소화시 화면밖으로 나가면서 이하만큼남앗을때 버튼생성(이동) ※맵툴 셋업보다 밑에있어야함
+			{
+				_rcSaveLoad = RectMake(_rcPalette.left, WINSIZEY - 48, 96, 48);							//맵툴 UI
+				_rcDummy1 = RectMake(_rcPalette.left + 96, WINSIZEY - 48, 96, 48);						//맵툴 UI
+				_rcDummy2 = RectMake(_rcPalette.left + 96 * 2, WINSIZEY - 48, 96, 48);						//맵툴 UI
+				_rcDummy3 = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
+				_rcslide = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 96, 48);						//맵툴 UI
+				_rcArrow[0] = RectMake(_rcPalette.left + 96 * 5, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
+				_rcArrow[1] = RectMake(_rcPalette.left + 96 * 5.5f, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
+			}
+
+			if (_slideTool == false && _rcPalette.top < WINSIZEY + 17) // 최소화시=>화면밖까지 내리기 (맨위에 일정이상 내려갔을시 버튼이동하는 이프문있음)
+			{
+				_rcPalette.top += 5;
+				_rcPalette.bottom += 5;
+			}
+			else if (_slideTool == true && _rcPalette.top > _rcScreen.bottom - 336) //최대화시=>초기위치까지 올리기 (336은 초기위치)
+			{
+				_rcPalette.top -= 5;
+				_rcPalette.bottom -= 5;
+			}
+
+			if (INPUT->GetKeyDown(0x31)) { selectLayer1(); }
+			if (INPUT->GetKeyDown(0x32)) { selectLayer2(); }
+			if (INPUT->GetKeyDown(0x33)) { selectLayer3(); }
+
+			if (INPUT->GetKey(VK_UP))
+			{
+				for (int i = 0; i < TILEX * TILEY; i++)
+				{
+					_tiles[i].rc.top--;
+					_tiles[i].rc.bottom--;
+				}
+			}
+			if (INPUT->GetKey(VK_DOWN))
+			{
+				for (int i = 0; i < TILEX * TILEY; i++)
+				{
+					_tiles[i].rc.top++;
+					_tiles[i].rc.bottom++;
+				}
+			}
+			if (INPUT->GetKey(VK_RIGHT))
+			{
+				for (int i = 0; i < TILEX * TILEY; i++)
+				{
+					_tiles[i].rc.left++;
+					_tiles[i].rc.right++;
+				}
+			}
+			if (INPUT->GetKey(VK_LEFT))
+			{
+				for (int i = 0; i < TILEX * TILEY; i++)
+				{
+					_tiles[i].rc.left--;
+					_tiles[i].rc.right--;
+				}
+			}
+
+			if (INPUT->GetKey(VK_LBUTTON)) this->setMap();
+			if (INPUT->GetKeyUp(VK_LBUTTON))
+			{
+				if (PtInRect(&_rcSaveLoad, _ptMouse))
+				{
+					_setSaveLoad = true;
+					//_ctrlSelect = CTRL_SAVE;  
+					//this->save();
 
 
-		if (INPUT->GetKeyDown(0x31)) { selectLayer1(); }
-		if (INPUT->GetKeyDown(0x32)) { selectLayer2(); }
-		if (INPUT->GetKeyDown(0x33)) { selectLayer3(); }
+					//_ctrlSelect = CTRL_LOAD;
+					//this->load();
+				}
+				if (PtInRect(&_rcDummy1, _ptMouse))
+				{
 
-		if (INPUT->GetKey(VK_UP))
-		{
-			for (int i = 0; i < TILEX * TILEY; i++)
-			{
-				_tiles[i].rc.top--;
-				_tiles[i].rc.bottom--;
-			}
-		}
-		if (INPUT->GetKey(VK_DOWN))
-		{
-			for (int i = 0; i < TILEX * TILEY; i++)
-			{
-				_tiles[i].rc.top++;
-				_tiles[i].rc.bottom++;
-			}
-		}
-		if (INPUT->GetKey(VK_RIGHT))
-		{
-			for (int i = 0; i < TILEX * TILEY; i++)
-			{
-				_tiles[i].rc.left++;
-				_tiles[i].rc.right++;
-			}
-		}
-		if (INPUT->GetKey(VK_LEFT))
-		{
-			for (int i = 0; i < TILEX * TILEY; i++)
-			{
-				_tiles[i].rc.left--;
-				_tiles[i].rc.right--;
-			}
-		}
-
-		if (INPUT->GetKey(VK_LBUTTON)) this->setMap();
-		if (INPUT->GetKeyUp(VK_LBUTTON))
-		{
-			if (PtInRect(&_rcSaveLoad, _ptMouse))
-			{
-				_setSaveLoad = true;
-				//_ctrlSelect = CTRL_SAVE;  
-				//this->save();
-
-
-				//_ctrlSelect = CTRL_LOAD;
-				//this->load();
-			}
-			if (PtInRect(&_rcDummy1, _ptMouse))
-			{
-
-			}
-			if (PtInRect(&_rcDummy2, _ptMouse))
-			{
-				//_ctrlSelect = CTRL_TERRAIN;
-			}
-			if (PtInRect(&_rcDummy3, _ptMouse))
-			{
-				//_ctrlSelect = CTRL_OBJECT;
-			}
-			if (PtInRect(&_rcslide, _ptMouse))
-			{
-				if (_slideTool == false) { _slideTool = true; }
-				else if (_slideTool == true ) { _slideTool = false; }
+				}
+				if (PtInRect(&_rcDummy2, _ptMouse))
+				{
+					//_ctrlSelect = CTRL_TERRAIN;
+				}
+				if (PtInRect(&_rcDummy3, _ptMouse))
+				{
+					//_ctrlSelect = CTRL_OBJECT;
+				}
+				if (PtInRect(&_rcslide, _ptMouse))
+				{
+					if (_slideTool == false) { _slideTool = true; }
+					else if (_slideTool == true) { _slideTool = false; }
+				}
+				if (PtInRect(&_rcArrow[0], _ptMouse) && _palettePage > 1)
+				{
+					_palettePage--;
+					sprintf_s(_imageName, "map%d", _palettePage);
+					sprintf_s(_dataName, "MapData\\map%d.txt", _palettePage);
+					loadMapData(_dataName);
+				}
+				if (PtInRect(&_rcArrow[1], _ptMouse) && _palettePage < 3)
+				{
+					_palettePage++;
+					sprintf_s(_imageName, "map%d", _palettePage);
+					sprintf_s(_dataName, "MapData\\map%d.txt", _palettePage);
+					loadMapData(_dataName);
+				}
 			}
 		}
 	
-
-	}
 }
 
 
@@ -256,8 +316,14 @@ void maptoolScene::render()
 		_sampleTile[i].tileFrameX = i % 10;
 		_sampleTile[i].tileFrameY = i / 10;
 		_sampleTile[i].imagePage = _palettePage;
-
+		if (_sampleTile[i].canMove == true) { sprintf_s(_editModechar, "%d", 1); }
+		else { sprintf_s(_editModechar, "%d", 0); }
 		IMAGEMANAGER->findImage("map1")->scaleFrameRender(getMemDC(), _sampleTile[i].rc.left, _sampleTile[i].rc.top,i%10,i/10,3.0f);
+
+		if (_editMode == true)
+		{
+			TextOut(getMemDC(), _sampleTile[i].rc.left, _sampleTile[i].rc.top, _editModechar, strlen(_editModechar));
+		}
 	}
 
 	Rectangle(getMemDC(), _rcSaveLoad);
@@ -266,15 +332,11 @@ void maptoolScene::render()
 	Rectangle(getMemDC(), _rcDummy3);
 	Rectangle(getMemDC(), _rcslide);
 
-	if (_layer[0]) { IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
-	if (_layer[1]) { IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
-	if (_layer[2])
-	{
-		IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top);
-		IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top);
-	}
-
 	frameBoxRender(_rcPalette, 1.0f);
+
+	if (_palettePage > 1) { IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
+	if (_palettePage < 3) { IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
+
 	
 	if (_setSaveLoad == true)
 	{
@@ -321,7 +383,6 @@ void maptoolScene::render()
 void maptoolScene::maptoolSetup()
 {
 	//_rcPalette = RectMakeCenter((_rcScreen.left + _rcScreen.right) / 2, _rcScreen.bottom - 192, 576, 288);
-
 	for (int i = 0; i < 6; i++)
 	{
 		for (int j = 0; j < 10; j++)
@@ -347,10 +408,6 @@ void maptoolScene::maptoolSetup()
 	}																							    //세이브로드UI
 	_rcSave = RectMakeCenter(WINSIZEX/2-70,WINSIZEY/2+35,80,35);								    //세이브로드UI
 	_rcLoad = RectMakeCenter(WINSIZEX/2+70,WINSIZEY/2+35,80,35);								    //세이브로드UI
-
-
-
-
 
 }
 
@@ -405,7 +462,6 @@ void maptoolScene::setMap()
 			}
 		}
 	}
-
 }
 
 void maptoolScene::uiMove()
@@ -429,8 +485,47 @@ void maptoolScene::load(char* str)
 	DWORD read;
 
 	file = CreateFile(str, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
 	ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
 	CloseHandle(file);
+}
+
+void maptoolScene::saveMapData(char *str)
+{
+	HANDLE file;
+	DWORD write;
+
+	file = CreateFile(str, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	WriteFile(file, _sampleTile, sizeof(tagSampleTile) * SAMPLETILEX * SAMPLETILEY, &write, NULL);
+	CloseHandle(file);
+}
+
+void maptoolScene::loadMapData(char* str)
+{
+	HANDLE file;
+	DWORD read;
+
+	file = CreateFile(str, GENERIC_READ, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, _sampleTile, sizeof(tagSampleTile) * SAMPLETILEX * SAMPLETILEY, &read, NULL);
+	CloseHandle(file);
+}
+
+void maptoolScene::editCanMove()
+{
+
+	for (int i = 0; i < SAMPLETILEX * SAMPLETILEY; i++)
+	{
+		if (PtInRect(&_sampleTile[i].rc, _ptMouse))
+		{
+			if (INPUT->GetKeyDown(VK_LBUTTON))
+			{
+				_sampleTile[i].canMove = !_sampleTile[i].canMove;
+				break;
+			}
+		}
+	}
 }
 
 void maptoolScene::frameBoxRender(int left, int top, int width, int height,float scale)
@@ -449,7 +544,6 @@ void maptoolScene::frameBoxRender(int left, int top, int width, int height,float
 	//모서리
 
 }
-
 void maptoolScene::frameBoxRender(RECT rc, float scale)
 {
 	IMAGEMANAGER->findImage("FrameL")->scaleRender(getMemDC(), rc.left-17 * scale, rc.top-1, 0, 0, 17 * scale, rc.bottom+1 - rc.top, scale);
