@@ -1,0 +1,127 @@
+﻿  stdafx.cpp
+  bullet.cpp
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(33): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(40): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(50): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(66): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(72): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(83): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(90): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(96): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(149): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(163): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(179): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(193): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(250): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(263): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\bullet.cpp(277): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  camera.cpp
+e:\kunygil_talesofphantasia_imitationwork\windowapi\camera.cpp(72): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  enemy.cpp
+  enemyManager.cpp
+e:\kunygil_talesofphantasia_imitationwork\windowapi\enemymanager.cpp(35): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\enemymanager.cpp(53): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\enemymanager.cpp(84): warning C4244: '인수': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\enemymanager.cpp(97): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  gameNode.cpp
+  image.cpp
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(69): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(133): note: 'strcpy' 선언을 참조하십시오.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(110): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(133): note: 'strcpy' 선언을 참조하십시오.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(155): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(133): note: 'strcpy' 선언을 참조하십시오.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(202): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(133): note: 'strcpy' 선언을 참조하십시오.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(716): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(717): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(754): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(755): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(792): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(793): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(840): warning C4244: '초기화 중': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(848): warning C4244: '=': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(849): warning C4244: '=': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(868): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(867): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(891): warning C4244: '초기화 중': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(899): warning C4244: '=': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(900): warning C4244: '=': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(923): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\image.cpp(922): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  imageManager.cpp
+  imageTest.cpp
+  inGameScene.cpp
+  iniData.cpp
+e:\kunygil_talesofphantasia_imitationwork\windowapi\inidata.cpp(39): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\inidata.cpp(32): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1774): note: 'sprintf' 선언을 참조하십시오.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\inidata.cpp(35): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(90): note: 'strcat' 선언을 참조하십시오.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\inidata.cpp(52): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1774): note: 'sprintf' 선언을 참조하십시오.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\inidata.cpp(54): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(90): note: 'strcat' 선언을 참조하십시오.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\inidata.cpp(70): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1774): note: 'sprintf' 선언을 참조하십시오.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\inidata.cpp(72): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(90): note: 'strcat' 선언을 참조하십시오.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\inidata.cpp(80): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iniTestScene.cpp
+  input.cpp
+  loading.cpp
+e:\kunygil_talesofphantasia_imitationwork\windowapi\loading.cpp(42): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\loading.cpp(43): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\loading.cpp(78): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\loading.cpp(79): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\loading.cpp(175): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\loading.cpp(200): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\loading.cpp(214): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\loading.cpp(229): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\loading.cpp(229): warning C4244: '인수': 'unsigned int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  loadingScene.cpp
+  mainGame.cpp
+  maptoolScene.cpp
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(355): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(356): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(357): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(358): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(363): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(364): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(365): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  minion.cpp
+  pixelCollisionScene.cpp
+e:\kunygil_talesofphantasia_imitationwork\windowapi\pixelcollisionscene.cpp(13): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\pixelcollisionscene.cpp(16): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\pixelcollisionscene.cpp(36): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\pixelcollisionscene.cpp(37): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\pixelcollisionscene.cpp(42): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\pixelcollisionscene.cpp(49): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\pixelcollisionscene.cpp(66): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  player.cpp
+e:\kunygil_talesofphantasia_imitationwork\windowapi\player.cpp(102): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\player.cpp(124): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\player.cpp(126): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\player.cpp(148): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\player.cpp(153): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  playerData.cpp
+  코드를 생성하고 있습니다...
+e:\kunygil_talesofphantasia_imitationwork\windowapi\inidata.cpp(60): warning C4172: 지역 변수 또는 임시: data의 주소를 반환하고 있습니다.
+  컴파일하고 있습니다...
+  progressBar.cpp
+e:\kunygil_talesofphantasia_imitationwork\windowapi\progressbar.cpp(13): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\progressbar.cpp(14): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\progressbar.cpp(16): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\progressbar.cpp(29): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\progressbar.cpp(35): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\progressbar.cpp(38): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\progressbar.cpp(37): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  random.cpp
+  sceneManager.cpp
+  soundManager.cpp
+  soundTestScene.cpp
+  startScene.cpp
+  util.cpp
+  winMain.cpp
+  코드를 생성하고 있습니다...
+  GameFramework2D.vcxproj -> E:\kunygil_TalesOfPhantasia_imitationWork\WindowAPI\Debug\GameFramework2D.exe
