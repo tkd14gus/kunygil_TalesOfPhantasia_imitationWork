@@ -15,7 +15,6 @@
 //ÁöÇü
 struct TERRAIN
 {
-	int _palettePage;
 	int x, y;
 };
 
