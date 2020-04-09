@@ -61,7 +61,7 @@ void loadingScene::loadingImage()
 		_loading->loadImage("테스트", WINSIZEX, WINSIZEY);
 	}
 
-	_loading->loadFrameImage("citytile", "map/citytile.bmp", 160, 96, 10, 6); //타일 10x6 이밑에 다른타일 추가해줄 것
+	_loading->loadFrameImage("map1", "map/citytile.bmp", 160, 96, 10, 6); //타일 10x6 이밑에 다른타일 추가해줄 것
 
 	_loading->loadImage("FrameLT", "Images/UI/FrameLT.bmp", 17, 17);	 //프레임 모서리부분 키우려면 스케일랜더 사용할 것
 	_loading->loadImage("FrameRT", "Images/UI/FrameRT.bmp", 17, 17);	 //프레임 모서리부분 키우려면 스케일랜더 사용할 것
