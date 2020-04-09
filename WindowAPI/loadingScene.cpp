@@ -56,11 +56,7 @@ void loadingScene::loadingImage()
 	
 
 	//로딩이 너무 빠르게 진행되서 천천히 돌아가도록 테스트용으로 만들기
-	
 
-	_loading->loadFrameImage("map1", "map/citytile.bmp", 160, 96, 10, 6); //타일 10x6 이밑에 다른타일 추가해줄 것 
-
-	_loading->loadFrameImage("map1", "map/citytile.bmp", 160, 96, 10, 6); //타일 10x6 이밑에 다른타일 추가해줄 것
 
 	//#====================================================================================================================#
 	//#									맵 타일																			   #
@@ -78,11 +74,11 @@ void loadingScene::loadingImage()
 	_loading->loadImage("FrameLB", "Images/UI/FrameLB.bmp", 17, 17);	 //프레임 모서리부분 키우려면 스케일랜더 사용할 것
 	_loading->loadImage("FrameRB", "Images/UI/FrameRB.bmp", 17, 17);	 //프레임 모서리부분 키우려면 스케일랜더 사용할 것
 	
-	
-	_loading->loadImage("FrameL", "Images/UI/FrameL.bmp", 17, 275);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
-	_loading->loadImage("FrameR", "Images/UI/FrameR.bmp", 17, 275);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
-	_loading->loadImage("FrameT", "Images/UI/FrameT.bmp", 575, 17);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
-	_loading->loadImage("FrameB", "Images/UI/FrameB.bmp", 575, 17);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 		   
+
+	_loading->loadImage("FrameL", "Images/UI/FrameL.bmp", 17, 800);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
+	_loading->loadImage("FrameR", "Images/UI/FrameR.bmp", 17, 800);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
+	_loading->loadImage("FrameT", "Images/UI/FrameT.bmp", 600, 17);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
+	_loading->loadImage("FrameB", "Images/UI/FrameB.bmp", 600, 17);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 		   
 	//#====================================================================================================================#
 
 }
