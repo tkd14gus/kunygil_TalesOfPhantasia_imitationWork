@@ -1,0 +1,19 @@
+﻿  mainGame.cpp
+  maptoolScene.cpp
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(364): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(365): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(366): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(367): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(372): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(373): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(374): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(381): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(382): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(383): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(384): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(389): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(390): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\kunygil_talesofphantasia_imitationwork\windowapi\maptoolscene.cpp(391): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  winMain.cpp
+  코드를 생성하고 있습니다...
+  GameFramework2D.vcxproj -> E:\kunygil_TalesOfPhantasia_imitationWork\WindowAPI\Debug\GameFramework2D.exe

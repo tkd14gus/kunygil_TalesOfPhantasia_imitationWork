@@ -53,6 +53,7 @@ public:
 	void save(char* str);
 	void load(char* str);
 	void frameBoxRender(int left, int top, int width, int height, float scale);			//프레임 랜더시키기 인자는 RectMake랑같음 ※스케일값은 가능하면 정수로
+	void frameBoxRender(RECT rc, float scale);			//프레임 랜더시키기 인자는 RectMake랑같음 ※스케일값은 가능하면 정수로
 
 	void selectLayer1();
 	void selectLayer2();
