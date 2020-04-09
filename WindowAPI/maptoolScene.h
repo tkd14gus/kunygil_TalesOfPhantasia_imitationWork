@@ -52,15 +52,18 @@ public:
 	void uiMove();
 	void save(char* str);
 	void load(char* str);
+
 	void frameBoxRender(int left, int top, int width, int height, float scale);			//프레임 랜더시키기 인자는 RectMake랑같음 ※스케일값은 가능하면 정수로
-	void frameBoxRender(RECT rc, float scale);			//프레임 랜더시키기 인자는 RectMake랑같음 ※스케일값은 가능하면 정수로
+																						//사각형에 프레임 씌우기 인자는 사각형	※scale값은 가능하면 정수로
+	void frameBoxRender(RECT rc, float scale);											//프레임 랜더시키기 인자는 RectMake랑같음 ※스케일값은 가능하면 정수로
+																						//오버로드-> 렉트넣어서 간편하게		※scale < 1 => 제대로 안그려짐
 
 	void selectLayer1();
 	void selectLayer2();
 	void selectLayer3();
 
 	//지형, 오브젝트 세터
-	TERRAIN terrainSelect(int frameX, int frameY, int page);
+	TERRAIN terrainSelect(int frameX, int frameY);
 
 	maptoolScene() {}
 	~maptoolScene() {}

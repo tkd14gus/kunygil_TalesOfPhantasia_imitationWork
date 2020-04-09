@@ -148,8 +148,7 @@ void maptoolScene::render()
 			else
 			{
 				sprintf_s(_fileName, "map%d", _tiles[i].imagePage[0]);
-				IMAGEMANAGER->findImage(_fileName)->scaleFrameRender(getMemDC(), _tiles[i].rc.left, _tiles[i].rc.top, _tiles[i].tileFrameX[0], _tiles[i].tileFrameY[0], 3.0f);
-					//IMAGEMANAGER->findImage("map1")->scaleFrameRender(getMemDC(), _sampleTile[i].rc.left, _sampleTile[i].rc.top,i%10,i/10,3.0f);
+				IMAGEMANAGER->scaleFrameRender(_fileName, getMemDC(), _tiles[i].rc.left, _tiles[i].rc.top, _tiles[i].tileFrameX[0], _tiles[i].tileFrameY[0], 3.0f);
 			}
 		}
 		else { continue; }
@@ -160,7 +159,7 @@ void maptoolScene::render()
 		RECT rc;
 		if (IntersectRect(&rc, &_rcScreen, &_tiles[i].rc))
 		{
-			if (_tiles[i].imagePage[0] == -1 && _tiles[i].imagePage[1] == -1 )
+			if (_tiles[i].imagePage[0] == -1 && _tiles[i].imagePage[1] == -1)
 				//하단 레이어에 그림이 없을 때 빈 사각형을 그려준다.
 				//이미지 추가되면 #FF00FF 사각형으로 칠해버릴 예정 (#FF00FF는 마젠타색)
 			{
@@ -168,7 +167,8 @@ void maptoolScene::render()
 			}
 			else
 			{
-
+				sprintf_s(_fileName, "map%d", _tiles[i].imagePage[1]);
+				IMAGEMANAGER->scaleFrameRender(_fileName, getMemDC(), _tiles[i].rc.left, _tiles[i].rc.top, _tiles[i].tileFrameX[1], _tiles[i].tileFrameY[1], 3.0f);
 			}
 		}
 		else { continue; }
@@ -186,7 +186,8 @@ void maptoolScene::render()
 			}
 			else
 			{
-
+				sprintf_s(_fileName, "map%d", _tiles[i].imagePage[2]);
+				IMAGEMANAGER->scaleFrameRender(_fileName, getMemDC(), _tiles[i].rc.left, _tiles[i].rc.top, _tiles[i].tileFrameX[2], _tiles[i].tileFrameY[2], 3.0f);
 			}
 		}
 		else { continue; }
@@ -269,7 +270,7 @@ void maptoolScene::maptoolSetup()
 	{
 		for (int j = 0; j < TILEX; j++)
 		{
-			_tiles[i * TILEX + j].rc = RectMake(48 * j, 48 * i, TILESIZEX, TILESIZEY);
+			_tiles[i * TILEX + j].rc = RectMake(48 * j, 48 * i, 48, 48);
 		}
 	}
 
@@ -304,7 +305,8 @@ void maptoolScene::setMap()
 					_tiles[i].canMove[0] = _canMove;
 					_tiles[i].tileFrameX[0] = _currentTile.x;
 					_tiles[i].tileFrameY[0] = _currentTile.y;
-					_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y, _currentTile.pageNumber);
+					_tiles[i].imagePage[0] = _currentTile.pageNumber;
+					_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y);
 				}
 				//현재버튼이 오브젝트냐?
 				if (_layer[1])
@@ -312,7 +314,8 @@ void maptoolScene::setMap()
 					_tiles[i].canMove[1] = _canMove;
 					_tiles[i].tileFrameX[1] = _currentTile.x;
 					_tiles[i].tileFrameY[1] = _currentTile.y;
-					_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y, _currentTile.pageNumber);
+					_tiles[i].imagePage[1] = _currentTile.pageNumber;
+					_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y);
 				}
 				//현재버튼이 지우개냐?
 				if (_layer[2])
@@ -320,7 +323,8 @@ void maptoolScene::setMap()
 					_tiles[i].canMove[2] = _canMove;
 					_tiles[i].tileFrameX[2] = _currentTile.x;
 					_tiles[i].tileFrameY[2] = _currentTile.y;
-					_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y, _currentTile.pageNumber);
+					_tiles[i].imagePage[2] = _currentTile.pageNumber;
+					_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y);
 				}
 			}
 		}
@@ -339,16 +343,10 @@ void maptoolScene::save(char* str)
 	DWORD write;
 
 	file = CreateFile(str , GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	/*
-	while(true)
-	{
-		sprintf_s(str, "map%d.map"
-	}
-	*/
+	
 	WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &write, NULL);
 	CloseHandle(file);
 }
-
 void maptoolScene::load(char* str)
 {
 	HANDLE file;
@@ -399,14 +397,12 @@ void maptoolScene::selectLayer1()
 	_layer[1] = false;
 	_layer[2] = false;
 }
-
 void maptoolScene::selectLayer2()
 {
 	_layer[0] = false;
 	_layer[1] = true;
 	_layer[2] = false;
 }
-
 void maptoolScene::selectLayer3()
 {
 	_layer[0] = false;
@@ -414,12 +410,11 @@ void maptoolScene::selectLayer3()
 	_layer[2] = true;
 }
 
-TERRAIN maptoolScene::terrainSelect(int frameX, int frameY, int page)
+TERRAIN maptoolScene::terrainSelect(int frameX, int frameY)
 {
 	TERRAIN t;
 	t.x = frameX;
 	t.y = frameY;
-	t._palettePage = page;
 
 	return t;
 }
