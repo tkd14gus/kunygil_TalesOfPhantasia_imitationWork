@@ -8,6 +8,7 @@ private:
 	bool _tileSetting;
 	bool _canMove;
 	bool _setSaveLoad;		//세이브/로드창 띄워져있는가 없는가 판단
+	bool _slideTool;		//맵툴창이 최대화되어있는지 최소화되어있는지 판단
 	char _fileName[128];	//파일 이름(맵, 맵 데이터)을 받아올 변수
 	int _startFile;			/*파일 명은 0번부터 시작
 							ex) MAP0.map	MAP0.mapdata
@@ -35,10 +36,10 @@ private:
 
 
 
-	RECT _rcDummy1;			//2번째칸	예정사항	
-	RECT _rcDummy2;			//3번째칸	지형 
-	RECT _rcDummy3;			//4번째칸	오브젝트
-	RECT _rcDummy4;			//5번째칸	지우개(오브젝트만 지운다, 지형은 덮어씌운다)
+	RECT _rcDummy1;			//2번째칸	예정사항	지형 
+	RECT _rcDummy2;			//3번째칸	오브젝트
+	RECT _rcDummy3;			//4번째칸	지우개(오브젝트만 지운다, 지형은 덮어씌운다)
+	RECT _rcslide;			//5번째칸	최대화 / 최소화시키기
 
 public:
 	HRESULT init();
@@ -52,7 +53,11 @@ public:
 	void uiMove();
 	void save(char* str);
 	void load(char* str);
-	void frameBoxRender(int left, int top, int width, int height, float scale);			//프레임 랜더시키기 인자는 RectMake랑같음 ※스케일값은 가능하면 정수로
+
+	void frameBoxRender(int left, int top, int width, int height, float scale);			//사각형에 프레임 씌우기 인자는 사각형	※scale값은 가능하면 정수,1미만금지
+	void frameBoxRender(RECT rc, float scale);											//오버로드-> 렉트넣어서 간편하게(렉트밖으로 그려짐)
+
+
 
 	void selectLayer1();
 	void selectLayer2();

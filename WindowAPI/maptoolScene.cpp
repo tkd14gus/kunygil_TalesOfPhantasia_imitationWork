@@ -6,8 +6,10 @@ HRESULT maptoolScene::init()
 	//타일맵 이미지 초기화
 	//IMAGEMANAGER->addFrameImage("tilemap", "tilemap.bmp", 640, 256, SAMPLETILEX, SAMPLETILEY);
 	_rcScreen = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2, 600, 800);
+	_rcPalette = RectMakeCenter((_rcScreen.left + _rcScreen.right) / 2, _rcScreen.bottom - 192, 576, 288);
 	_tileSetting = false;
 	_setSaveLoad = false;
+	_slideTool = true;
 	//맵툴세팅
 	this->maptoolSetup();
 
@@ -29,6 +31,10 @@ void maptoolScene::release()
 
 void maptoolScene::update()
 {
+	
+
+
+
 
 
 	if (_setSaveLoad == true) // 세이브 확인창이 켜졌을때
@@ -62,6 +68,31 @@ void maptoolScene::update()
 	}
 	else
 	{
+		this->maptoolSetup();
+
+		if (_rcPalette.top > WINSIZEY) // 최소화시 화면밖으로 나가면서 이하만큼남앗을때 버튼생성(이동) ※맵툴 셋업보다 밑에있어야함
+		{
+			_rcSaveLoad = RectMake(_rcPalette.left, WINSIZEY - 48, 96, 48);							//맵툴 UI
+			_rcDummy1 = RectMake(_rcPalette.left + 96, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			_rcDummy2 = RectMake(_rcPalette.left + 96 * 2, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			_rcDummy3 = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			_rcslide = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			_rcArrow[0] = RectMake(_rcPalette.left + 96 * 5, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
+			_rcArrow[1] = RectMake(_rcPalette.left + 96 * 5.5f, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
+		}
+
+		if (_slideTool == false && _rcPalette.top < WINSIZEY+17) // 최소화시=>화면밖까지 내리기 (맨위에 일정이상 내려갔을시 버튼이동하는 이프문있음)
+		{
+			_rcPalette.top += 5;
+			_rcPalette.bottom += 5;
+		}
+		else if (_slideTool == true && _rcPalette.top > _rcScreen.bottom - 336) //최대화시=>초기위치까지 올리기 (336은 초기위치)
+		{
+			_rcPalette.top -= 5;
+			_rcPalette.bottom -= 5;
+		}
+
+
 		if (INPUT->GetKeyDown(0x31)) { selectLayer1(); }
 		if (INPUT->GetKeyDown(0x32)) { selectLayer2(); }
 		if (INPUT->GetKeyDown(0x33)) { selectLayer3(); }
@@ -98,6 +129,7 @@ void maptoolScene::update()
 				_tiles[i].rc.right--;
 			}
 		}
+
 		if (INPUT->GetKey(VK_LBUTTON)) this->setMap();
 		if (INPUT->GetKeyDown(VK_LBUTTON))
 		{
@@ -123,11 +155,14 @@ void maptoolScene::update()
 			{
 				//_ctrlSelect = CTRL_OBJECT;
 			}
-			if (PtInRect(&_rcDummy4, _ptMouse))
+			if (PtInRect(&_rcslide, _ptMouse))
 			{
-				//_ctrlSelect = CTRL_ERASER;
+				if (_slideTool == false) { _slideTool = true; }
+				else if (_slideTool == true ) { _slideTool = false; }
 			}
 		}
+	
+
 	}
 }
 
@@ -194,6 +229,7 @@ void maptoolScene::render()
 
 	
 	Rectangle(getMemDC(), _rcPalette);
+
 	for (int i = 0; i < 60; i++)
 	{
 		Rectangle(getMemDC(), _sampleTile[i].rc);
@@ -211,7 +247,7 @@ void maptoolScene::render()
 	Rectangle(getMemDC(), _rcDummy1);
 	Rectangle(getMemDC(), _rcDummy2);
 	Rectangle(getMemDC(), _rcDummy3);
-	Rectangle(getMemDC(), _rcDummy4);
+	Rectangle(getMemDC(), _rcslide);
 
 	if (_layer[0]) { IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
 	if (_layer[1]) { IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
@@ -230,13 +266,14 @@ void maptoolScene::render()
 		Rectangle(getMemDC(), _rcSave);
 		Rectangle(getMemDC(), _rcLoad);
 
-		//frameBoxRender(_rcPalette.left + 480, _rcPalette.top, 96, 48, 1.0f); //함수 확인용
+		frameBoxRender(_rcSaveWindow, 1.0f); //함수 확인용
 	}
+	frameBoxRender(_rcPalette, 1.0f);
 }
 
 void maptoolScene::maptoolSetup()
 {
-	_rcPalette = RectMakeCenter((_rcScreen.left + _rcScreen.right) / 2, _rcScreen.bottom - 192, 576, 288);
+	//_rcPalette = RectMakeCenter((_rcScreen.left + _rcScreen.right) / 2, _rcScreen.bottom - 192, 576, 288);
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -252,7 +289,7 @@ void maptoolScene::maptoolSetup()
 	_rcDummy1 = RectMake(_rcPalette.left + 480, _rcPalette.top + 48, 96, 48);						//맵툴 UI
 	_rcDummy2 = RectMake(_rcPalette.left + 480, _rcPalette.top + 96, 96, 48);						//맵툴 UI
 	_rcDummy3 = RectMake(_rcPalette.left + 480, _rcPalette.top + 144, 96, 48);						//맵툴 UI
-	_rcDummy4 = RectMake(_rcPalette.left + 480, _rcPalette.top + 192, 96, 48);						//맵툴 UI
+	_rcslide = RectMake(_rcPalette.left + 480, _rcPalette.top + 192, 96, 48);						//맵툴 UI
 	_rcArrow[0] = RectMake(_rcPalette.left + 480, _rcPalette.top + 240, 48, 48);					//맵툴 UI
 	_rcArrow[1] = RectMake(_rcPalette.left + 528, _rcPalette.top + 240, 48, 48);					//맵툴 UI
 
@@ -375,6 +412,43 @@ void maptoolScene::frameBoxRender(int left, int top, int width, int height,float
 	//모서리
 
 }
+
+
+
+void maptoolScene::frameBoxRender(RECT rc, float scale)
+{
+	IMAGEMANAGER->findImage("FrameL")->scaleRender(getMemDC(), rc.left-17 * scale, rc.top, 0, 0, 17 * scale, rc.bottom - rc.top, scale);
+	IMAGEMANAGER->findImage("FrameR")->scaleRender(getMemDC(), rc.right, rc.top, 0, 0, 17 * scale, rc.bottom - rc.top, scale);
+	IMAGEMANAGER->findImage("FrameT")->scaleRender(getMemDC(), rc.left, rc.top-17 * scale, 0, 0, rc.right - rc.left, 17 * scale, scale);
+	IMAGEMANAGER->findImage("FrameB")->scaleRender(getMemDC(), rc.left,rc.bottom, 0, 0, rc.right - rc.left, 17 * scale, scale);
+
+
+	//프레임바디
+	IMAGEMANAGER->findImage("FrameLT")->scaleRender(getMemDC(), rc.left-17 * scale, rc.top-17 * scale, scale);
+	IMAGEMANAGER->findImage("FrameRT")->scaleRender(getMemDC(), rc.right, rc.top-17 * scale, scale);
+	IMAGEMANAGER->findImage("FrameLB")->scaleRender(getMemDC(), rc.left-17 * scale, rc.bottom , scale);
+	IMAGEMANAGER->findImage("FrameRB")->scaleRender(getMemDC(), rc.right, rc.bottom, scale);
+	//모서리
+
+}
+
+
+//void maptoolScene::frameBoxRender(RECT rc, float scale)
+//{
+//	IMAGEMANAGER->findImage("FrameL")->scaleRender(getMemDC(), rc.left, rc.top, 0, 0, 17 * scale, rc.bottom - rc.top, scale);
+//	IMAGEMANAGER->findImage("FrameR")->scaleRender(getMemDC(), rc.right - (17 * scale), rc.top, 0, 0, 17 * scale, rc.bottom - rc.top, scale);
+//	IMAGEMANAGER->findImage("FrameT")->scaleRender(getMemDC(), rc.left, rc.top, 0, 0, rc.right - rc.left, 17 * scale, scale);
+//	IMAGEMANAGER->findImage("FrameB")->scaleRender(getMemDC(), rc.left, rc.top + rc.bottom - rc.top - (17 * scale), 0, 0, rc.right - rc.left, 17 * scale, scale);
+//
+//
+//	//프레임바디
+//	IMAGEMANAGER->findImage("FrameLT")->scaleRender(getMemDC(), rc.left, rc.top, scale);
+//	IMAGEMANAGER->findImage("FrameRT")->scaleRender(getMemDC(), rc.right - (17 * scale), rc.top, scale);
+//	IMAGEMANAGER->findImage("FrameLB")->scaleRender(getMemDC(), rc.left, rc.bottom - (17 * scale), scale);
+//	IMAGEMANAGER->findImage("FrameRB")->scaleRender(getMemDC(), rc.right - (17 * scale), rc.bottom - (17 * scale), scale);
+//	//모서리
+//
+//}  //렉트 내부에 그리는것 혹시쓸수도있어서 주석처리
 void maptoolScene::selectLayer1()
 {
 	_layer[0] = true;
