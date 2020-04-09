@@ -58,7 +58,11 @@ void loadingScene::loadingImage()
 	//로딩이 너무 빠르게 진행되서 천천히 돌아가도록 테스트용으로 만들기
 	
 
+<<<<<<< HEAD
 	_loading->loadFrameImage("map1", "map/citytile.bmp", 160, 96, 10, 6); //타일 10x6 이밑에 다른타일 추가해줄 것 
+=======
+	_loading->loadFrameImage("map1", "map/citytile.bmp", 160, 96, 10, 6); //타일 10x6 이밑에 다른타일 추가해줄 것
+>>>>>>> Jiho-Choi
 
 	_loading->loadImage("FrameLT", "Images/UI/FrameLT.bmp", 17, 17);	 //프레임 모서리부분 키우려면 스케일랜더 사용할 것
 	_loading->loadImage("FrameRT", "Images/UI/FrameRT.bmp", 17, 17);	 //프레임 모서리부분 키우려면 스케일랜더 사용할 것

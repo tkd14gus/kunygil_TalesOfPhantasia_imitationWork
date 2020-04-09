@@ -11,6 +11,8 @@ HRESULT maptoolScene::init()
 	//맵툴세팅
 	this->maptoolSetup();
 
+	_palettePage = 1;
+
 	//현재타일 초기화 (지형 = 잔디)
 	_currentTile.x = 3;
 	_currentTile.y = 0;
@@ -145,7 +147,9 @@ void maptoolScene::render()
 			}
 			else
 			{
-
+				sprintf_s(_fileName, "map%d", _tiles[i].imagePage[0]);
+				IMAGEMANAGER->findImage(_fileName)->scaleFrameRender(getMemDC(), _tiles[i].rc.left, _tiles[i].rc.top, _tiles[i].tileFrameX[0], _tiles[i].tileFrameY[0], 3.0f);
+					//IMAGEMANAGER->findImage("map1")->scaleFrameRender(getMemDC(), _sampleTile[i].rc.left, _sampleTile[i].rc.top,i%10,i/10,3.0f);
 			}
 		}
 		else { continue; }
@@ -156,7 +160,7 @@ void maptoolScene::render()
 		RECT rc;
 		if (IntersectRect(&rc, &_rcScreen, &_tiles[i].rc))
 		{
-			if (_tiles[i].imagePage[1] == -1)
+			if (_tiles[i].imagePage[0] == -1 && _tiles[i].imagePage[1] == -1 )
 				//하단 레이어에 그림이 없을 때 빈 사각형을 그려준다.
 				//이미지 추가되면 #FF00FF 사각형으로 칠해버릴 예정 (#FF00FF는 마젠타색)
 			{
@@ -174,7 +178,7 @@ void maptoolScene::render()
 		RECT rc;
 		if (IntersectRect(&rc, &_rcScreen, &_tiles[i].rc))
 		{
-			if (_tiles[i].imagePage[2] == -1)
+			if (_tiles[i].imagePage[0] == -1 && _tiles[i].imagePage[1] == -1 && _tiles[i].imagePage[2] == -1)
 				//하단 레이어에 그림이 없을 때 빈 사각형을 그려준다.
 				//이미지 추가되면 #FF00FF 사각형으로 칠해버릴 예정 (#FF00FF는 마젠타색)
 			{
@@ -195,6 +199,12 @@ void maptoolScene::render()
 		Rectangle(getMemDC(), _sampleTile[i].rc);
 
 		//하단의 샘플타일 랜더 스케일랜더로 16->48픽셀로 확대
+<<<<<<< HEAD
+=======
+		_sampleTile[i].tileFrameX = i % 10;
+		_sampleTile[i].tileFrameY = i / 10;
+		_sampleTile[i].imagePage = _palettePage;
+>>>>>>> Jiho-Choi
 		IMAGEMANAGER->findImage("map1")->scaleFrameRender(getMemDC(), _sampleTile[i].rc.left, _sampleTile[i].rc.top,i%10,i/10,3.0f);
 	}
 
