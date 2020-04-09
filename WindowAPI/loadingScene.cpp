@@ -78,7 +78,20 @@ void loadingScene::loadingImage()
 	_loading->loadImage("FrameL", "Images/UI/FrameL.bmp", 17, 800);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
 	_loading->loadImage("FrameR", "Images/UI/FrameR.bmp", 17, 800);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
 	_loading->loadImage("FrameT", "Images/UI/FrameT.bmp", 600, 17);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 
-	_loading->loadImage("FrameB", "Images/UI/FrameB.bmp", 600, 17);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 		   
+	_loading->loadImage("FrameB", "Images/UI/FrameB.bmp", 600, 17);		 //오버로드된 함수로 원하는만큼만 짤라서 랜더 		 
+
+	_loading->loadImage("activeYes", "Images/UI/activeYes.bmp", 50, 50);
+	_loading->loadImage("deactiveYes", "Images/UI/deactiveYes.bmp", 50, 50);
+	_loading->loadImage("activeNo", "Images/UI/activeNo.bmp", 50, 50);
+	_loading->loadImage("deactiveNo", "Images/UI/deactiveNo.bmp", 50, 50);
+	
+	
+	_loading->loadImage("save", "Images/UI/save.bmp", 81, 36);
+	_loading->loadImage("load", "Images/UI/load.bmp", 81, 36);
+	_loading->loadImage("textbox", "Images/UI/textbox.bmp", 600, 800);
+	_loading->loadImage("activetextbox", "Images/UI/activetextbox.bmp", 600, 800);
+
+	
 	//#====================================================================================================================#
 
 }

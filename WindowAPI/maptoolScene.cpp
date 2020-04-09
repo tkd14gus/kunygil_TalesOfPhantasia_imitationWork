@@ -10,8 +10,17 @@ HRESULT maptoolScene::init()
 	_tileSetting = false;
 	_setSaveLoad = false;
 	_slideTool = true;
+	_setSaveSlot = 3;
 	//맵툴세팅
 	this->maptoolSetup();
+
+	for (int i = 0; i < TILEY; i++)
+	{
+		for (int j = 0; j < TILEX; j++)
+		{
+			_tiles[i * TILEX + j].rc = RectMake(48 * j, 48 * i, 48, 48);
+		}
+	}
 
 	_palettePage = 1;
 
@@ -37,29 +46,40 @@ void maptoolScene::update()
 	{
 		if (INPUT->GetKeyDown(VK_LBUTTON))
 		{
-			if (!PtInRect(&_rcSaveWindow, _ptMouse)) // 세이브 확인창 밖을 클릭하면 세이브창 닫기
-			{
-				_setSaveLoad = false;
-				return;
-			}
-			else if (PtInRect(&_rcSaveSlot[0], _ptMouse)) { sprintf_s(_fileName, "save1.mapsave"); }	//슬롯1번선택
-			else if (PtInRect(&_rcSaveSlot[1], _ptMouse)) { sprintf_s(_fileName, "save2.mapsave"); }	//슬롯2번선택
-			else if (PtInRect(&_rcSaveSlot[2], _ptMouse)) { sprintf_s(_fileName, "save3.mapsave"); }	//슬롯3번선택
-			else if (PtInRect(&_rcSave, _ptMouse))
-			{
-				this->save(_fileName);
-				_setSaveLoad = false;
-				return;
-			}
-			//세이브완료
-			else if (PtInRect(&_rcLoad, _ptMouse))
-			{
-				this->load(_fileName);
-				_setSaveLoad = false;
-				return;
-			}
-			//로드완료
+			
+			if (PtInRect(&_rcSaveSlot[0], _ptMouse)) { _setSaveSlot = 0; }	//슬롯1번선택
+			else if (PtInRect(&_rcSaveSlot[1], _ptMouse)) { _setSaveSlot = 1; }	//슬롯2번선택
+			else if (PtInRect(&_rcSaveSlot[2], _ptMouse)) { _setSaveSlot = 2; }	//슬롯3번선택
 
+			if ( _setSaveSlot == 0) { sprintf_s(_fileName, "save1.mapsave"); }	//슬롯1번파일으로 이름변경
+			else if ( _setSaveSlot == 1) { sprintf_s(_fileName, "save2.mapsave"); }	//슬롯2번파일으로 이름변경
+			else if ( _setSaveSlot == 2) { sprintf_s(_fileName, "save3.mapsave"); }	//슬롯3번파일으로 이름변경
+			
+		}
+		if (INPUT->GetKeyUp(VK_LBUTTON))
+		{
+		if (!PtInRect(&_rcSaveWindow, _ptMouse)) // 세이브 확인창 밖을 클릭하면 세이브창 닫기
+		{
+			_setSaveLoad = false;
+			_setSaveSlot = 3;
+			return;
+		}
+		else if (PtInRect(&_rcSave, _ptMouse))
+		{
+			this->save(_fileName);
+			_setSaveLoad = false;
+			_setSaveSlot = 3;
+			return;
+		}
+		//세이브완료
+		else if (PtInRect(&_rcLoad, _ptMouse))
+		{
+			this->load(_fileName);
+			_setSaveLoad = false;
+			_setSaveSlot = 3;
+			return;
+		}
+		//로드완료
 		}
 	}
 	else
@@ -127,7 +147,7 @@ void maptoolScene::update()
 		}
 
 		if (INPUT->GetKey(VK_LBUTTON)) this->setMap();
-		if (INPUT->GetKeyDown(VK_LBUTTON))
+		if (INPUT->GetKeyUp(VK_LBUTTON))
 		{
 			if (PtInRect(&_rcSaveLoad, _ptMouse))
 			{
@@ -253,19 +273,49 @@ void maptoolScene::render()
 		IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top);
 		IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top);
 	}
+
+	frameBoxRender(_rcPalette, 1.0f);
 	
 	if (_setSaveLoad == true)
 	{
-		Rectangle(getMemDC(), _rcSaveWindow);
-		Rectangle(getMemDC(), _rcSaveSlot[0]);
-		Rectangle(getMemDC(), _rcSaveSlot[1]);
-		Rectangle(getMemDC(), _rcSaveSlot[2]);	
-		Rectangle(getMemDC(), _rcSave);
-		Rectangle(getMemDC(), _rcLoad);
+		frameBoxRender(_rcSaveWindow, 1.0f); //세이브확인창프레임
 
-		frameBoxRender(_rcSaveWindow, 1.0f); //함수 확인용
+		Rectangle(getMemDC(), _rcSaveWindow);
+		IMAGEMANAGER->findImage("textbox")->render(getMemDC(), _rcSaveWindow.left, _rcSaveWindow.top, 0, 0, 
+			_rcSaveWindow.right - _rcSaveWindow.left, _rcSaveWindow.bottom - _rcSaveWindow.top);
+
+		//Rectangle(getMemDC(), _rcSaveSlot[0]);
+		//Rectangle(getMemDC(), _rcSaveSlot[1]);
+		//Rectangle(getMemDC(), _rcSaveSlot[2]);	
+		for (int i = 0; i < 3; i++)
+		{
+			if (PtInRect(&_rcSaveSlot[i], _ptMouse))
+			{
+				IMAGEMANAGER->findImage("activetextbox")->render(getMemDC(), _rcSaveSlot[i].left, _rcSaveSlot[i].top, 0, 0,
+					_rcSaveSlot[i].right - _rcSaveSlot[i].left, _rcSaveSlot[i].bottom - _rcSaveSlot[i].top);
+			}//마우스 가져가면 활성화
+
+			if (_setSaveSlot == i)
+			{
+				IMAGEMANAGER->findImage("activetextbox")->render(getMemDC(), _rcSaveSlot[i].left, _rcSaveSlot[i].top, 0, 0,
+					_rcSaveSlot[i].right - _rcSaveSlot[i].left, _rcSaveSlot[i].bottom - _rcSaveSlot[i].top);
+			}
+		}
+
+
+		FrameRect(getMemDC(), _rcSaveSlot[0], RGB(255, 255, 255));				 //세이브슬롯 구분해주기
+		FrameRect(getMemDC(), _rcSaveSlot[1], RGB(255, 255, 255));				 //세이브슬롯 구분해주기
+		FrameRect(getMemDC(), _rcSaveSlot[2], RGB(255, 255, 255));				 //세이브슬롯 구분해주기
+
+		Rectangle(getMemDC(), _rcSave);
+		frameBoxRender(_rcSave, 0.3f);															//세이브 버튼 이미지..미안..
+		IMAGEMANAGER->findImage("save")->render(getMemDC(), _rcSave.left-1, _rcSave.top-1);
+
+		Rectangle(getMemDC(), _rcLoad);
+		frameBoxRender(_rcLoad, 0.3f);															//로드 버튼 마찬가지로 이미지 지못미..
+		IMAGEMANAGER->findImage("load")->render(getMemDC(), _rcLoad.left-1, _rcLoad.top-1);
+
 	}
-	frameBoxRender(_rcPalette, 1.0f);
 }
 
 void maptoolScene::maptoolSetup()
@@ -295,17 +345,10 @@ void maptoolScene::maptoolSetup()
 	{																							    //세이브로드UI
 		_rcSaveSlot[i] = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2 - 125 + i * 49, 250,50);		    //세이브로드UI
 	}																							    //세이브로드UI
-	_rcSave = RectMakeCenter(WINSIZEX/2-70,WINSIZEY/2+35,80,40);								    //세이브로드UI
-	_rcLoad = RectMakeCenter(WINSIZEX/2+70,WINSIZEY/2+35,80,40);								    //세이브로드UI
+	_rcSave = RectMakeCenter(WINSIZEX/2-70,WINSIZEY/2+35,80,35);								    //세이브로드UI
+	_rcLoad = RectMakeCenter(WINSIZEX/2+70,WINSIZEY/2+35,80,35);								    //세이브로드UI
 
 
-	for (int i = 0; i < TILEY; i++)
-	{
-		for (int j = 0; j < TILEX; j++)
-		{
-			_tiles[i * TILEX + j].rc = RectMake(48 * j, 48 * i, 48, 48);
-		}
-	}
 
 
 
@@ -409,10 +452,10 @@ void maptoolScene::frameBoxRender(int left, int top, int width, int height,float
 
 void maptoolScene::frameBoxRender(RECT rc, float scale)
 {
-	IMAGEMANAGER->findImage("FrameL")->scaleRender(getMemDC(), rc.left-17 * scale, rc.top, 0, 0, 17 * scale, rc.bottom - rc.top, scale);
-	IMAGEMANAGER->findImage("FrameR")->scaleRender(getMemDC(), rc.right, rc.top, 0, 0, 17 * scale, rc.bottom - rc.top, scale);
-	IMAGEMANAGER->findImage("FrameT")->scaleRender(getMemDC(), rc.left, rc.top-17 * scale, 0, 0, rc.right - rc.left, 17 * scale, scale);
-	IMAGEMANAGER->findImage("FrameB")->scaleRender(getMemDC(), rc.left,rc.bottom, 0, 0, rc.right - rc.left, 17 * scale, scale);
+	IMAGEMANAGER->findImage("FrameL")->scaleRender(getMemDC(), rc.left-17 * scale, rc.top-1, 0, 0, 17 * scale, rc.bottom+1 - rc.top, scale);
+	IMAGEMANAGER->findImage("FrameR")->scaleRender(getMemDC(), rc.right, rc.top-1, 0, 0, 17 * scale, rc.bottom+1 - rc.top, scale);
+	IMAGEMANAGER->findImage("FrameT")->scaleRender(getMemDC(), rc.left-1, rc.top-17 * scale, 0, 0, rc.right+1 - rc.left, 17 * scale, scale);
+	IMAGEMANAGER->findImage("FrameB")->scaleRender(getMemDC(), rc.left-1,rc.bottom, 0, 0, rc.right+1 - rc.left, 17 * scale, scale);
 
 
 	//프레임바디
