@@ -16,6 +16,7 @@ private:
 
 	char _editModechar[128] = { 0, };
 	char _fileName[128] = { 0, };	//맵 파일의 이름을 받아올 변수 
+	char _mapName[128] = { 0, };
 									//파일 이름(맵, 맵 데이터)을 받아올 변수
 	char _imageName[128] = { 0, };	//맵 이미지 파일의 이름을 받아올 변수
 	char _dataName[128] = { 0, };	//맵 데이터 파일의 이름을 받아올 변수
