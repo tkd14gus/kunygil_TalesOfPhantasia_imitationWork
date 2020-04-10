@@ -102,6 +102,12 @@ void loadingScene::loadingImage()
 	//#====================================================================================================================#
 	_loading->loadImage("Eraser", "Images/UI/Eraser.bmp", 96, 48);
 
+
+
+	//_loading->loadImage("activateLeft", "Images/UI/activateLeftArrow.bmp", 48, 48);
+	_loading->loadImage("Left" "Images/UI/LeftArrow.bmp", 48, 48);
+	_loading->loadImage("activateRight", "Images/UI/activateRightArrow.bmp", 48, 48);
+	_loading->loadImage("Right" "Images/UI/RightArrow.bmp", 48, 48);
 	//#====================================================================================================================#
 	//#									UI 이미지 종료																	   #
 	//#====================================================================================================================#

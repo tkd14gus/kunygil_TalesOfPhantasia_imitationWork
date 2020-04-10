@@ -375,9 +375,11 @@ void maptoolScene::render()
 	DeleteObject(brush);
 
 	//샘플타일의 번호가 1보다 작은 경우는 없으므로 1보다 큰 경우에만 이전 타일로 넘어가는 화살표를 보여준다.
-	if (_palettePage > 1) { IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
+	if (_palettePage > 1) { IMAGEMANAGER->findImage("activateLeft")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
+	else if (_palettePage == 1) { IMAGEMANAGER->findImage("Left")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
 	//샘플타일의 번호가 최대값보다 큰 경우는 없으므로 최대값보다 작은 경우에만 다음 타일로 넘어가는 화살표를 보여준다.
-	if (_palettePage < SMAPLETILECOUNT) { IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
+	if (_palettePage <= SMAPLETILECOUNT) { IMAGEMANAGER->findImage("activateRight")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
+	else { IMAGEMANAGER->findImage("Right")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
 	
 	
 	if (_setSaveLoad == true)
