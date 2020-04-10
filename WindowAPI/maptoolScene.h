@@ -52,16 +52,21 @@ private:
 						//0번 : LeftArrow, 1번 : RightArrow
 	RECT _rcPalette;	//샘플타일을 그려줄 Rect;
 
+
+	RECT _rcMouse;		//마우스 포인터를 따라다니는 Rect
+						//중심점은 마우스 포인터의 좌표이며
+						//이 Rect가 화면 끝에 닿으면 타일이 움직인다.
+
 	RECT _rcSaveLoad;		//세이브/로드버튼
 	RECT _rcSaveWindow;		//세이브 창
-	RECT _rcSaveSlot[3];		//세이브슬롯3개
+	RECT _rcSaveSlot[3];	//세이브슬롯3개
 	
 	RECT _rcSave;			//세이브로드 UI안에서의 세이브
 	RECT _rcLoad;			//세이브로드 UI안에서의 로드
 
 
 
-	RECT _rcDummy1;			//2번째칸	예정사항	지형 
+	RECT _rcEraser;			//2번째칸	예정사항	지형 
 	RECT _rcDummy2;			//3번째칸	오브젝트
 	RECT _rcDummy3;			//4번째칸	지우개(오브젝트만 지운다, 지형은 덮어씌운다)
 	RECT _rcslide;			//5번째칸	최대화 / 최소화시키기
