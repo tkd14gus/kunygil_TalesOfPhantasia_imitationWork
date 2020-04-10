@@ -1,20 +1,33 @@
 #pragma once
 #include "gameNode.h"
 #include "tileNode.h"
+#define VK_D	0x44
+#define VK_1	0x31
+#define VK_2	0x32
+#define VK_3	0x33
 
 class maptoolScene : public gameNode
 {
 private:
-	bool _editMode;			//맵파일 속성 입력 모드.
-	bool _eitCanMove;
-	bool _editMoveDirect;
-	bool _canMove;
-	bool _setSaveLoad;		//세이브/로드창 띄워져있는가 없는가 판단
-	bool _slideTool;		//맵툴창이 최대화되어있는지 최소화되어있는지 판단
+	bool _editMode;					//맵파일 속성 입력 모드.
+	bool _editCanMove;				//해당 타일로 이동을 변경할 수 있는지 판단해주는 bool 변수
+	bool _editMoveDirect;			//해당 타일에서 이동 방향을 변경할 수 있는지 판단해주는 bool 변수
+	bool _canMove;					//현재 선택한 타일이 이동 가능한 타일인가?
+	bool _direct[4] = { false, };	//현재 선택한 타일에서 어떤 방향으로 이동할 수 있는가?
+									//0:상	1:하	  2:좌  3:우
+	bool _setSaveLoad;				//세이브/로드창 띄워져있는가 없는가 판단
+	bool _slideTool;				//맵툴창이 최대화되어있는지 최소화되어있는지 판단
 
-	int _setSaveSlot;		//세이브 슬롯 활성화
+	int _setSaveSlot;				//세이브 슬롯 활성화
 
-	char _editModechar[128] = { 0, };
+	char _canMoveChar[8] = { 0, };		//에디트 모드에서 사용
+										//각 샘플 타일로 이동할 수 있는지 표시.
+										//0 : 이동 불가		1 : 이동 가능
+	char _moveDirectChar[5] = { 0, };	//에디트 모드에서 사용
+										//각 생플타일에서 어떤 방향으로 이동할 수 있는지를 표시.
+										//0:상  1:하  2:좌  3:우
+
+
 	char _fileName[128] = { 0, };	//맵 파일의 이름을 받아올 변수 
 	char _mapName[128] = { 0, };
 									//파일 이름(맵, 맵 데이터)을 받아올 변수
@@ -24,8 +37,9 @@ private:
 	int _startFile;			/*파일 명은 0번부터 시작
 							ex) MAP0.map	MAP0.mapdata
 							*/
-	unsigned int _palettePage;
-	bool _layer[3];
+
+	unsigned int _palettePage;		//지금 샘플 타일에 몇번째 샘플 이미지가 그려지는지를 저장한 변수.
+	bool _layer[LAYERCOUNT];		//몇 번째 레이어 층인지 표시.
 
 private:
 	tagTile _tiles[TILEX * TILEY];	//인게임화면에 사용되는 타일 총 400개
@@ -62,11 +76,13 @@ public:
 	void maptoolSetup();
 	void setMap();
 	void uiMove();
-	void save(char* str);
-	void load(char* str);
-	void saveMapData(char *str);
-	void loadMapData(char *str);
-	void editCanMove();
+	void save(char* str);				//제작한 맵을 저장하는 함수
+	void load(char* str);				//제작된 맵을 불러오는 함수
+	void saveMapData(char *str);		//샘플타일의 속성을 프로젝트 폴더의 하위 폴더인 MapData에
+										//.mapdata 확장자로 저장된다.
+										//현재 버그로 미동작.
+	void loadMapData(char *str);		//샘플타일의 속성을 프로젝트 폴더의 하위 폴더인 MapData에서
+										//.mapdata 확장자를 불러온다.
 
 
 	void frameBoxRender(int left, int top, int width, int height, float scale);			//팝업창(텍스트등)에 프레임씌우기
@@ -75,9 +91,9 @@ public:
 																						
 
 
-	void selectLayer1();
-	void selectLayer2();
-	void selectLayer3();
+	void selectLayer1();	//1번 레이어 선택
+	void selectLayer2();	//2번 레이어 선택
+	void selectLayer3();	//3번 레이어 선택
 
 	//지형, 오브젝트 세터
 	TERRAIN terrainSelect(int frameX, int frameY);
