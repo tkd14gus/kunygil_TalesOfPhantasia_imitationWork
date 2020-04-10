@@ -2,6 +2,9 @@
 #include "gameNode.h"
 #include "minion.h"  //미니언 클래스 사용하기 위해
 #include "bullet.h"	 //공용총알 클래스 사용하기 위해
+#include "enemy.h"
+
+#define ENEMYAMOUNT 5 //몹 수(임시지정)
 
 //상호참조용 클래스 전방선언
 class player;
@@ -10,10 +13,12 @@ class enemyManager : public gameNode
 {
 private:
 	player* _player;
+	enemy* _enemy;
 
 private:
 	vector<enemy*> _vMinion;
 	vector<enemy*>::iterator _viMinion;
+	vector<int> minionXPos;
 	//vector<enemy*> _vBoss;
 	bullet* _bullet; //공용총알 클래스
 	int _count;
@@ -33,13 +38,16 @@ public:
 
 	//미니언 벡터 가져오기
 	vector<enemy*> getMinion() { return _vMinion; }
+	void setMinion(vector<enemy*> vMinion) { _vMinion = vMinion; }
+
+
+	void setBoss();
 
 	//충돌함수 (미니언들의 총알들, 플레이어)
 	void collision();
 
 	//상호참조시 플레이어 포인터를 받을 셋터함수
 	void setPlayerLink(player* player) { _player = player; }
-
 	enemyManager() {}
 	~enemyManager() {}
 };

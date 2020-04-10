@@ -10,6 +10,7 @@
 HWND		_hWnd;
 HINSTANCE	_hInstance;
 POINT		_ptMouse = { 0, 0 };
+bool		_mouseHover;
 //메인게임 클래스 선언
 mainGame* _mg;
 

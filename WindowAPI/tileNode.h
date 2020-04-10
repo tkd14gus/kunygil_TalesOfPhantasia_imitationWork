@@ -12,8 +12,8 @@
 #define SAMPLETILEY 6
 
 //샘플타일 개수 정의
-//정확한 개수를 모르기 때문에 임의로 3이라 정의
-#define SMAPLETILECOUNT 3
+//샘플 타일은 총 69가지가 있습니다
+#define SMAPLETILECOUNT 69
 
 
 //레이어 개수 정의
@@ -62,5 +62,15 @@ struct tagSampleTile
 struct tagCurrentTile
 {
 	int pageNumber;							//샘플타일 번호
-	int x, y;								//(x, y) 타일
+	int sampleSizeX;						//샘플타일 x사이즈
+	int sampleSizeY;						//샘플타일 y사이즈
+	int sampleStartX;						//드래그시 샘플타일 시작하는 X위치
+	int sampleStartY;						//드래그시 샘플타일 시작하는 Y위치
+	int sampleStartPointX;
+	int samplSetartPointY;
+	int sampleEndX;							//드래그시 샘플타일 끝나는 X위치
+	int sampleEndY;							//드래그시 샘플타일 끝나는 Y위치
+	int sampleEndPointX;
+	int sampleEndPointY;
+	int x, y;						//타일 좌표가 저장될 (x, y배열)
 };
