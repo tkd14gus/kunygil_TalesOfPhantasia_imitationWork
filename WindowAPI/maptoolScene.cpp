@@ -26,8 +26,10 @@ HRESULT maptoolScene::init()
 	_palettePage = 1;
 	sprintf_s(_dataName, "MapData\\map%d.txt", _palettePage);
 	//현재타일 초기화 (지형 = 잔디)
+	_currentTile.pageNumber = _palettePage;
 	_currentTile.x = 3;
 	_currentTile.y = 0;
+
 
 	_layer[0] = true;
 	_layer[1] = false;
@@ -47,6 +49,7 @@ void maptoolScene::update()
 		if (INPUT->GetKeyDown(VK_D))
 		{
 			_editMode = false;
+			sprintf(_dataName, "MapData/map%d.txt", _currentTile.pageNumber);
 			saveMapData(_dataName);
 		}
 		if (INPUT->GetKeyDown(VK_1))
@@ -143,9 +146,10 @@ void maptoolScene::update()
 		//#=====================================================================================================
 		if (INPUT->GetKeyDown(VK_D))
 		{
-			_editMode = true; 
+			//샘플타일 데이터 에디트 
 			loadMapData(_dataName);
-		}	//샘플타일 데이터 에디트 
+			_editMode = true;
+		}
 
 		this->maptoolSetup();
 
@@ -530,9 +534,17 @@ void maptoolScene::saveMapData(char *str)
 	HANDLE file;
 	DWORD write;
 
-	file = CreateFile(str, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	file = CreateFile(str, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	WriteFile(file, _sampleTile, sizeof(tagSampleTile) * (SAMPLETILEX-2) * SAMPLETILEY, &write, NULL);
+	if (file == INVALID_HANDLE_VALUE)
+	{
+		file = CreateFile(str, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		WriteFile(file, _sampleTile, sizeof(tagSampleTile) * (SAMPLETILEX-2) * SAMPLETILEY, &write, NULL);
+	}
+	else
+	{
+		WriteFile(file, _sampleTile, sizeof(tagSampleTile) * (SAMPLETILEX - 2) * SAMPLETILEY, &write, NULL);
+	}
 	CloseHandle(file);
 }
 
@@ -541,9 +553,16 @@ void maptoolScene::loadMapData(char* str)
 	HANDLE file;
 	DWORD read;
 
-	file = CreateFile(str, GENERIC_READ, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	file = CreateFile(str, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	ReadFile(file, _sampleTile, sizeof(tagSampleTile) * (SAMPLETILEX-2) * SAMPLETILEY, &read, NULL);
+	if (file == INVALID_HANDLE_VALUE)
+	{
+		saveMapData(str);
+	}
+	else
+	{
+		ReadFile(file, _sampleTile, sizeof(tagSampleTile) * (SAMPLETILEX - 2) * SAMPLETILEY, &read, NULL);
+	}
 	CloseHandle(file);
 }
 
