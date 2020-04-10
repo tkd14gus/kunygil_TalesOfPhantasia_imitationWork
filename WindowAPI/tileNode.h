@@ -13,7 +13,7 @@
 
 //샘플타일 개수 정의
 //정확한 개수를 모르기 때문에 임의로 3이라 정의
-#define SMAPLETILECOUNT 3
+#define SMAPLETILECOUNT 65
 
 
 //레이어 개수 정의

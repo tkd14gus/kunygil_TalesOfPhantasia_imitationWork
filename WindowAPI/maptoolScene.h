@@ -71,6 +71,9 @@ private:
 	RECT _rcDummy3;			//4번째칸	지우개(오브젝트만 지운다, 지형은 덮어씌운다)
 	RECT _rcslide;			//5번째칸	최대화 / 최소화시키기
 
+	char _pageNum[100];
+	char _pageName[100];
+
 public:
 	HRESULT init();
 	void release();
