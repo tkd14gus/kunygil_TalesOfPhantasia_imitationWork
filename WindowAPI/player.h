@@ -1,56 +1,170 @@
 #pragma once
 #include "gameNode.h"
-#include "bullet.h"
-#include "progressBar.h"
 
-//상호참조용 클래스 전방선언
-class enemyManager;
+enum tagstate
+{
+	pIDLE,
+	pDEAD,
+	pRUN,
+	pWALK,
+	pJUMP,
+	pATTACK,
+	pGUARD,
+	pWIN
+};
 
+struct tagPlayer
+{
+	bool sight;	 //플레이어 시각(0 - 왼쪽, 1 - 오른쪽)
+	int hp;		 //플레이어 hp
+	int attXK, attYK;
+	float x, y;    //플레이어 좌표
+	float inGameX, inGameY;	//전투가 아니라 인게임 내에서 쓸 좌표
+	float speed;
+	float gravity;  //중력값
+
+	image* idle;
+	image * walk;
+	image* run;
+	image* guard;
+
+	image* atkSlash;
+	image* atkstab;
+	image* atkshot;
+	image* atkmelee;
+	image* jump;
+
+	image * dead;
+	image* win;
+
+	RECT rc;  //플레이어 충돌 사각형
+
+	RECT attack;      //공격 충돌 사각형
+	//RECT jumpAttack;  //공격 충돌 사각형
+	//float atkTime;
+};
 class player : public gameNode
 {
 private:
-	enemyManager* _em;  //절대로 동적할당 놉!!
-	//메인게임에서 생성한 EM과 플레이어에서 생성한 EM은
-	//전혀 다른 메모리 주소라서 서로 참조할 수 없다!!!
+	//프레임 이미지 
+	int _frameIndex;
+	int _frameCount;
+
+	tagPlayer _player;
 
 private:
-	image* _rocket;		//로켓(플레이어) 이미지
-	//RECT _rcPlayer;		//플레이어 움직일 렉트
-	missile* _missile;	//미사일 클래스
-	bomb* _bomb;		//폭탄 클래스
+	RECT _stage;		//지형
+	RECT _playerDoorRc;	// 플레이어가 문에 닿았는지 확인해주는 렉트
+	float _enemyCenterX, _enemyCenterY;		//사각형 중앙
 
-	progressBar* _hpBar;	 //체력바
-	float _maxHp, _currentHp; //최대체력, 현재체력
+	//float _immoTime;		//충돌시 무적시간
+
+	//태그 상태
+	tagstate _state;
+
+	int _direct;		// 플레이어가 왼쪽을 보고 있는지
+						//0: 위, 1: 아래, 2: 좌, 3: 우
+
+	bool _isBattle;	//플레이어가 현재 배틀씬인지 아닌지
 
 public:
+
 	HRESULT init();
 	void release();
 	void update();
 	void render();
 
-	//폭탄클래스 가져오기
-	bomb* getBomb() { return _bomb; }
 
-	//폭탄삭제
-	void removeBomb(int index);
 
-	//충돌함수(플레이어총알, 미니언충돌)
-	void collision();
+	//float getenemyCenterx() { return _enemyCenterX; }
+	//float getenemyCentery() { return _enemyCenterY; }
+	//RECT getenemyRect() { return _TESTenemy; }
 
-	//피통깍기
-	void hitDamage(float damage);
+	//enum태그 변화에 따라 변하는 플레이어 모션
+	void animation();
+	tagPlayer* getPlayer() { return &_player; }
+	void setPlayer(tagPlayer player) { _player = player; }
 
-	//세이브로드
-	void save();
-	void load();
+	//플레이어의 X,Y좌표를 주기위한 get함수
+	float getPlayerX() { return _player.inGameX; }
+	float getPlayerY() { return _player.inGameY; }
+	//맵이 이동했을 때 플레이어의 위치를 조정해줘야 하므로 set으로 플레이어의 x,y값과 렉트값을 바꿔준다.
+	void setPlayerRect(int x, int y);// { _playerP._rcPlayerP = RectMakeCenter(x, y, 64, 128); }
+	//플레이어의 렉트를 주기위한 get함수
+	RECT getPlayerRc() { return _player.rc; }
+	//플레이어가 문 근처에 있는지 확인하기 위한 get함수
+	RECT getPlayerDoorRc() { return _playerDoorRc; }
 
-	//플레이어 이미지 가져오기
-	image* getPlayerImg() { return _rocket; }
+	// 플레이어 구조체를 초기화 하는 함수
+	void settingTagPlayer();
+	// 플레이어 도어렉트 플레이어 위치에 따라 위치를 조정해주는 함수.
+	void settingPlayerDoorRect();
 
-	//상호참조시 적매니져 포인터를 넘겨받을 셋터함수
-	void setEMLink(enemyManager* em) { _em = em; }
+
 
 	player() {}
 	~player() {}
+};
+
+class subplayer : public gameNode
+{
+private:
+	//프레임 이미지 
+	int _frameIndex;
+	int _frameCount;
+
+	tagPlayer _player;
+
+	player* _mainplayer;
+
+	//private:
+	//	bool _sight;	 //플레이어 시각(0 - 왼쪽, 1 - 오른쪽)
+	//	int _hp;		 //플레이어 hp
+	//	float _x, _y;    //플레이어 좌표
+	//	float _speed;
+	//	float _gravity;  //중력값
+	//
+	//private:
+	//	image* _idle;
+	//	image * _walk;
+	//	image* _run;
+	//	image* _guard;
+	//
+	//	image* _atkSlash;
+	//	image* _atkstab;
+	//	image* _jump;
+	//	
+	//	image * _dead;
+	//	image* _win;
+
+private:
+	RECT _rcPlayer;		//플레이어 충돌 사각형
+	float _chargeTime;	//화살 장전 시간
+
+	float _distance;	//ai와 적의 거리
+	float _cX, _cY;		//ai사각형 중앙
+	float _speed;		//화살속도
+
+	RECT _arrow;		//화살 사각형
+	image* _arrowImg;		//화살 사각형
+	bool _arrowIs;		//화살 날라가는여부
+	bool _melee;		//근접공격여부
+
+	//태그 상태
+	tagstate _state;
+
+public:
+
+	HRESULT init();
+	void release();
+	void update();
+	void render();
+
+	//enum태그 변화에 따라 변하는 플레이어 모션
+	void animation();
+
+
+	subplayer() {}
+	~subplayer() {}
 };
 

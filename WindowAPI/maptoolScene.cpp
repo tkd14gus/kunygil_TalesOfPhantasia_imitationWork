@@ -516,9 +516,19 @@ void maptoolScene::save(char* str)
 	HANDLE file;
 	DWORD write;
 
-	file = CreateFile(str , GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	
-	WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &write, NULL);
+	//tagTile saveTiles[TILEX * TILEY];
+	for (int i = 0; i < TILEY; i++)
+	{
+		for (int j = 0; j < TILEX; j++)
+		{
+			saveTiles[i * TILEX + j] = _tiles[i * TILEX + j];
+			saveTiles[i * TILEX + j].rc = RectMake(48 * j, 48 * i, 48, 48);
+		}
+	}
+
+	file = CreateFile(str, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	WriteFile(file, saveTiles, sizeof(tagTile) * TILEX * TILEY, &write, NULL);
 	CloseHandle(file);
 }
 void maptoolScene::load(char* str)

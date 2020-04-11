@@ -20,6 +20,7 @@ HRESULT mainGame::init()
 	SCENEMANAGER->addScene("픽셀충돌", new pixelCollisionScene);
 	SCENEMANAGER->addScene("사운드", new soundTestScene);
 	SCENEMANAGER->addScene("맵툴기초", new maptoolScene);
+	SCENEMANAGER->addScene("전투화면", new battleScene);
 	
 
 	/*현재씬 설정*/

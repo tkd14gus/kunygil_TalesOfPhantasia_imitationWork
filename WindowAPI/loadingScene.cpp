@@ -29,7 +29,7 @@ void loadingScene::update()
 	//로딩완료후 화면 변경
 	if (_loading->loadingDone())
 	{
-		SCENEMANAGER->loadScene("맵툴기초");
+		SCENEMANAGER->loadScene("게임화면");
 	}
 }
 
@@ -105,6 +105,25 @@ void loadingScene::loadingImage()
 	//#====================================================================================================================#
 	//#									UI 이미지 종료																	   #
 	//#====================================================================================================================#
+	
+
+
+	//#====================================================================================================================#
+	//#								Charicter, Enemy 이미지																   #
+	//#====================================================================================================================#
+	_loading->loadImage("mummydead", "Images/enemy/mummy/dead.bmp", 64*2,46*2);
+	_loading->loadImage("mummyguard", "Images/enemy/mummy/guard.bmp",64*2,46*2);
+	_loading->loadImage("mummyhit", "Images/enemy/mummy/hit.bmp", 64*2,46*2);
+	_loading->loadImage("mummyidle", "Images/enemy/mummy/idle.bmp", 64*2,46*2);
+
+	_loading->loadFrameImage("mummyatt1", "Images/enemy/mummy/attack1.bmp", 320*2, 46*2, 5, 1);
+	_loading->loadFrameImage("mummyatt2", "Images/enemy/mummy/attack2.bmp", 256*2, 46*2, 4, 1);
+	_loading->loadFrameImage("mummywalk", "Images/enemy/mummy/walk.bmp", 192*2, 46*2, 3, 1);
+	//#====================================================================================================================#
+	//#									inGameScene안에서 쓰일 이미지															   #
+	//#====================================================================================================================#
+	_loading->loadFrameImage("cress", "Images/inGameSprite/cress.bmp", 320, 512, 5, 4);
+
 }
 
 //로딩사운드 함수(이곳에 사운드를 전부 넣어라)
