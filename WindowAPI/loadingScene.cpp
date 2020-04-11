@@ -177,14 +177,16 @@ void loadingScene::loadingImage()
 	//#====================================================================================================================#
 	//#									버튼 이미지																		   #
 	//#====================================================================================================================#
-	_loading->loadImage("Eraser", "Images/UI/Eraser.bmp", 96, 48);
-	_loading->loadImage("EraserOff", "Images/UI/EraserOff.bmp", 96, 48);
+	_loading->loadImage("Eraser", "Images/UI/erase_off.bmp", 96, 48);
+	_loading->loadImage("EraserOff", "Images/UI/erase.bmp", 96, 48);
 	_loading->loadImage("saveLoad", "Images/UI/saveLoad.bmp", 96, 48);
 	_loading->loadImage("saveLoadOff", "Images/UI/saveLoad_off.bmp", 96, 48);
 	_loading->loadImage("terrain", "Images/UI/terrain.bmp", 96, 48);
 	_loading->loadImage("terrainOff", "Images/UI/terrain_off.bmp", 96, 48);
-	_loading->loadImage("object", "Images/UI/object.bmp", 96, 48);
-	_loading->loadImage("objectOff", "Images/UI/object_off.bmp", 96, 48);
+	//_loading->loadImage("object", "Images/UI/object.bmp", 96, 48);
+	//_loading->loadImage("objectOff", "Images/UI/object_off.bmp", 96, 48);
+	_loading->loadImage("home", "Images/UI/home.bmp", 96, 48);
+	_loading->loadImage("homeoff", "Images/UI/home_off.bmp", 96, 48);
 	_loading->loadImage("slide", "Images/UI/slide.bmp", 96, 48);
 	_loading->loadImage("slideOff", "Images/UI/slide_off.bmp", 96, 48);
 

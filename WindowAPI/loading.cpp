@@ -101,6 +101,8 @@ HRESULT loading::init()
 	IMAGEMANAGER->addImage("loadingBarBack", "loadingBarBack.bmp", 600, 20);
 	IMAGEMANAGER->addImage("leftArrow", "Images\\UI\\Arrow0.bmp", 48, 48);
 	IMAGEMANAGER->addImage("rightArrow", "Images\\UI\\Arrow1.bmp", 48, 48);
+	IMAGEMANAGER->addImage("leftArrow5", "Images\\UI\\Arrow5_0.bmp", 48, 48);
+	IMAGEMANAGER->addImage("rightArrow5", "Images\\UI\\Arrow5_1.bmp", 48, 48);
 
 	//로딩바 클래스 초기화
 	_loadingBar = new progressBar;

@@ -168,8 +168,10 @@ void maptoolScene::update()
 			_rcSaveLoad = RectMake(_rcPalette.left, WINSIZEY - 48, 96, 48);							//맵툴 UI
 			_rcEraser = RectMake(_rcPalette.left + 96, WINSIZEY - 48, 96, 48);						//맵툴 UI
 			_rcDummy2 = RectMake(_rcPalette.left + 96 * 2, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcDummy3 = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcslide = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			_rcslide = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			//_rcDummy3 = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			_rcArrow5[0] = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 48, 48);
+			_rcArrow5[1] = RectMake(_rcPalette.left + 96 * 4.5f, WINSIZEY - 48, 48, 48);
 			_rcArrow[0] = RectMake(_rcPalette.left + 96 * 5, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
 			_rcArrow[1] = RectMake(_rcPalette.left + 96 * 5.5f, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
 		}
@@ -241,16 +243,30 @@ void maptoolScene::update()
 			}
 			if (PtInRect(&_rcDummy2, _ptMouse))
 			{
-
+				SCENEMANAGER->loadScene("시작화면");
 			}
-			if (PtInRect(&_rcDummy3, _ptMouse))
-			{
+			//if (PtInRect(&_rcDummy3, _ptMouse))
+			//{
 
-			}
+			//}
 			if (PtInRect(&_rcslide, _ptMouse))
 			{
 				if (_slideTool == false) { _slideTool = true; }
 				else if (_slideTool == true) { _slideTool = false; }
+			}
+			if (PtInRect(&_rcArrow5[0], _ptMouse) && _palettePage - 4 > 1)			//샘플타일의 번호가 1보다 클 때
+			{
+				_palettePage -= 5;													//샘플타일의 번호를 1 감소시키고
+				sprintf_s(_imageName, "map%d", _palettePage);
+				sprintf_s(_dataName, "MapData\\map%d.txt", _palettePage);
+				loadMapData(_dataName);											//해당 샘플타일을 팔레트에 그려준다.
+			}
+			if (PtInRect(&_rcArrow5[1], _ptMouse) && _palettePage + 4 < SMAPLETILECOUNT)			//샘플타일의 번호가 최대값보다 작을 때
+			{
+				_palettePage += 5;													//샘플타일의 번호를 1 증가시키고
+				sprintf_s(_imageName, "map%d", _palettePage);
+				sprintf_s(_dataName, "MapData\\map%d.txt", _palettePage);
+				loadMapData(_dataName);											//해당 샘플타일을 팔레트에 그려준다.
 			}
 			if (PtInRect(&_rcArrow[0], _ptMouse) && _palettePage > 1)			//샘플타일의 번호가 1보다 클 때
 			{
@@ -375,7 +391,7 @@ void maptoolScene::render()
 
 	IMAGEMANAGER->findImage("Eraser")->render(getMemDC(), _rcEraser.left, _rcEraser.top);			//지우개 이미지 출력
 	IMAGEMANAGER->findImage("saveLoadOff")->render(getMemDC(), _rcSaveLoad.left, _rcSaveLoad.top);
-	IMAGEMANAGER->findImage("objectOff")->render(getMemDC(), _rcDummy2.left, _rcDummy2.top);
+	IMAGEMANAGER->findImage("homeoff")->render(getMemDC(), _rcDummy2.left, _rcDummy2.top);
 	IMAGEMANAGER->findImage("slideOff")->render(getMemDC(), _rcslide.left, _rcslide.top);
 	if (PtInRect(&_rcEraser, _ptMouse))
 	{
@@ -387,7 +403,7 @@ void maptoolScene::render()
 	}
 	if (PtInRect(&_rcDummy2, _ptMouse))
 	{
-		IMAGEMANAGER->findImage("object")->render(getMemDC(), _rcDummy2.left, _rcDummy2.top);
+		IMAGEMANAGER->findImage("home")->render(getMemDC(), _rcDummy2.left, _rcDummy2.top);
 	}
 	if (PtInRect(&_rcslide, _ptMouse))
 	{
@@ -397,16 +413,19 @@ void maptoolScene::render()
 	frameBoxRender(_rcPalette, 1.0f);
 
 
-	HBRUSH brush = CreateSolidBrush(RGB(255, 255, 255));
+	HBRUSH brush = CreateSolidBrush(RGB(16, 64, 168));
 	HBRUSH oldBrush = (HBRUSH)SelectObject(getMemDC(), brush);
+	Rectangle(getMemDC(), _rcArrow5[0].left, _rcArrow5[0].top, _rcArrow5[1].right, _rcArrow5[1].bottom);
 	Rectangle(getMemDC(), _rcArrow[0].left, _rcArrow[0].top, _rcArrow[1].right, _rcArrow[1].bottom);
 	SelectObject(getMemDC(), oldBrush);
 	DeleteObject(brush);
 
 	//샘플타일의 번호가 1보다 작은 경우는 없으므로 1보다 큰 경우에만 이전 타일로 넘어가는 화살표를 보여준다.
 	if (_palettePage > 1) { IMAGEMANAGER->findImage("leftArrow")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
+	if (_palettePage > 1) { IMAGEMANAGER->findImage("leftArrow5")->render(getMemDC(), _rcArrow5[0].left, _rcArrow5[0].top); }
 	//샘플타일의 번호가 최대값보다 큰 경우는 없으므로 최대값보다 작은 경우에만 다음 타일로 넘어가는 화살표를 보여준다.
 	if (_palettePage < SMAPLETILECOUNT) { IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
+	if (_palettePage < SMAPLETILECOUNT) { IMAGEMANAGER->findImage("rightArrow5")->render(getMemDC(), _rcArrow5[1].left, _rcArrow5[1].top); }
 
 
 	if (_setSaveLoad == true)
@@ -470,8 +489,10 @@ void maptoolScene::maptoolSetup()
 	_rcSaveLoad = RectMake(_rcPalette.left + 480, _rcPalette.top, 96, 48);							//맵툴 UI 1번칸
 	_rcEraser = RectMake(_rcPalette.left + 480, _rcPalette.top + 48, 96, 48);						//맵툴 UI 2번칸
 	_rcDummy2 = RectMake(_rcPalette.left + 480, _rcPalette.top + 96, 96, 48);						//맵툴 UI 3번칸
-	_rcDummy3 = RectMake(_rcPalette.left + 480, _rcPalette.top + 144, 96, 48);						//맵툴 UI 4번칸
-	_rcslide = RectMake(_rcPalette.left + 480, _rcPalette.top + 192, 96, 48);						//맵툴 UI 5번칸
+	_rcslide = RectMake(_rcPalette.left + 480, _rcPalette.top + 144, 96, 48);						//맵툴 UI 4번칸
+	//_rcDummy3 = RectMake(_rcPalette.left + 480, _rcPalette.top + 192, 96, 48);						//맵툴 UI 5번칸
+	_rcArrow5[0] = RectMake(_rcPalette.left + 480, _rcPalette.top + 192, 48, 48);
+	_rcArrow5[1] = RectMake(_rcPalette.left + 528, _rcPalette.top + 192, 48, 48);
 	_rcArrow[0] = RectMake(_rcPalette.left + 480, _rcPalette.top + 240, 48, 48);					//맵툴 UI 맨아래번칸
 	_rcArrow[1] = RectMake(_rcPalette.left + 528, _rcPalette.top + 240, 48, 48);					//맵툴 UI 맨아래번칸
 

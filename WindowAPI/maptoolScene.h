@@ -38,7 +38,8 @@ private:
 							ex) MAP0.map	MAP0.mapdata
 							*/
 
-	unsigned int _palettePage;		//지금 샘플 타일에 몇번째 샘플 이미지가 그려지는지를 저장한 변수.
+	/////////////////////////////////////////////////////////////////////////////////////////-YSH- unsigned 제거함
+	int _palettePage;		//지금 샘플 타일에 몇번째 샘플 이미지가 그려지는지를 저장한 변수.
 	bool _layer[LAYERCOUNT];		//몇 번째 레이어 층인지 표시.
 
 private:
@@ -50,6 +51,7 @@ private:
 						//이 Rect와 충돌한 타일만 화면에 그려진다.
 	RECT _rcArrow[2];	//샘플타일을 변경할 화살표를 그려주는 Rect
 						//0번 : LeftArrow, 1번 : RightArrow
+	RECT _rcArrow5[2];
 	RECT _rcPalette;	//샘플타일을 그려줄 Rect;
 
 
