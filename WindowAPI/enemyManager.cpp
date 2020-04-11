@@ -2,6 +2,7 @@
 #include "enemyManager.h"
 #include "player.h"
 
+
 HRESULT enemyManager::init()
 {
 	//미니언 생성, 보스, 일반몬스터
@@ -29,7 +30,7 @@ void enemyManager::release()
 void enemyManager::update()
 {
 	//총알 업데이트
-	_bullet->update();
+	//_bullet->update();
 
 	//벡터에 담긴 미니언들 업데이트
 	for (int i = 0; i < _vMinion.size(); i++)
@@ -38,7 +39,7 @@ void enemyManager::update()
 	}
 
 	//미니언 총알발사
-	this->minionBulletFire();
+	//this->minionBulletFire();
 
 	//충돌함수
 	this->collision();
@@ -47,7 +48,7 @@ void enemyManager::update()
 void enemyManager::render()
 {
 	//총알클래스 렌더
-	_bullet->render();
+	//_bullet->render();
 
 	//벡터에 담긴 미니언들 렌더
 	for (int i = 0; i < _vMinion.size(); i++)
@@ -58,19 +59,36 @@ void enemyManager::render()
 
 void enemyManager::setMinion()
 {
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < ENEMYAMOUNT; i++)
 	{
-		for (int j = 0; j < 6; j++)
+		if (i == 0)
 		{
-			enemy* ufo = new minion;
-			ufo->init("ufo", PointMake(50 + j * 100, 100 + i * 100));
-			_vMinion.push_back(ufo);
+			minionXPos.push_back(RANDOM->Range(950, 1000));
 		}
+		if (i > 0)
+		{
+			minionXPos.push_back(RANDOM->Range(minionXPos[i-1]+50, minionXPos[i - 1] + 150));
+		}
+		//minionXPos.push_back(rand() % WINSIZEX / 2 + WINSIZEX / 2 - 50);
+		//위치 안겹치게
+		//100은 대략적인 거리 수치입니다
+		//if (i != 0 && minionXPos[i] - minionXPos[i - 1] < -100 && minionXPos[i] - minionXPos[i - 1] > 100) {
+		//	i--;
+		//	continue;
+		//}
+		enemy* _minion = new minion;
+		_minion->init(PointMake(minionXPos[i], 500));
+		_vMinion.push_back(_minion);
 	}
+}
+
+void enemyManager::setBoss() {
+
 }
 
 void enemyManager::minionBulletFire()
 {
+	/*
 	_viMinion = _vMinion.begin();
 	for (_viMinion; _viMinion != _vMinion.end(); ++_viMinion)
 	{
@@ -83,7 +101,7 @@ void enemyManager::minionBulletFire()
 			RECT rc = (*_viMinion)->getRect();
 			_bullet->fire(rc.left + (rc.right - rc.left) / 2, rc.bottom + 30, -(PI_2), 3.0f);
 		}
-	}
+	}*/
 }
 
 void enemyManager::removeMinion(int index)
@@ -93,18 +111,15 @@ void enemyManager::removeMinion(int index)
 
 void enemyManager::collision()
 {
-	//충돌함수 (미니언들의 총알들, 플레이어)
-	for (int i = 0; i < _bullet->getBullet().size(); i++)
-	{
-		RECT rc;
-		if (IntersectRect(&rc, &_bullet->getBullet()[i].rc,
-			&_player->getPlayerImg()->boudingBox()))
-		{
-			//공용총알 삭제
-			_bullet->removeBullet(i);
-			//플레이어 피통깍기
-			_player->hitDamage(10);
-			break;
-		}
-	}
+	//RECT rc;
+	//for (int i = 0; i < ENEMYAMOUNT; i++) {
+	//	if (IntersectRect(&rc, &_player->getRCPlayer(), &getMinion()[i]->getRect())) {
+	//		//적 개체 멈추기
+	//		getMinion()[i]->setCollision(true);
+	//		//위치재설정
+	//		_player->setRCPlayerLeft(getMinion()[i]->getRect().right);
+	//		//플레이어 피통깎기
+	//		_player->hitDamage(5);
+	//	}
+	//}
 }

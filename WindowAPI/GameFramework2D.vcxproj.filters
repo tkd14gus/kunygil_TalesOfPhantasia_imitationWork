@@ -159,6 +159,9 @@
     <ClInclude Include="tileNode.h">
       <Filter>MainGame\맵툴기초</Filter>
     </ClInclude>
+    <ClInclude Include="battleScene.h">
+      <Filter>MainGame\씬테스트</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -247,6 +250,9 @@
     </ClCompile>
     <ClCompile Include="maptoolScene.cpp">
       <Filter>MainGame\맵툴기초</Filter>
+    </ClCompile>
+    <ClCompile Include="battleScene.cpp">
+      <Filter>MainGame\씬테스트</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
