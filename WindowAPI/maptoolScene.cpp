@@ -165,17 +165,18 @@ void maptoolScene::update()
 
 		if (_rcPalette.top > WINSIZEY) // 최소화시 화면밖으로 나가면서 이하만큼남앗을때 버튼생성(이동) ※맵툴 셋업보다 밑에있어야함
 		{
-			_rcSaveLoad = RectMake(_rcPalette.left, WINSIZEY - 48, 96, 48);							//맵툴 UI
-			_rcEraser = RectMake(_rcPalette.left + 96, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			_rcSaveLoad = RectMake(_rcPalette.left, WINSIZEY - 48, 96, 48);								//맵툴 UI
+			_rcEraser = RectMake(_rcPalette.left + 96, WINSIZEY - 48, 96, 48);							//맵툴 UI
 			_rcDummy2 = RectMake(_rcPalette.left + 96 * 2, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcDummy3 = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcslide = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 96, 48);
+			//_rcDummy3 = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);					//맵툴 UI
+			_rcslide = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
 			//_rcslide = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			//_rcDummy3 = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			//_rcArrow5[0] = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 48, 48);
-			//_rcArrow5[1] = RectMake(_rcPalette.left + 96 * 4.5f, WINSIZEY - 48, 48, 48);
+			//_rcDummy3 = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 96, 48);					//맵툴 UI
+			_rcArrow5[0] = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 48, 48);					//맵툴 UI
+			_rcArrow5[1] = RectMake(_rcPalette.left + 96 * 4.5f, WINSIZEY - 48, 48, 48);				//맵툴 UI
 			_rcArrow[0] = RectMake(_rcPalette.left + 96 * 5, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
 			_rcArrow[1] = RectMake(_rcPalette.left + 96 * 5.5f, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
+			_howcanido = RectMake(_rcPalette.left, WINSIZEY - 48, 576, 48);
 		}
 
 		if (_slideTool == false && _rcPalette.top < WINSIZEY + 17) // 최소화시=>화면밖까지 내리기 (맨위에 일정이상 내려갔을시 버튼이동하는 이프문있음)
@@ -413,11 +414,8 @@ void maptoolScene::render()
 	//}
 	IMAGEMANAGER->findImage("slideOff")->render(getMemDC(), _rcslide.left, _rcslide.top);
 	if (PtInRect(&_rcslide, _ptMouse)) {
+
 		IMAGEMANAGER->findImage("slide")->render(getMemDC(), _rcslide.left, _rcslide.top);
-	}
-	IMAGEMANAGER->findImage("inGameOff")->render(getMemDC(), _rcDummy3.left, _rcDummy3.top);
-	if (PtInRect(&_rcDummy3, _ptMouse)) {
-		IMAGEMANAGER->findImage("inGame")->render(getMemDC(), _rcDummy3.left, _rcDummy3.top);
 	}
 
 	frameBoxRender(_rcPalette, 1.0f);
@@ -481,6 +479,8 @@ void maptoolScene::render()
 
 	//char temp[100];
 	textOut(getMemDC(), 100, 100, _pageNum, RGB(255, 0, 0));
+
+	
 }
 
 void maptoolScene::maptoolSetup()
@@ -500,7 +500,7 @@ void maptoolScene::maptoolSetup()
 	_rcEraser = RectMake(_rcPalette.left + 480, _rcPalette.top + 48, 96, 48);						//맵툴 UI 2번칸
 	_rcDummy2 = RectMake(_rcPalette.left + 480, _rcPalette.top + 96, 96, 48);						//맵툴 UI 3번칸
 	_rcslide = RectMake(_rcPalette.left + 480, _rcPalette.top + 144, 96, 48);						//맵툴 UI 4번칸
-	//_rcDummy3 = RectMake(_rcPalette.left + 480, _rcPalette.top + 192, 96, 48);						//맵툴 UI 5번칸
+	//_rcDummy3 = RectMake(_rcPalette.left + 480, _rcPalette.top + 192, 96, 48);					//맵툴 UI 5번칸
 	_rcArrow5[0] = RectMake(_rcPalette.left + 480, _rcPalette.top + 192, 48, 48);
 	_rcArrow5[1] = RectMake(_rcPalette.left + 528, _rcPalette.top + 192, 48, 48);
 	_rcArrow[0] = RectMake(_rcPalette.left + 480, _rcPalette.top + 240, 48, 48);					//맵툴 UI 맨아래번칸
@@ -531,6 +531,30 @@ void maptoolScene::setMap()
 				break;
 			}
 		}
+	}
+	else if (PtInRect(&_rcArrow[0], _ptMouse))
+	{
+	}
+	else if (PtInRect(&_rcArrow[1], _ptMouse))
+	{
+	}
+	else if (PtInRect(&_rcArrow5[0], _ptMouse))
+	{
+	}
+	else if (PtInRect(&_rcArrow5[1], _ptMouse))
+	{
+	}
+	else if (PtInRect(&_rcslide, _ptMouse))
+	{
+	}
+	else if (PtInRect(&_rcEraser, _ptMouse))
+	{
+	}
+	else if (PtInRect(&_rcDummy2, _ptMouse))
+	{
+	}
+	else if (PtInRect(&_rcDummy3, _ptMouse))
+	{
 	}
 	else
 	{
