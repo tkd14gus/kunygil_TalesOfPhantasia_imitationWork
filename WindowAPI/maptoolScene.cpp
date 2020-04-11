@@ -168,10 +168,12 @@ void maptoolScene::update()
 			_rcSaveLoad = RectMake(_rcPalette.left, WINSIZEY - 48, 96, 48);							//¸ÊÅø UI
 			_rcEraser = RectMake(_rcPalette.left + 96, WINSIZEY - 48, 96, 48);						//¸ÊÅø UI
 			_rcDummy2 = RectMake(_rcPalette.left + 96 * 2, WINSIZEY - 48, 96, 48);						//¸ÊÅø UI
-			_rcslide = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//¸ÊÅø UI
+			_rcDummy3 = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//¸ÊÅø UI
+			_rcslide = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 96, 48);
+			//_rcslide = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//¸ÊÅø UI
 			//_rcDummy3 = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 96, 48);						//¸ÊÅø UI
-			_rcArrow5[0] = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 48, 48);
-			_rcArrow5[1] = RectMake(_rcPalette.left + 96 * 4.5f, WINSIZEY - 48, 48, 48);
+			//_rcArrow5[0] = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 48, 48);
+			//_rcArrow5[1] = RectMake(_rcPalette.left + 96 * 4.5f, WINSIZEY - 48, 48, 48);
 			_rcArrow[0] = RectMake(_rcPalette.left + 96 * 5, WINSIZEY - 48, 48, 48);					//¸ÊÅø UI			   ¿ØÁö ¼öÁ¤ÀÇ¿¹°¨
 			_rcArrow[1] = RectMake(_rcPalette.left + 96 * 5.5f, WINSIZEY - 48, 48, 48);					//¸ÊÅø UI			   ¿ØÁö ¼öÁ¤ÀÇ¿¹°¨
 		}
@@ -405,9 +407,17 @@ void maptoolScene::render()
 	{
 		IMAGEMANAGER->findImage("home")->render(getMemDC(), _rcDummy2.left, _rcDummy2.top);
 	}
-	if (PtInRect(&_rcslide, _ptMouse))
-	{
+	//if (PtInRect(&_rcslide, _ptMouse))
+	//{
+	//	IMAGEMANAGER->findImage("slide")->render(getMemDC(), _rcslide.left, _rcslide.top);
+	//}
+	IMAGEMANAGER->findImage("slideOff")->render(getMemDC(), _rcslide.left, _rcslide.top);
+	if (PtInRect(&_rcslide, _ptMouse)) {
 		IMAGEMANAGER->findImage("slide")->render(getMemDC(), _rcslide.left, _rcslide.top);
+	}
+	IMAGEMANAGER->findImage("inGameOff")->render(getMemDC(), _rcDummy3.left, _rcDummy3.top);
+	if (PtInRect(&_rcDummy3, _ptMouse)) {
+		IMAGEMANAGER->findImage("inGame")->render(getMemDC(), _rcDummy3.left, _rcDummy3.top);
 	}
 
 	frameBoxRender(_rcPalette, 1.0f);

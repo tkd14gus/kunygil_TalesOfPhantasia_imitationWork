@@ -136,7 +136,11 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("map63", "map/cityObject (5).bmp", 160, 96, 10, 6); 
 	_loading->loadFrameImage("map64", "map/cityObject (6).bmp", 160, 96, 10, 6); 
 	_loading->loadFrameImage("map65", "map/cityObject (7).bmp", 160, 96, 10, 6); 
+	_loading->loadFrameImage("map66", "map/cityObject (7).bmp", 160, 96, 10, 6);
+	_loading->loadFrameImage("map67", "map/cityObject (8).bmp", 160, 96, 10, 6);
+	_loading->loadFrameImage("map68", "map/cityObject (9).bmp", 160, 96, 10, 6);
 
+	_loading->loadFrameImage("map69", "map/citytile.bmp", 160, 96, 10, 6);
 	
 
 
@@ -189,6 +193,8 @@ void loadingScene::loadingImage()
 	_loading->loadImage("homeoff", "Images/UI/home_off.bmp", 96, 48);
 	_loading->loadImage("slide", "Images/UI/slide.bmp", 96, 48);
 	_loading->loadImage("slideOff", "Images/UI/slide_off.bmp", 96, 48);
+	_loading->loadImage("inGame", "Images/UI/inGame.bmp", 96, 48);
+	_loading->loadImage("inGameOff", "Images/UI/inGame_off.bmp", 96, 48);
 
 	//#====================================================================================================================#
 	//#									UI 이미지 종료																	   #
