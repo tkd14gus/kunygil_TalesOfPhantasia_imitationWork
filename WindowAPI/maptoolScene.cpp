@@ -477,6 +477,7 @@ void maptoolScene::setMap()
 		{
 			if (PtInRect(&_tiles[i].rc, _ptMouse))
 			{
+				//제일 아래쪽 레이어인가?
 				if (_layer[0])
 				{
 					_tiles[i].canMove[0] = _canMove;
@@ -485,7 +486,7 @@ void maptoolScene::setMap()
 					_tiles[i].imagePage[0] = _currentTile.pageNumber;
 					_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y);
 				}
-				//현재버튼이 오브젝트냐?
+				//중간 레이어인가?
 				if (_layer[1])
 				{
 					_tiles[i].canMove[1] = _canMove;
@@ -494,7 +495,7 @@ void maptoolScene::setMap()
 					_tiles[i].imagePage[1] = _currentTile.pageNumber;
 					_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y);
 				}
-				//현재버튼이 지우개냐?
+				//제일 위쪽의 레이어인가?
 				if (_layer[2])
 				{
 					_tiles[i].canMove[2] = _canMove;
