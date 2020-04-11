@@ -19,6 +19,7 @@ private:
 	bool _slideTool;				//맵툴창이 최대화되어있는지 최소화되어있는지 판단
 
 	int _setSaveSlot;				//세이브 슬롯 활성화
+	char _palettePageNum[128];
 
 	char _canMoveChar[8] = { 0, };		//에디트 모드에서 사용
 										//각 샘플 타일로 이동할 수 있는지 표시.
@@ -38,16 +39,18 @@ private:
 							ex) MAP0.map	MAP0.mapdata
 							*/
 
-	/////////////////////////////////////////////////////////////////////////////////////////-YSH- unsigned 제거함
+
+
+/////////////////////////////////////////////////////////////////////////////////////////-YSH- unsigned 제거함
 	int _palettePage;		//지금 샘플 타일에 몇번째 샘플 이미지가 그려지는지를 저장한 변수.
 	bool _layer[LAYERCOUNT];		//몇 번째 레이어 층인지 표시.
 
 private:
 	tagTile _tiles[TILEX * TILEY];	//인게임화면에 사용되는 타일 총 400개
-	tagTile saveTiles[TILEX * TILEY];  //세이브 할 때 _tiles의 정보를 모두 받고, 위치를 0, 0부터 초기화 시켜서
-									   //저장시키기 위한 변수
 	tagSampleTile _sampleTile[60]; //샘플타일 총 (12-2)*6 = 60개
 	tagCurrentTile _currentTile;	//현재타일
+
+
 private:
 	RECT _rcScreen;		//화면 카메라 Rect;
 						//이 Rect와 충돌한 타일만 화면에 그려진다.
@@ -56,14 +59,13 @@ private:
 	RECT _rcArrow5[2];
 	RECT _rcPalette;	//샘플타일을 그려줄 Rect;
 
-
 	RECT _rcMouse;		//마우스 포인터를 따라다니는 Rect
 						//중심점은 마우스 포인터의 좌표이며
 						//이 Rect가 화면 끝에 닿으면 타일이 움직인다.
 
 	RECT _rcSaveLoad;		//세이브/로드버튼
 	RECT _rcSaveWindow;		//세이브 창
-	RECT _rcSaveSlot[3];	//세이브슬롯3개
+	RECT _rcSaveSlot[3];		//세이브슬롯3개
 	
 	RECT _rcSave;			//세이브로드 UI안에서의 세이브
 	RECT _rcLoad;			//세이브로드 UI안에서의 로드
@@ -75,11 +77,11 @@ private:
 	RECT _rcDummy3;			//4번째칸	지우개(오브젝트만 지운다, 지형은 덮어씌운다)
 	RECT _rcslide;			//5번째칸	최대화 / 최소화시키기
 
-
-	RECT _howcanido;
-
 	char _pageNum[100];
 	char _pageName[100];
+
+	char drag[1024];	//드래그 좌표 미리보기용(차후 지움)
+	char count[1042];
 
 public:
 	HRESULT init();
@@ -89,7 +91,9 @@ public:
 
 	//맵툴세팅
 	void maptoolSetup();
+	void setSample();
 	void setMap();
+	void setAllMap();
 	void uiMove();
 	void save(char* str);				//제작한 맵을 저장하는 함수
 	void load(char* str);				//제작된 맵을 불러오는 함수
