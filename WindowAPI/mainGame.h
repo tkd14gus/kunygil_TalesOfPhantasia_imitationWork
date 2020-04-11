@@ -9,6 +9,7 @@
 #include "pixelCollisionScene.h"
 #include "soundTestScene.h"
 #include "maptoolScene.h"
+#include "battleScene.h"
 
 
 class mainGame : public gameNode
