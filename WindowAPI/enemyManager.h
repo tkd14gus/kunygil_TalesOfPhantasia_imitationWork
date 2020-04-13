@@ -4,7 +4,7 @@
 #include "bullet.h"	 //공용총알 클래스 사용하기 위해
 #include "enemy.h"
 
-#define ENEMYAMOUNT 1 //몹 수(임시지정)
+#define ENEMYAMOUNT 5 //몹 수(임시지정)
 
 //상호참조용 클래스 전방선언
 class player;

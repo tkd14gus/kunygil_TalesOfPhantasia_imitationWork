@@ -77,6 +77,11 @@ private:
 	RECT _rcDummy3;			//4번째칸	지우개(오브젝트만 지운다, 지형은 덮어씌운다)
 	RECT _rcslide;			//5번째칸	최대화 / 최소화시키기
 
+	dragRect _dragRect;		//팔레트 드래그 선택영역 보기
+	drawField _drawField;	//타일 내 드래그 선택영역용
+	RECT selectRect;		//그림이 그려질 위치 미리보기
+
+
 	char _pageNum[100];
 	char _pageName[100];
 
@@ -92,8 +97,9 @@ public:
 	//맵툴세팅
 	void maptoolSetup();
 	void setSample();
-	void setMap();
-	void setAllMap();
+	void setMap();						//일반 채우기
+	void setAllMap();					//전체 채우기	
+	void setFieldMap();					//영역을 지정하여 같은 타일로 채우기
 	void uiMove();
 	void save(char* str);				//제작한 맵을 저장하는 함수
 	void load(char* str);				//제작된 맵을 불러오는 함수

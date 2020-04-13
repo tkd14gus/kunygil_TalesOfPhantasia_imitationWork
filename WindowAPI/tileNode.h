@@ -72,5 +72,30 @@ struct tagCurrentTile
 	int sampleEndY;							//드래그시 샘플타일 끝나는 Y위치
 	int sampleEndPointX;
 	int sampleEndPointY;
-	int x, y;						//타일 좌표가 저장될 (x, y배열)
+	int x[SAMPLETILEX], y[SAMPLETILEY];						//타일 좌표가 저장될 (x, y배열)
 };
+
+//드래그용 렉트
+struct dragRect
+{
+	int endX;
+	int endY;
+	int width;
+	int height;
+	RECT rc;
+};
+
+//드래그용 영역렉트
+struct drawField
+{
+	int startX;			//영역 그리기 시작 x좌표
+	int startY;			//영역 그리기 시작 y좌표
+	int endX;			//영역 그리기 끝 x좌표
+	int endY;			//영역 그리기 끝 y좌표
+	int startIndex;		//그리기를 시작할 타일 번호
+	int sizeX;
+	int sizeY;
+	int dragWidth;
+	int dragHeight;
+};
+

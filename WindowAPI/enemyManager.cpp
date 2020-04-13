@@ -67,7 +67,7 @@ void enemyManager::setMinion()
 		}
 		if (i > 0)
 		{
-			minionXPos.push_back(RANDOM->Range(minionXPos[i-1]+50, minionXPos[i - 1] + 150));
+			minionXPos.push_back(RANDOM->Range(minionXPos[i - 1] + 50, minionXPos[i - 1] + 150));
 		}
 		//minionXPos.push_back(rand() % WINSIZEX / 2 + WINSIZEX / 2 - 50);
 		//위치 안겹치게

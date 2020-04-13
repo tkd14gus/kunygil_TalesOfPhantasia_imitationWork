@@ -22,7 +22,7 @@ HRESULT player::init()
 	//_enemyY = 400;
 
 	// 게임이 시작할 때 전투씬이 아니다.
-	_isBattle = false;
+	_isBattle = true;
 	// 플레이어는 제일 먼저 시작할 때 아래를 바라보고 있다.
 	_direct = 1;
 
@@ -54,7 +54,7 @@ void player::update()
 			_player.attack = RectMake(_player.rc.left - 20, _player.rc.top, _player.attXK, _player.attYK);
 			//_player.jumpAttack = RectMake(_rcPlayer.left - 20, _rcPlayer.top, 50, 160);
 		}
-
+		//공격용 렉트
 		if (_state == pWALK)
 		{
 			_player.speed = 3.0f;
@@ -80,6 +80,19 @@ void player::update()
 				_frameIndex = 0;
 			}
 		}
+		if (INPUT->GetKeyDown('W'))
+		{
+			_player.hp++;
+			_state = pIDLE;
+		}
+		if (INPUT->GetKeyDown('E'))
+		{
+			_player.gravity = 3.f;
+			_state = pHIT;
+			_frameIndex = 0;
+			_frameCount = 0;
+		}
+		//액션테스트
 
 		//sight left & walk left
 		if (INPUT->GetKey(VK_LEFT))
@@ -98,6 +111,23 @@ void player::update()
 				_state = pJUMP;
 				_player.x -= 3;
 			}
+			else if (_state == pHIT)
+			{
+				_state = pHIT;
+			}
+			else if (_state == pWIN)
+			{
+				_state = pWIN;
+			}
+			else if (_state == pDEAD)
+			{
+				_state = pDEAD;
+				if (_frameIndex >= 2)
+				{
+					_player.sight = 0;				 //플레이어 시점 - 왼쪽
+					_player.x -= _player.speed;                    //플레이어 좌표 변화
+				}
+			}
 			else
 			{
 				if (INPUT->GetKey(VK_SHIFT))
@@ -115,12 +145,15 @@ void player::update()
 			}
 		}
 		//state idle
-		if (INPUT->GetKeyUp(VK_LEFT) && _state != pATTACK)
+		if (INPUT->GetKeyUp(VK_LEFT) && _state != pATTACK && _state != pWIN && _state != pDEAD)
 		{
 
 			if (_state != pGUARD)
 			{
-				_state = pIDLE;
+				if (_state != pHIT)
+				{
+					_state = pIDLE;
+				}
 			}
 		}
 		//sight right & walk right
@@ -140,6 +173,23 @@ void player::update()
 				_state = pJUMP;
 				_player.x += 3;
 			}
+			else if (_state == pHIT)
+			{
+				_state = pHIT;
+			}
+			else if (_state == pWIN)
+			{
+				_state = pWIN;
+			}
+			else if (_state == pDEAD)
+			{
+				_state = pDEAD;
+				if (_frameIndex >= 2)
+				{
+					_player.sight = 1;				 //플레이어 시점 - 왼쪽
+					_player.x += _player.speed;                    //플레이어 좌표 변화
+				}
+			}
 			else
 			{
 				if (INPUT->GetKey(VK_SHIFT))
@@ -157,18 +207,21 @@ void player::update()
 			}
 		}
 		//state idle
-		if (INPUT->GetKeyUp(VK_RIGHT) && _state != pATTACK)
+		if (INPUT->GetKeyUp(VK_RIGHT) && _state != pATTACK && _state != pWIN && _state != pDEAD)
 		{
 
 			if (_state != pGUARD)
 			{
-				_state = pIDLE;
+				if (_state != pHIT)
+				{
+					_state = pIDLE;
+				}
 			}
 		}
 
 
 		//test - state attack -> 베기와 찌르기, 점프시에는 점프 베기 찌르기등으로 추가예정
-		if (INPUT->GetKeyDown('Z') && _state != pDEAD && _state != pJUMP)
+		if (INPUT->GetKeyDown('Z') && _state != pDEAD && _state != pJUMP && _state != pHIT && _state != pWIN && _state != pDEAD)
 		{
 			_state = pATTACK;
 			if (_state != pATTACK)
@@ -182,26 +235,29 @@ void player::update()
 		}
 
 		//test - state guard
-		if (INPUT->GetKey('X') && _state != pJUMP)
+		if (INPUT->GetKey('X') && _state != pJUMP && _state != pHIT && _state != pWIN && _state != pDEAD)
 		{
 			_state = pGUARD;
 		}
-		if (INPUT->GetKeyUp('X'))
+		if (INPUT->GetKeyUp('X') && _state != pHIT && _state != pWIN && _state != pDEAD)
 		{
 			_state = pIDLE;
 		}
 
 		// state jump
-		if (INPUT->GetKeyDown('C') && _state != pJUMP)
+		if (INPUT->GetKeyDown('C') && _state != pJUMP && _state != pWIN && _state != pDEAD)
 		{
-			_frameIndex = 0;
-			_state = pJUMP;
-			_player.gravity = 0.0f;
-			_player.attXK = 50;
-			_player.attYK = 130;
+			if (_state != pHIT)
+			{
+				_frameIndex = 0;
+				_state = pJUMP;
+				_player.gravity = 0.0f;
+				_player.attXK = 50;
+				_player.attYK = 130;
+			}
 		}
 
-		if (_state == pJUMP)
+		if (_state == pJUMP || _state == pHIT)
 		{
 			_player.x += cosf(PI / 2) * 1;
 			_player.y += -sinf(PI / 2) * 5 + _player.gravity;
@@ -213,6 +269,8 @@ void player::update()
 		//test - state win
 		if (INPUT->GetKeyDown(VK_F5))
 		{
+			_frameIndex = 0;
+			_frameCount = 0;
 			_state = pWIN;
 		}
 
@@ -223,17 +281,47 @@ void player::update()
 			_state = pIDLE;
 			_player.y = 460;
 		}
+		if (_player.y > 470 && _state == pHIT)
+		{
+
+			_player.y = 470;
+		}
 		//공중에서 다른 모션이 적용되지 않도록 설정
 		if (_player.y < 460 && _state != pJUMP)
 		{
-			_state = pJUMP;
+			if (_state != pHIT)
+			{
+				_state = pJUMP;
+			}
 		}
-
+		if (_player.y < 460 && _state != pHIT)
+		{
+			if (_state != pJUMP)
+			{
+				_state = pHIT;
+			}
+		}
 		//플레이어 사망
 		if (_player.hp <= 0)
 		{
+			if (_state != pDEAD)
+			{
+				_frameCount = 0;
+				IMAGEMANAGER->findImage("dead")->setFrameX(0);
+			}
 			_state = pDEAD;
+			_player.rc = RectMakeCenter(_player.x - 75 / 2, _player.y - 80 / 2, 0, 0);
+
+			if (_frameCount > 200)
+			{
+				SCENEMANAGER->loadScene("시작화면");
+			}
 		}
+		if (_state == pWIN)
+		{
+			_state = pWIN;
+		}
+
 
 
 
@@ -248,80 +336,80 @@ void player::update()
 	}
 	else
 	{
-		// 위쪽키를 눌렀을 때
-		if (INPUT->GetKey(VK_UP))
-		{
-			//움직이면 먼저 상태를 walk로 바꿔준다.
-			_state = pWALK;
-			//움직이는 뱡항을 조정해준다.
-			//위쪽이므로 0.
-			_direct = 0;
-			//위쪽으로 움직이므로 Y좌표만 --시켜준다.
-			_player.inGameY--;
-		}
-		// 위쪽키를 땠을 떄
-		if (INPUT->GetKeyUp(VK_UP))
-		{
-			//움직임을 idle로 바꿔준다.
-			_state = pIDLE;
-		}
-		// 아래쪽키를 눌렀을 때
-		if (INPUT->GetKey(VK_DOWN))
-		{
-			//움직이면 먼저 상태를 walk로 바꿔준다.
-			_state = pWALK;
-			//움직이는 뱡항을 조정해준다.
-			//위쪽이므로 1
-			_direct = 1;
-			//위쪽으로 움직이므로 Y좌표만 ++시켜준다.
-			_player.inGameY++;
-		}
-		// 아래쪽키를 땠을 떄
-		if (INPUT->GetKeyUp(VK_DOWN))
-		{
-			//움직임을 idle로 바꿔준다.
-			_state = pIDLE;
-		}
-		// 왼쪽키를 눌렀을 때
-		if (INPUT->GetKey(VK_LEFT))
-		{
-			//움직이면 먼저 상태를 walk로 바꿔준다.
-			_state = pWALK;
-			//움직이는 뱡항을 조정해준다.
-			//위쪽이므로 2.
-			_direct = 2;
-			//위쪽으로 움직이므로 X좌표만 --시켜준다.
-			_player.inGameX--;
-		}
-		// 왼쪽키를 땠을 떄
-		if (INPUT->GetKeyUp(VK_LEFT))
-		{
-			//움직임을 idle로 바꿔준다.
-			_state = pIDLE;
-		}
-		// 오른쪽키를 눌렀을 때
-		if (INPUT->GetKey(VK_RIGHT))
-		{
-			//움직이면 먼저 상태를 walk로 바꿔준다.
-			_state = pWALK;
-			//움직이는 뱡항을 조정해준다.
-			//위쪽이므로 3.
-			_direct = 3;
-			//위쪽으로 움직이므로 X좌표만 ++시켜준다.
-			_player.inGameX++;
-		}
-		// 오른쪽키를 땠을 떄
-		if (INPUT->GetKeyUp(VK_RIGHT))
-		{
-			//움직임을 idle로 바꿔준다.
-			_state = pIDLE;
-		}
+	// 위쪽키를 눌렀을 때
+	if (INPUT->GetKey(VK_UP))
+	{
+		//움직이면 먼저 상태를 walk로 바꿔준다.
+		_state = pWALK;
+		//움직이는 뱡항을 조정해준다.
+		//위쪽이므로 0.
+		_direct = 0;
+		//위쪽으로 움직이므로 Y좌표만 --시켜준다.
+		_player.inGameY--;
+	}
+	// 위쪽키를 땠을 떄
+	if (INPUT->GetKeyUp(VK_UP))
+	{
+		//움직임을 idle로 바꿔준다.
+		_state = pIDLE;
+	}
+	// 아래쪽키를 눌렀을 때
+	if (INPUT->GetKey(VK_DOWN))
+	{
+		//움직이면 먼저 상태를 walk로 바꿔준다.
+		_state = pWALK;
+		//움직이는 뱡항을 조정해준다.
+		//위쪽이므로 1
+		_direct = 1;
+		//위쪽으로 움직이므로 Y좌표만 ++시켜준다.
+		_player.inGameY++;
+	}
+	// 아래쪽키를 땠을 떄
+	if (INPUT->GetKeyUp(VK_DOWN))
+	{
+		//움직임을 idle로 바꿔준다.
+		_state = pIDLE;
+	}
+	// 왼쪽키를 눌렀을 때
+	if (INPUT->GetKey(VK_LEFT))
+	{
+		//움직이면 먼저 상태를 walk로 바꿔준다.
+		_state = pWALK;
+		//움직이는 뱡항을 조정해준다.
+		//위쪽이므로 2.
+		_direct = 2;
+		//위쪽으로 움직이므로 X좌표만 --시켜준다.
+		_player.inGameX--;
+	}
+	// 왼쪽키를 땠을 떄
+	if (INPUT->GetKeyUp(VK_LEFT))
+	{
+		//움직임을 idle로 바꿔준다.
+		_state = pIDLE;
+	}
+	// 오른쪽키를 눌렀을 때
+	if (INPUT->GetKey(VK_RIGHT))
+	{
+		//움직이면 먼저 상태를 walk로 바꿔준다.
+		_state = pWALK;
+		//움직이는 뱡항을 조정해준다.
+		//위쪽이므로 3.
+		_direct = 3;
+		//위쪽으로 움직이므로 X좌표만 ++시켜준다.
+		_player.inGameX++;
+	}
+	// 오른쪽키를 땠을 떄
+	if (INPUT->GetKeyUp(VK_RIGHT))
+	{
+		//움직임을 idle로 바꿔준다.
+		_state = pIDLE;
+	}
 
-		// 플레이어의 위치를 계속 초기화 한다.
-		_player.rc = RectMakeCenter(_player.inGameX, _player.inGameY, 64, 128);
-		// 플레이어의 문 충돌용 렉트 위치를 계속 초기화 한다.
-		this->settingPlayerDoorRect();
-		//_playerDoorRcP = RectMakeCenter(_player.inGameX, _player.inGameY, 64 + 48 * 2, 128 + 48 * 2);
+	// 플레이어의 위치를 계속 초기화 한다.
+	_player.rc = RectMakeCenter(_player.inGameX, _player.inGameY, 64, 128);
+	// 플레이어의 문 충돌용 렉트 위치를 계속 초기화 한다.
+	this->settingPlayerDoorRect();
+	//_playerDoorRcP = RectMakeCenter(_player.inGameX, _player.inGameY, 64 + 48 * 2, 128 + 48 * 2);
 
 	}
 
@@ -344,8 +432,11 @@ void player::render()
 											//배틀일 땐 애니메이션으로 렌더하니까 뒤에 둔다.
 
 		char chr1[100];
-		sprintf(chr1, "player hp : %d", _player.hp);
+		sprintf(chr1, "player hp : %d", _frameCount);
 		TextOut(getMemDC(), 100, 720, chr1, strlen(chr1));
+
+		sprintf(chr1, "player hp : %d", _player.hp);
+		TextOut(getMemDC(), 100, 680, chr1, strlen(chr1));
 	}
 	else
 	{
@@ -513,9 +604,6 @@ void player::render()
 		}
 
 	}
-
-
-
 }
 
 void player::animation()
@@ -529,8 +617,8 @@ void player::animation()
 			//좌
 			if (_player.sight == false)
 			{
-				IMAGEMANAGER->frameRender("mIdle", getMemDC(), _player.rc.left, _player.rc.top);
-				_frameCount++;
+				IMAGEMANAGER->frameRender("mIdle", getMemDC(), _player.rc.left, _player.rc.top + 3);
+				//_frameCount++;
 				_player.idle->setFrameY(0);
 				if (_frameCount % 8 == 0)
 				{
@@ -543,10 +631,10 @@ void player::animation()
 				}
 			}
 			//우
-			if (_player.sight == true)
+			else if (_player.sight == true)
 			{
-				IMAGEMANAGER->frameRender("mIdle", getMemDC(), _player.rc.left, _player.rc.top);
-				_frameCount++;
+				IMAGEMANAGER->frameRender("mIdle", getMemDC(), _player.rc.left, _player.rc.top + 3);
+				//_frameCount++;
 				_player.idle->setFrameY(1);
 				if (_frameCount % 8 == 0)
 				{
@@ -563,8 +651,8 @@ void player::animation()
 		case pWALK:		//걷기
 			if (_player.sight == false)
 			{
-				IMAGEMANAGER->frameRender("walk", getMemDC(), _player.rc.left - 10, _player.rc.top);
-				_frameCount++;
+				IMAGEMANAGER->frameRender("walk", getMemDC(), _player.rc.left - 10, _player.rc.top + 2);
+				//_frameCount++;
 				_player.walk->setFrameY(0);
 				if (_frameCount % 8 == 0)
 				{
@@ -577,10 +665,10 @@ void player::animation()
 					_player.walk->setFrameX(_frameIndex);
 				}
 			}
-			if (_player.sight == true)
+			else if (_player.sight == true)
 			{
-				IMAGEMANAGER->frameRender("walk", getMemDC(), _player.rc.left + 10, _player.rc.top);
-				_frameCount++;
+				IMAGEMANAGER->frameRender("walk", getMemDC(), _player.rc.left + 10, _player.rc.top + 2);
+				//_frameCount++;
 				_player.walk->setFrameY(1);
 				if (_frameCount % 8 == 0)
 				{
@@ -597,8 +685,8 @@ void player::animation()
 		case pRUN:		//달리기
 			if (_player.sight == false)
 			{
-				IMAGEMANAGER->frameRender("run", getMemDC(), _player.rc.left - 10, _player.rc.top - 10);
-				_frameCount++;
+				IMAGEMANAGER->frameRender("run", getMemDC(), _player.rc.left - 10, _player.rc.top - 5);
+				//_frameCount++;
 				_player.run->setFrameY(1);
 				if (_frameCount % 8 == 0)
 				{
@@ -611,10 +699,10 @@ void player::animation()
 					_player.run->setFrameX(_frameIndex);
 				}
 			}
-			if (_player.sight == true)
+			else if (_player.sight == true)
 			{
-				IMAGEMANAGER->frameRender("run", getMemDC(), _player.rc.left, _player.rc.top - 10);
-				_frameCount++;
+				IMAGEMANAGER->frameRender("run", getMemDC(), _player.rc.left, _player.rc.top - 5);
+				//_frameCount++;
 				_player.run->setFrameY(0);
 				if (_frameCount % 8 == 0)
 				{
@@ -631,8 +719,8 @@ void player::animation()
 		case pATTACK:	//공격은 한번공격후 다시 대기상태로 들어가게 했음
 			if (_player.sight == false)
 			{
-				IMAGEMANAGER->frameRender("slash", getMemDC(), _player.rc.left - 15, _player.rc.top - 20);
-				_frameCount++;
+				IMAGEMANAGER->frameRender("slash", getMemDC(), _player.rc.left - 15, _player.rc.top - 10);
+				//_frameCount++;
 				_player.atkSlash->setFrameY(0);
 				if (_frameCount % 8 == 0)
 				{
@@ -647,10 +735,10 @@ void player::animation()
 					_player.atkSlash->setFrameX(_frameIndex);
 				}
 			}
-			if (_player.sight == true)
+			else if (_player.sight == true)
 			{
-				IMAGEMANAGER->frameRender("slash", getMemDC(), _player.rc.left - 10, _player.rc.top - 15);
-				_frameCount++;
+				IMAGEMANAGER->frameRender("slash", getMemDC(), _player.rc.left - 10, _player.rc.top - 10);
+				//_frameCount++;
 				_player.atkSlash->setFrameY(1);
 				if (_frameCount % 8 == 0)
 				{
@@ -669,7 +757,7 @@ void player::animation()
 			if (_player.sight == false)
 			{
 				IMAGEMANAGER->frameRender("jump", getMemDC(), _player.rc.left, _player.rc.top - 20);
-				_frameCount++;
+				//_frameCount++;
 				_player.jump->setFrameY(1);
 				if (_frameCount % 15 == 0)
 				{
@@ -683,10 +771,10 @@ void player::animation()
 					_player.jump->setFrameX(_frameIndex);
 				}
 			}
-			if (_player.sight == true)
+			else if (_player.sight == true)
 			{
 				IMAGEMANAGER->frameRender("jump", getMemDC(), _player.rc.left, _player.rc.top - 20);
-				_frameCount++;
+				//_frameCount++;
 				_player.jump->setFrameY(0);
 				if (_frameCount % 15 == 0)
 				{
@@ -705,7 +793,7 @@ void player::animation()
 			if (_player.sight == false)
 			{
 				IMAGEMANAGER->frameRender("guard", getMemDC(), _player.rc.left, _player.rc.top);
-				_frameCount++;
+				//_frameCount++;
 				_player.atkSlash->setFrameY(0);
 				if (_frameCount % 8 == 0)
 				{
@@ -719,10 +807,10 @@ void player::animation()
 					_player.atkSlash->setFrameX(_frameIndex);
 				}
 			}
-			if (_player.sight == true)
+			else if (_player.sight == true)
 			{
 				IMAGEMANAGER->frameRender("guard", getMemDC(), _player.rc.left, _player.rc.top);
-				_frameCount++;
+				//_frameCount++;
 				_player.atkSlash->setFrameY(1);
 				if (_frameCount % 8 == 0)
 				{
@@ -738,8 +826,9 @@ void player::animation()
 		case pDEAD:		//사망시에는 hp = 0이되어 사망하며 유령상태 유지 - 이후 재시작등 수정 가능
 			if (_player.sight == false)
 			{
-				IMAGEMANAGER->frameRender("dead", getMemDC(), _player.rc.left, _player.rc.top);
-				_frameCount++;
+				if (_frameIndex >= 2) { IMAGEMANAGER->frameRender("dead", getMemDC(), _player.rc.left, _player.rc.top + 10); }
+				else { IMAGEMANAGER->frameRender("dead", getMemDC(), _player.rc.left, _player.rc.top + 18); }
+				//_frameCount++;
 				_player.dead->setFrameY(0);
 				if (_frameCount % 30 == 0)
 				{
@@ -752,10 +841,11 @@ void player::animation()
 					_player.dead->setFrameX(_frameIndex);
 				}
 			}
-			if (_player.sight == true)
+			else if (_player.sight == true)
 			{
-				IMAGEMANAGER->frameRender("dead", getMemDC(), _player.rc.left, _player.rc.top);
-				_frameCount++;
+				if (_frameIndex >= 2) { IMAGEMANAGER->frameRender("dead", getMemDC(), _player.rc.left, _player.rc.top + 10); }
+				else { IMAGEMANAGER->frameRender("dead", getMemDC(), _player.rc.left + 20, _player.rc.top + 18); }
+				//_frameCount++;
 				_player.dead->setFrameY(1);
 				if (_frameCount % 30 == 0)
 				{
@@ -771,83 +861,147 @@ void player::animation()
 			break;
 		case pWIN:
 			IMAGEMANAGER->frameRender("win", getMemDC(), _player.rc.left - 20, _player.rc.top - 54);
-			_frameCount++;
+			//_frameCount++;
 			_player.win->setFrameY(0);
 			if (_frameCount % 20 == 0)
 			{
 				IMAGEMANAGER->findImage("win")->setFrameY(0);
 				_frameIndex++;
 				_player.win->setFrameX(_frameIndex);
+				if (_frameIndex == 7)
+				{
+					SCENEMANAGER->loadScene("게임화면");
+				}
 			}
+			break;
+		case pHIT:		//히트시 날아가서 눕고 프레임 올라가는속도 / 인덱스0,1위치차이 등 예외적용한게 많음
+			if (_frameIndex == 0) { IMAGEMANAGER->frameRender("hit", getMemDC(), _player.rc.left, _player.rc.top + 10); }
+			else { IMAGEMANAGER->frameRender("hit", getMemDC(), _player.rc.left, _player.rc.top + 3); }
+			_player.hit->setFrameY(0);
+			if (_frameCount % 80 < 50 && _frameIndex == 0) { _player.x--; }
+			if (_frameCount == 80 || _frameCount >= 120)
+			{
+				_frameIndex++;
+				if (_frameIndex > 2)
+				{
+					_frameIndex = 0;
+					_state = pIDLE;
+					_player.y = 460;
+				}
+				_player.hit->setFrameX(_frameIndex);
+			}
+
 			break;
 		}
 	}
 	//배틀이 아닐 때
 	else
 	{
-	// 플레이어가 걷는 상태라면
-	if (_state == pWALK)
-	{
-		// _directP가 바라보는 방향인데 바라보는 방향에 따라
-		// 프레임이미지의 Y좌표가 달라짐.
-		switch (_direct)
+		// 플레이어가 걷는 상태라면
+		if (_state == pWALK)
 		{
-			//위쪽키를 눌렀을 떄
-		case 0:
-			if (_frameCount % 8 == 0)
+			// _directP가 바라보는 방향인데 바라보는 방향에 따라
+			// 프레임이미지의 Y좌표가 달라짐.
+			switch (_direct)
 			{
-				IMAGEMANAGER->findImage("cress")->setFrameY(0);
-				_frameIndex++;
-				if (_frameIndex > 5)
+				//위쪽키를 눌렀을 떄
+			case 0:
+				if (_frameCount % 8 == 0)
 				{
-					_frameIndex = 0;
+					IMAGEMANAGER->findImage("cress")->setFrameY(0);
+					_frameIndex++;
+					if (_frameIndex > 5)
+					{
+						_frameIndex = 0;
+					}
+					IMAGEMANAGER->findImage("cress")->setFrameX(_frameIndex);
 				}
-				IMAGEMANAGER->findImage("cress")->setFrameX(_frameIndex);
-			}
-			break;
-			//아래쪽키를 눌렀을 떄
-		case 1:
-			if (_frameCount % 8 == 0)
-			{
-				IMAGEMANAGER->findImage("cress")->setFrameY(1);
-				_frameIndex++;
-				if (_frameIndex > 5)
+				break;
+				//아래쪽키를 눌렀을 떄
+			case 1:
+				if (_frameCount % 8 == 0)
 				{
-					_frameIndex = 0;
+					IMAGEMANAGER->findImage("cress")->setFrameY(1);
+					_frameIndex++;
+					if (_frameIndex > 5)
+					{
+						_frameIndex = 0;
+					}
+					IMAGEMANAGER->findImage("cress")->setFrameX(_frameIndex);
 				}
-				IMAGEMANAGER->findImage("cress")->setFrameX(_frameIndex);
-			}
-			break;
-			//왼쪽키를 눌렀을 떄
-		case 2:
-			if (_frameCount % 8 == 0)
-			{
-				IMAGEMANAGER->findImage("cress")->setFrameY(2);
-				_frameIndex++;
-				if (_frameIndex > 5)
+				break;
+				//왼쪽키를 눌렀을 떄
+			case 2:
+				if (_frameCount % 8 == 0)
 				{
-					_frameIndex = 0;
+					IMAGEMANAGER->findImage("cress")->setFrameY(2);
+					_frameIndex++;
+					if (_frameIndex > 5)
+					{
+						_frameIndex = 0;
+					}
+					IMAGEMANAGER->findImage("cress")->setFrameX(_frameIndex);
 				}
-				IMAGEMANAGER->findImage("cress")->setFrameX(_frameIndex);
-			}
-			break;
-			//오른쪽키를 눌렀을 때
-		case 3:
-			if (_frameCount % 8 == 0)
-			{
-				IMAGEMANAGER->findImage("cress")->setFrameY(3);
-				_frameIndex++;
-				if (_frameIndex > 5)
+				break;
+				//오른쪽키를 눌렀을 때
+			case 3:
+				if (_frameCount % 8 == 0)
 				{
-					_frameIndex = 0;
+					IMAGEMANAGER->findImage("cress")->setFrameY(3);
+					_frameIndex++;
+					if (_frameIndex > 5)
+					{
+						_frameIndex = 0;
+					}
+					IMAGEMANAGER->findImage("cress")->setFrameX(_frameIndex);
 				}
-				IMAGEMANAGER->findImage("cress")->setFrameX(_frameIndex);
+				break;
 			}
-			break;
 		}
 	}
+}
+
+
+void player::setAction(int pattern)
+{
+	tagstate state;
+	if (pattern == 1) { state = pIDLE; }
+	else if (pattern == 2) { state = pRUN; }
+	else if (pattern == 3) { state = pHIT; }
+	else if (pattern == 4) { state = pWALK; }
+	else if (pattern == 5) { state = pJUMP; }
+	else if (pattern == 6) { state = pATTACK; }
+	else if (pattern == 7) { state = pGUARD; }
+	else if (pattern == 8) { state = pDEAD; }
+	else if (pattern == 8) { state = pWIN; }
+	if (_state != state)
+	{
+		_frameIndex = 0;
+	}
+	_state = state;
+}
+
+void player::playerWin()
+{
+	if (_state != pWIN && !(_state == pJUMP || _state))
+	{
+		_frameIndex = 0;
+		_frameCount = 0;
+		_state = pWIN;
 	}
 }
+void player::playerHit()
+{
+	_player.hp--;
+	if (_player.hp > 0)
+	{
+		_player.gravity = 3.f;
+		_state = pHIT;
+	}
+	_frameIndex = 0;
+	_frameCount = 0;
+}
+
 
 void player::setPlayerRect(int x, int y)
 {
@@ -855,6 +1009,7 @@ void player::setPlayerRect(int x, int y)
 	_player.inGameY = y;
 	_player.rc = RectMakeCenter(_player.inGameX, _player.inGameY, 64, 128);
 }
+
 
 void player::settingTagPlayer()
 {
@@ -870,10 +1025,12 @@ void player::settingTagPlayer()
 	//_player.atkstab = IMAGEMANAGER->addFrameImage("stab", "Images/mainplayer/atk_stab.bmp", 396, 120, 4, 2);
 	_player.jump = IMAGEMANAGER->addFrameImage("jump", "Images/mainplayer/jump_slash.bmp", 445, 262, 5, 2);
 
-	_player.dead = IMAGEMANAGER->addFrameImage("dead", "Images/mainplayer/dead.bmp", 264, 156, 4, 2);
+	_player.dead = IMAGEMANAGER->addFrameImage("dead", "Images/mainplayer/dead.bmp", 250, 120, 4, 2);
 
 	_player.win = IMAGEMANAGER->addFrameImage("win", "Images/mainplayer/victory.bmp", 401, 157, 4, 1);
 
+	//히트모션 추가 - 구민본
+	_player.hit = IMAGEMANAGER->addFrameImage("hit", "Images/mainplayer/hit.bmp", 137, 140, 2, 2);
 
 	//플레이어 초기 좌표 설정
 	_player.x = 200;
@@ -1103,9 +1260,9 @@ void subplayer::update()
 		_state = pWALK;
 		_player.x++;
 	}
-	else if(_distance)
+	else if (_distance)
 	{
-		
+
 	}
 
 	//공격
@@ -1194,7 +1351,7 @@ void subplayer::animation()
 	{
 	case pIDLE:		//대기상태
 		IMAGEMANAGER->frameRender("subIdle", getMemDC(), _rcPlayer.left - 10, _rcPlayer.top - 30);
-		_frameCount++;
+		//_frameCount++;
 		_player.idle->setFrameY(0);
 		if (_frameCount % 8 == 0)
 		{
@@ -1208,7 +1365,7 @@ void subplayer::animation()
 		break;
 	case pWALK:		//걷기
 		IMAGEMANAGER->frameRender("subWalk", getMemDC(), _rcPlayer.left - 20, _rcPlayer.top - 30);
-		_frameCount++;
+		//_frameCount++;
 		_player.walk->setFrameY(0);
 		if (_frameCount % 8 == 0)
 		{
@@ -1226,7 +1383,7 @@ void subplayer::animation()
 		if (_melee == false)
 		{
 			IMAGEMANAGER->frameRender("subShot", getMemDC(), _rcPlayer.left - 10, _rcPlayer.top - 30);
-			_frameCount++;
+			//_frameCount++;
 			_player.atkshot->setFrameY(0);
 			if (_frameCount % 8 == 0)
 			{
@@ -1243,7 +1400,7 @@ void subplayer::animation()
 		else if (_melee = true)
 		{
 			IMAGEMANAGER->frameRender("subMelee", getMemDC(), _rcPlayer.left - 10, _rcPlayer.top - 30);
-			_frameCount++;
+			//_frameCount++;
 			_player.atkmelee->setFrameY(0);
 			if (_frameCount % 8 == 0)
 			{

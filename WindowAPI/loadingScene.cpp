@@ -29,7 +29,9 @@ void loadingScene::update()
 	//로딩완료후 화면 변경
 	if (_loading->loadingDone())
 	{
-		SCENEMANAGER->loadScene("게임화면");
+		//SCENEMANAGER->loadScene("게임화면");
+		SCENEMANAGER->loadScene("맵툴기초");
+		//SCENEMANAGER->loadScene("전투화면");
 	}
 }
 
@@ -205,6 +207,7 @@ void loadingScene::loadingImage()
 	//#									UI 이미지 종료																	   #
 	//#====================================================================================================================#
 
+
 	//#====================================================================================================================#
 	//#								Charicter, Enemy 이미지																   #
 	//#====================================================================================================================#
@@ -223,9 +226,6 @@ void loadingScene::loadingImage()
 	_loading->loadImage("stateWindow", "Images/inGameSprite/stateWIndow.bmp", WINSIZEX, WINSIZEY);
 
 }
-
-
-	
 
 
 //로딩사운드 함수(이곳에 사운드를 전부 넣어라)
