@@ -7,7 +7,7 @@ class inGameScene : public gameNode
 {
 private:
 	player* _player; //플레이어 클래스
-
+	subplayer* _subPlayer;
 private:
 	tagTile _tiles[TILEX * TILEY];	//인게임화면에 사용되는 타일 총 400개
 	RECT _rcScreen;		//화면 카메라 Rect;

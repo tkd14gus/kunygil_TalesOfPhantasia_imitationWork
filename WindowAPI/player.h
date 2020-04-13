@@ -3,21 +3,32 @@
 
 enum tagstate
 {
-	pIDLE,
-	pDEAD,
-	pRUN,
-	pWALK,
-	pJUMP,
-	pATTACK,
-	pGUARD,
-	pWIN
+	pIDLE,		//대기
+	pDEAD,		//사망
+	pRUN,		//달리기
+	pWALK,		//걷기
+	pJUMP,		//점프
+	pATTACK,	//공격
+	pGUARD,		//방어
+	pWIN		//승리
+};
+
+struct ARROW	//화살 구조체
+{
+	bool _bShoot;		//화살을 발사했는지 판단
+	float _speed;		//화살이 날아가는 속도
+	float _chargeTime;	//화살 장전 시간
+
+	POINT _point;	//화살의 초기 (x, y) 좌표
+	RECT _rc;		//화살 Rect
+	image* _img;	//화살 이미지
 };
 
 struct tagPlayer
 {
-	bool sight;	 //플레이어 시각(0 - 왼쪽, 1 - 오른쪽)
+	bool sight;			//플레이어 시각(0 - 왼쪽, 1 - 오른쪽)
 	int lv;				//플레이어 LV
-	int maxHp, hp;		 //플레이어 hp
+	int maxHp, hp;		//플레이어 hp
 	int maxTp, tp;		// 플레이어 tp
 	int attXK, attYK;
 	float x, y;    //플레이어 좌표
@@ -25,19 +36,19 @@ struct tagPlayer
 	float speed;
 	float gravity;  //중력값
 
-	image* idle;
-	image * walk;
-	image* run;
-	image* guard;
+	image* idle;	//대기 이미지
+	image* walk;	//걷기 이미지
+	image* run;		//달리기 이미지
+	image* guard;	//방어 이미지
 
-	image* atkSlash;
+	image* atkSlash;	
 	image* atkstab;
-	image* atkshot;
-	image* atkmelee;
-	image* jump;
+	image* atkshot;		//원거리 공격 이미지
+	image* atkmelee;	//근접 공격 이미지
+	image* jump;		//점프 이미지
 
-	image * dead;
-	image* win;
+	image * dead;		//사망 이미지
+	image* win;			//승리 이미지
 
 	RECT rc;  //플레이어 충돌 사각형
 
@@ -122,44 +133,16 @@ private:
 	int _frameIndex;
 	int _frameCount;
 
-	tagPlayer _player;
-
-	player* _mainplayer;
-
-	//private:
-	//	bool _sight;	 //플레이어 시각(0 - 왼쪽, 1 - 오른쪽)
-	//	int _hp;		 //플레이어 hp
-	//	float _x, _y;    //플레이어 좌표
-	//	float _speed;
-	//	float _gravity;  //중력값
-	//
-	//private:
-	//	image* _idle;
-	//	image * _walk;
-	//	image* _run;
-	//	image* _guard;
-	//
-	//	image* _atkSlash;
-	//	image* _atkstab;
-	//	image* _jump;
-	//	
-	//	image * _dead;
-	//	image* _win;
-
+	tagPlayer _subPlayer;
+	player _player;
+	ARROW _arrow;
+	image* _walkingDirect;	//4방향으로 걷는 이미지
 private:
-	RECT _rcPlayer;		//플레이어 충돌 사각형
-	float _chargeTime;	//화살 장전 시간
+	bool _melee;			//근접공격여부
+	bool _isLeft;
+	int _direct = 0;
+	float _distance;		//ai와 적의 거리
 
-	float _distance;	//ai와 적의 거리
-	float _cX, _cY;		//ai사각형 중앙
-	float _speed;		//화살속도
-
-	RECT _arrow;		//화살 사각형
-	image* _arrowImg;		//화살 사각형
-	bool _arrowIs;		//화살 날라가는여부
-	bool _melee;		//근접공격여부
-
-	//태그 상태
 	tagstate _state;
 
 public:
@@ -171,7 +154,16 @@ public:
 
 	//enum태그 변화에 따라 변하는 플레이어 모션
 	void animation();
+	//상태창에서 걷는 애니메이션 출력
+	void walkingInfo();
+	player setPlayer(player _playerAddress) { _player = _playerAddress; }
 
+	tagPlayer* getSubPlayer() { return &_subPlayer; }
+	void setSubPlayer(tagPlayer subPlayer) { _subPlayer = subPlayer; }
+
+	void setSubPlayerState(tagstate state) { _state = state; }
+	int getDirect() { return _direct; }
+	void setDirect(int direct) { _direct = direct; }
 
 	subplayer() {}
 	~subplayer() {}
