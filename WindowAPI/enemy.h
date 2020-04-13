@@ -60,6 +60,9 @@ public:
 	 
 	virtual int getHpK() = 0;
 	virtual void setHpK(int hp) = 0;
+
+	virtual int getEnemyX() = 0;				//몬스터 캐릭터간 방향 설정
+	virtual void setLeft(bool isLeft) = 0;				//몬스터 좌우 설정
 	enemy() {}
 	virtual ~enemy() {}
 };
@@ -79,12 +82,14 @@ private:
 	int _hp;			//체력
 	bool _hitAtt;		//공격이 유효할때 On 맞앗거나 모션끝나면off
 	bool collision;		//충돌했는지 안했는지
+	bool _isLeft;		//좌우판정
 	int playerX;
 	int playerY;
 	int playerWidth;
 	int playerheight;
 	int type;
 	int _attCd;
+	
 	MINIONTYPE _minionType;	//몹 종류
 	STATE _state;
 
@@ -130,6 +135,9 @@ public:
 
 	int getHpK() { return _hp; }
 	void setHpK(int hp) { _hp = hp; }
+
+	int getEnemyX(){ return playerX; }								//몬스터 캐릭터간 방향 설정
+	void setLeft(bool isLeft) { _isLeft = isLeft; }					//몬스터 좌우 설정
 
 	mummy() {}
 	~mummy() {}
@@ -151,6 +159,7 @@ private:
 	int _hp;			//체력
 	bool _hitAtt;		//공격이 유효할때 On 맞앗거나 모션끝나면off
 	bool collision;		//충돌했는지 안했는지
+	bool _isLeft;		//좌우판정
 	int playerX;
 	int playerY;
 	int playerWidth;
@@ -202,6 +211,9 @@ public:
 
 	int getHpK() { return _hp; }
 	void setHpK(int hp) { _hp = hp; }
+
+	int getEnemyX() { return playerX; }								//몬스터 캐릭터간 방향 설정
+	void setLeft(bool isLeft) { _isLeft = isLeft; }					//몬스터 좌우 설정
 
 	golem() {}
 	~golem() {}

@@ -193,8 +193,8 @@ void maptoolScene::update()
 			_rcDummy2 = RectMake(_rcPalette.left + 96 * 2, WINSIZEY - 48, 96, 48);						//맵툴 UI
 			//_rcDummy3 = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
 			_rcslide = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcArrow5[0] = RectMake(_rcPalette.left + 96*4, WINSIZEY - 48, 48, 48);
-			_rcArrow5[1] = RectMake(_rcPalette.left + 96*4.5f, WINSIZEY - 48, 48, 48);
+			_rcArrow5[0] = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 48, 48);					//맵툴 UI
+			_rcArrow5[1] = RectMake(_rcPalette.left + 96 * 4.5f, WINSIZEY - 48, 48, 48);				//맵툴 UI
 			_rcArrow[0] = RectMake(_rcPalette.left + 96 * 5, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
 			_rcArrow[1] = RectMake(_rcPalette.left + 96 * 5.5f, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
 		}
@@ -221,6 +221,8 @@ void maptoolScene::update()
 				_tiles[i].rc.top -= 10;
 				_tiles[i].rc.bottom -= 10;
 			}
+
+			_drawField.startY -= 10;//화면 이동시 선택영역 시작지점도 함께 이동
 		}
 		if (INPUT->GetKey(VK_RIGHT))
 		{
@@ -229,6 +231,8 @@ void maptoolScene::update()
 				_tiles[i].rc.left -= 10;
 				_tiles[i].rc.right -= 10;
 			}
+
+			_drawField.startX -= 10;//화면이동시 선택영역 시작지점도 함께 이동
 		}
 		if (INPUT->GetKey(VK_LEFT))
 		{
@@ -343,7 +347,6 @@ void maptoolScene::update()
 			//마우스 오른쪽을 눌러 칠하거나 지울 영역 선택하기
 			for (int i = 0; i < TILEX*TILEY; i++) {
 				if (PtInRect(&_tiles[i].rc, _ptMouse)) {
-					//영역 채우기는 기본적으로 1칸씩만 가능합니다
 					_currentTile.sampleSizeX = 1;
 					_currentTile.sampleSizeY = 1;
 
@@ -376,6 +379,19 @@ void maptoolScene::update()
 					this->setFieldMap(); //범위 채우기로 이동
 				}
 			}
+		}
+
+		//샘플타일 내 드래그 상태 보이게 하기
+		if (PtInRect(&_rcPalette, _ptMouse) && INPUT->GetKey(VK_LBUTTON) && _editMode == false) {
+			for (int i = 0; i < 60; i++) {
+				if (PtInRect(&_sampleTile[i].rc, _ptMouse)) {
+					_dragRect.endX = _sampleTile[i].rc.right;
+					_dragRect.endY = _sampleTile[i].rc.bottom;
+				}
+			}
+			_dragRect.width = _dragRect.endX - _currentTile.sampleStartX;
+			_dragRect.height = _dragRect.endY - _currentTile.sampleStartY;
+			_dragRect.rc = RectMake(_currentTile.sampleStartX, _currentTile.sampleStartY, _dragRect.width, _dragRect.height);
 		}
 	}
 }
@@ -434,7 +450,7 @@ void maptoolScene::render()
 
 	//타일이 그려질 위치&범위 보이게 만들기
 	for (int i = 0; i < TILEX*TILEY; i++) {
-		if (PtInRect(&_tiles[i].rc, _ptMouse)) {
+		if (PtInRect(&_tiles[i].rc, _ptMouse)&&_editMode==false) {
 			selectRect = RectMake(_tiles[i].rc.left, _tiles[i].rc.top, _currentTile.sampleSizeX * 48, _currentTile.sampleSizeY * 48);
 	
 			if (INPUT->GetKey(VK_RBUTTON)) {
@@ -579,20 +595,10 @@ void maptoolScene::render()
 
 	}
 
-
-	//샘플타일 내 드래그 상태 보이게 하기
-	if (PtInRect(&_rcPalette, _ptMouse)&&INPUT->GetKey(VK_LBUTTON)) {
-		for (int i = 0; i < 60; i++) {
-			if (PtInRect(&_sampleTile[i].rc, _ptMouse)) {
-				_dragRect.endX = _sampleTile[i].rc.right;
-				_dragRect.endY = _sampleTile[i].rc.bottom;
-			}
-		}
-		_dragRect.width = _dragRect.endX - _currentTile.sampleStartX;
-		_dragRect.height = _dragRect.endY - _currentTile.sampleStartY;
-		_dragRect.rc = RectMake(_currentTile.sampleStartX, _currentTile.sampleStartY, _dragRect.width, _dragRect.height);
+	if (PtInRect(&_rcPalette, _ptMouse) && INPUT->GetKey(VK_LBUTTON) && _editMode == false) {
 		FrameRect(getMemDC(), _dragRect.rc, RGB(255, 255, 0));
 	}
+
 }
 
 void maptoolScene::maptoolSetup()
@@ -660,6 +666,18 @@ void maptoolScene::setSample() {
 
 void maptoolScene::setMap()
 {
+	//팝업 아래에서 버튼눌렀을때 뒤에 칠 안되게 넘겨주기
+
+
+	if (PtInRect(&_rcSaveLoad, _ptMouse)) { return; }
+	else if (PtInRect(&_rcslide, _ptMouse)) { return; }
+	else if (PtInRect(&_rcArrow5[0], _ptMouse)) { return; }
+	else if (PtInRect(&_rcArrow5[1], _ptMouse)) { return; }
+	else if (PtInRect(&_rcArrow[0], _ptMouse)) { return; }
+	else if (PtInRect(&_rcArrow[1], _ptMouse)) { return; }
+
+
+
 	for (int i = 0; i < TILEX * TILEY; i++)
 	{
 		if (PtInRect(&_tiles[i].rc, _ptMouse) && !PtInRect(&_rcPalette, _ptMouse))

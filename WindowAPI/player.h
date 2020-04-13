@@ -69,7 +69,7 @@ private:
 	tagPlayer _player;
 
 private:
-	RECT _stage;		//지형
+	//RECT _stage;		//지형
 	RECT _playerDoorRc;	// 플레이어가 문에 닿았는지 확인해주는 렉트
 	float _enemyCenterX, _enemyCenterY;		//사각형 중앙
 
@@ -100,6 +100,7 @@ public:
 	void animation();
 	tagPlayer* getPlayer() { return &_player; }
 	void setPlayer(tagPlayer player) { _player = player; }
+	void setSight(bool sight) { _player.sight = sight; }
 
 	//플레이어의 X,Y좌표를 주기위한 get함수
 	float getPlayerX() { return _player.inGameX; }

@@ -6,7 +6,7 @@ HRESULT player::init()
 	// 플레이어 구조체를 init시키면 초기화 시켜준다.
 	this->settingTagPlayer();
 
-	_stage = RectMake(0, 500, WINSIZEX, WINSIZEY);
+	//_stage = RectMake(0, 500, WINSIZEX, 300);
 
 	//프레임이미지초기화
 	_frameCount = 0;
@@ -422,7 +422,8 @@ void player::render()
 	//배틀일 때
 	if (_isBattle)
 	{
-		Rectangle(getMemDC(), _stage);
+				
+		//Rectangle(getMemDC(), _stage);
 
 		Rectangle(getMemDC(), _player.rc);		//플레이어 타격범위 사각형
 
@@ -875,22 +876,43 @@ void player::animation()
 			}
 			break;
 		case pHIT:		//히트시 날아가서 눕고 프레임 올라가는속도 / 인덱스0,1위치차이 등 예외적용한게 많음
-			if (_frameIndex == 0) { IMAGEMANAGER->frameRender("hit", getMemDC(), _player.rc.left, _player.rc.top + 10); }
-			else { IMAGEMANAGER->frameRender("hit", getMemDC(), _player.rc.left, _player.rc.top + 3); }
-			_player.hit->setFrameY(0);
-			if (_frameCount % 80 < 50 && _frameIndex == 0) { _player.x--; }
-			if (_frameCount == 80 || _frameCount >= 120)
+			
+			if (_player.sight)
 			{
-				_frameIndex++;
-				if (_frameIndex > 2)
+				if (_frameIndex == 0) { IMAGEMANAGER->frameRender("hit", getMemDC(), _player.rc.left, _player.rc.top + 10); }
+				else { IMAGEMANAGER->frameRender("hit", getMemDC(), _player.rc.left, _player.rc.top + 3); }
+				_player.hit->setFrameY(0);
+				if (_frameCount % 80 < 50 && _frameIndex == 0) { _player.x--; }
+				if (_frameCount == 80 || _frameCount >= 120)
 				{
-					_frameIndex = 0;
-					_state = pIDLE;
-					_player.y = 460;
+					_frameIndex++;
+					if (_frameIndex > 2)
+					{
+						_frameIndex = 0;
+						_state = pIDLE;
+						_player.y = 460;
+					}
+					_player.hit->setFrameX(_frameIndex);
 				}
-				_player.hit->setFrameX(_frameIndex);
 			}
-
+			else
+			{
+				if (_frameIndex == 0) { IMAGEMANAGER->frameRender("hit", getMemDC(), _player.rc.left, _player.rc.top + 10); }
+				else { IMAGEMANAGER->frameRender("hit", getMemDC(), _player.rc.left, _player.rc.top + 3); }
+				_player.hit->setFrameY(1);
+				if (_frameCount % 80 < 50 && _frameIndex == 0) { _player.x++; }
+				if (_frameCount == 80 || _frameCount >= 120)
+				{
+					_frameIndex++;
+					if (_frameIndex > 2)
+					{
+						_frameIndex = 0;
+						_state = pIDLE;
+						_player.y = 460;
+					}
+					_player.hit->setFrameX(_frameIndex);
+				}
+			}
 			break;
 		}
 	}
@@ -983,7 +1005,7 @@ void player::setAction(int pattern)
 
 void player::playerWin()
 {
-	if (_state != pWIN && !(_state == pJUMP || _state))
+	if (_state != pWIN && !(_state == pJUMP || _state == pATTACK))
 	{
 		_frameIndex = 0;
 		_frameCount = 0;

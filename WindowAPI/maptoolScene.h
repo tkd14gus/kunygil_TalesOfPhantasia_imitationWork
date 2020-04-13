@@ -85,7 +85,7 @@ private:
 	char _pageNum[100];
 	char _pageName[100];
 
-	char drag[1024];	//드래그 좌표 미리보기용(차후 지움)
+	char drag[1024];	//드래그 좌표 미리보기용
 	char count[1042];
 
 public:
