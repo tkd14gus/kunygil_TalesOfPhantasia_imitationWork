@@ -8,6 +8,14 @@ HRESULT battleScene::init()
 	_enemyManager = new enemyManager;
 	_enemyManager->init();
 
+	//만일 PLAYERDATA->getPlayerData()가 NULL이 아닐 때
+	//(제일 먼저 켜지면 NULL로 초기화됨)
+	//_player에 넣어준다.
+	if (PLAYERDATA->getPlayerData() != NULL)
+	{
+		_player = PLAYERDATA->getPlayerData();
+	}
+
 	return S_OK;
 }
 

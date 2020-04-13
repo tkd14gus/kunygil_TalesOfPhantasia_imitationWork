@@ -889,7 +889,9 @@ void player::settingTagPlayer()
 	_player.speed = 3.0f;
 
 
-	_player.hp = 5;			//초기 설정 - 체력 5
+	_player.hp = _player.maxHp = 5;			//초기 설정 - 체력 5
+	_player.tp = _player.maxTp = 5;			//초기 설정 - TP 5
+	_player.lv = 1;
 	_player.attXK = 0;
 	_player.attYK = 0;
 
@@ -969,6 +971,28 @@ void player::settingPlayerDoorRect()
 			_playerDoorRc = RectMake(_player.rc.left - (48 * 120 - WINSIZEX) - 48, _player.rc.top - (48 * 150 - WINSIZEY) - 48, 64 + 48 * 2, 128 + 48 * 2);
 		}
 	}
+}
+
+void player::spinPlayer()
+{
+	//stateWindow가 참이되면 플레이어를 update 안하기 때문에 여기서 프레임카운터를 증가시킨다.
+	_frameCount++;
+
+	//40프레임이 지날때 마다 보는 방향을 바꿔준다.
+	//순서는 아래 좌 위 우이다.
+	if (_frameCount % 500 == 0)
+	{
+		if (_direct == 0)
+			_direct = 3;
+		else if (_direct == 1)
+			_direct++;
+		else if (_direct == 2)
+			_direct = 0;
+		else
+			_direct = 1;
+	}
+	//
+	this->animation();
 }
 
 HRESULT subplayer::init()

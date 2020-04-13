@@ -16,7 +16,9 @@ enum tagstate
 struct tagPlayer
 {
 	bool sight;	 //플레이어 시각(0 - 왼쪽, 1 - 오른쪽)
-	int hp;		 //플레이어 hp
+	int lv;				//플레이어 LV
+	int maxHp, hp;		 //플레이어 hp
+	int maxTp, tp;		// 플레이어 tp
 	int attXK, attYK;
 	float x, y;    //플레이어 좌표
 	float inGameX, inGameY;	//전투가 아니라 인게임 내에서 쓸 좌표
@@ -89,7 +91,13 @@ public:
 	float getPlayerX() { return _player.inGameX; }
 	float getPlayerY() { return _player.inGameY; }
 	//맵이 이동했을 때 플레이어의 위치를 조정해줘야 하므로 set으로 플레이어의 x,y값과 렉트값을 바꿔준다.
-	void setPlayerRect(int x, int y);// { _playerP._rcPlayerP = RectMakeCenter(x, y, 64, 128); }
+	void setPlayerRect(int x, int y);
+	//상태창을 열었을 때 이미지가 계속 움직이려면 pWALK상태여야 하므로 상태를 바꿔줘야 한다.
+	void setPlayerState(tagstate state) { _state = state; }
+	//상태창에 들어갔을 떄와 나왔을 떄 같은 곳을 바라보고 있어야 하니 방향을 가르쳐줘야한다.
+	int getDirect() { return _direct; }
+	//그리고 받을 수도 있어야 한다.
+	void setDirect(int direct) { _direct = direct; }
 	//플레이어의 렉트를 주기위한 get함수
 	RECT getPlayerRc() { return _player.rc; }
 	//플레이어가 문 근처에 있는지 확인하기 위한 get함수
@@ -99,7 +107,8 @@ public:
 	void settingTagPlayer();
 	// 플레이어 도어렉트 플레이어 위치에 따라 위치를 조정해주는 함수.
 	void settingPlayerDoorRect();
-
+	// 스테이트 창 틀었을 때 캐릭터가 회전하는 이미지
+	void spinPlayer();
 
 
 	player() {}
