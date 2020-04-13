@@ -30,8 +30,8 @@ void loadingScene::update()
 	if (_loading->loadingDone())
 	{
 		//SCENEMANAGER->loadScene("게임화면");
-		//SCENEMANAGER->loadScene("맵툴기초");
-		SCENEMANAGER->loadScene("전투화면");
+		SCENEMANAGER->loadScene("맵툴기초");
+		//SCENEMANAGER->loadScene("전투화면");
 	}
 }
 
