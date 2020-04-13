@@ -29,7 +29,8 @@ void loadingScene::update()
 	//로딩완료후 화면 변경
 	if (_loading->loadingDone())
 	{
-		SCENEMANAGER->loadScene("게임화면");
+		//SCENEMANAGER->loadScene("게임화면");
+		SCENEMANAGER->loadScene("맵툴기초");
 	}
 }
 
@@ -201,6 +202,12 @@ void loadingScene::loadingImage()
 	_loading->loadImage("leftArrow5", "Images\\UI\\Arrow5_0.bmp", 48, 48);
 	_loading->loadImage("rightArrow5", "Images\\UI\\Arrow5_1.bmp", 48, 48);
 
+
+
+	//_loading->loadImage("activateLeft", "Images/UI/activateLeftArrow.bmp", 48, 48);
+	//_loading->loadImage("Left" "Images/UI/LeftArrow.bmp", 48, 48);
+	//_loading->loadImage("activateRight", "Images/UI/activateRightArrow.bmp", 48, 48);
+	//_loading->loadImage("Right" "Images/UI/RightArrow.bmp", 48, 48);
 	//#====================================================================================================================#
 	//#									UI 이미지 종료																	   #
 	//#====================================================================================================================#

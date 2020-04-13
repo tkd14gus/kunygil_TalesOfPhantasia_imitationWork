@@ -475,6 +475,13 @@ void maptoolScene::render()
 	if (_palettePage < SMAPLETILECOUNT) { IMAGEMANAGER->findImage("rightArrow5")->render(getMemDC(), _rcArrow5[1].left, _rcArrow5[1].top); }
 
 
+	//if (_palettePage > 1) { IMAGEMANAGER->findImage("activateLeft")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
+	//else if (_palettePage == 1) { IMAGEMANAGER->findImage("Left")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
+	////샘플타일의 번호가 최대값보다 큰 경우는 없으므로 최대값보다 작은 경우에만 다음 타일로 넘어가는 화살표를 보여준다.
+	//if (_palettePage <= SMAPLETILECOUNT) { IMAGEMANAGER->findImage("activateRight")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
+	//else { IMAGEMANAGER->findImage("Right")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
+	
+	
 	if (_setSaveLoad == true)
 	{
 		frameBoxRender(_rcSaveWindow, 1.0f); //세이브확인창프레임
