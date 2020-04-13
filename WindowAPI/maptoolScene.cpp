@@ -78,9 +78,9 @@ void maptoolScene::update()
 		{
 			for (int i = 0; i < SAMPLETILEX * SAMPLETILEY; i++)
 			{
-				if (INPUT->GetKeyDown(VK_LBUTTON))
+				if (PtInRect(&_sampleTile[i].rc, _ptMouse))
 				{
-					if (PtInRect(&_sampleTile[i].rc, _ptMouse))
+					if (INPUT->GetKeyDown(VK_LBUTTON))
 					{
 						_sampleTile[i].canMove = !_sampleTile[i].canMove;
 						break;
@@ -103,7 +103,6 @@ void maptoolScene::update()
 			}
 		}
 	}
-	
 	else if (_setSaveLoad == true) // 세이브 확인창이 켜졌을때
 	{
 		if (INPUT->GetKeyDown(VK_LBUTTON))
@@ -173,6 +172,19 @@ void maptoolScene::update()
 			_editMode = true;
 		}
 
+		this->maptoolSetup();
+
+		if (_rcPalette.top > WINSIZEY) // 최소화시 화면밖으로 나가면서 이하만큼남앗을때 버튼생성(이동) ※맵툴 셋업보다 밑에있어야함
+		{
+			_rcSaveLoad = RectMake(_rcPalette.left, WINSIZEY - 48, 96, 48);							//맵툴 UI
+			_rcEraser = RectMake(_rcPalette.left + 96, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			_rcDummy2 = RectMake(_rcPalette.left + 96 * 2, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			_rcDummy3 = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			_rcslide = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			_rcArrow[0] = RectMake(_rcPalette.left + 96 * 5, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
+			_rcArrow[1] = RectMake(_rcPalette.left + 96 * 5.5f, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
+		}
+
 		if (_slideTool == false && _rcPalette.top < WINSIZEY + 17) // 최소화시=>화면밖까지 내리기 (맨위에 일정이상 내려갔을시 버튼이동하는 이프문있음)
 		{
 			_rcPalette.top += 5;
@@ -183,22 +195,6 @@ void maptoolScene::update()
 			_rcPalette.top -= 5;
 			_rcPalette.bottom -= 5;
 		}
-
-		this->maptoolSetup();
-
-		if (_rcPalette.top > WINSIZEY) // 최소화시 화면밖으로 나가면서 이하만큼남앗을때 버튼생성(이동) ※맵툴 셋업보다 밑에있어야함
-		{
-			_rcSaveLoad = RectMake(_rcPalette.left, WINSIZEY - 48, 96, 48);							//맵툴 UI
-			_rcEraser = RectMake(_rcPalette.left + 96, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcDummy2 = RectMake(_rcPalette.left + 96 * 2, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			//_rcDummy3 = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcslide = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcArrow5[0] = RectMake(_rcPalette.left + 96*4, WINSIZEY - 48, 48, 48);
-			_rcArrow5[1] = RectMake(_rcPalette.left + 96*4.5f, WINSIZEY - 48, 48, 48);
-			_rcArrow[0] = RectMake(_rcPalette.left + 96 * 5, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
-			_rcArrow[1] = RectMake(_rcPalette.left + 96 * 5.5f, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
-		}
-
 
 		//레이어 선택
 		if (INPUT->GetKeyDown(VK_1)) { selectLayer1(); }
@@ -501,25 +497,21 @@ void maptoolScene::render()
 	if (PtInRect(&_rcEraser, _ptMouse)) {
 		IMAGEMANAGER->findImage("EraserOff")->render(getMemDC(), _rcEraser.left, _rcEraser.top);
 	}
-	frameBoxRender(_rcEraser, 0.1f);
 
 	IMAGEMANAGER->findImage("homeoff")->render(getMemDC(), _rcDummy2.left, _rcDummy2.top);
 	if (PtInRect(&_rcDummy2, _ptMouse)) {
 		IMAGEMANAGER->findImage("home")->render(getMemDC(), _rcDummy2.left, _rcDummy2.top);
 	}
-	frameBoxRender(_rcDummy2, 0.1f);
 
 	IMAGEMANAGER->findImage("saveLoadOff")->render(getMemDC(), _rcSaveLoad.left, _rcSaveLoad.top);
 	if (PtInRect(&_rcSaveLoad, _ptMouse)) {
 		IMAGEMANAGER->findImage("saveLoad")->render(getMemDC(), _rcSaveLoad.left, _rcSaveLoad.top);
 	}
-	frameBoxRender(_rcSaveLoad, 0.1f);
 
 	IMAGEMANAGER->findImage("slideOff")->render(getMemDC(), _rcslide.left, _rcslide.top);
 	if (PtInRect(&_rcslide, _ptMouse)) {
 		IMAGEMANAGER->findImage("slide")->render(getMemDC(), _rcslide.left, _rcslide.top);
 	}
-	frameBoxRender(_rcslide, 0.1f);
 
 	frameBoxRender(_rcPalette, 1.0f);
 
