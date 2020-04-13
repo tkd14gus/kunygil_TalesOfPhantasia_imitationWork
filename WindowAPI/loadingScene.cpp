@@ -29,8 +29,8 @@ void loadingScene::update()
 	//로딩완료후 화면 변경
 	if (_loading->loadingDone())
 	{
-		//SCENEMANAGER->loadScene("게임화면");
-		SCENEMANAGER->loadScene("맵툴기초");
+		SCENEMANAGER->loadScene("게임화면");
+		//SCENEMANAGER->loadScene("맵툴기초");
 		//SCENEMANAGER->loadScene("전투화면");
 	}
 }

@@ -22,7 +22,7 @@ HRESULT player::init()
 	//_enemyY = 400;
 
 	// 게임이 시작할 때 전투씬이 아니다.
-	_isBattle = true;
+	_isBattle = false;
 	// 플레이어는 제일 먼저 시작할 때 아래를 바라보고 있다.
 	_direct = 1;
 
