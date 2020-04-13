@@ -22,7 +22,7 @@ HRESULT player::init()
 	//_enemyY = 400;
 
 	// 게임이 시작할 때 전투씬이 아니다.
-	_isBattle = false;
+	_isBattle = true;
 	// 플레이어는 제일 먼저 시작할 때 아래를 바라보고 있다.
 	_direct = 1;
 
@@ -432,10 +432,10 @@ void player::render()
 											//배틀일 땐 애니메이션으로 렌더하니까 뒤에 둔다.
 
 		char chr1[100];
-		sprintf(chr1, "player hp : %d", _frameCount);
+		sprintf_s(chr1, "player hp : %d", _frameCount);
 		TextOut(getMemDC(), 100, 720, chr1, strlen(chr1));
 
-		sprintf(chr1, "player hp : %d", _player.hp);
+		sprintf_s(chr1, "player hp : %d", _player.hp);
 		TextOut(getMemDC(), 100, 680, chr1, strlen(chr1));
 	}
 	else
@@ -1368,11 +1368,11 @@ void subplayer::render()
 	}
 
 	char chr[100];
-	sprintf(chr, "거리 : %f", _distance);
+	sprintf_s(chr, "거리 : %f", _distance);
 	TextOut(getMemDC(), 100, 150, chr, strlen(chr));
 
 	char chr1[100];
-	sprintf(chr1, "화살충전시간 : %f", _arrow._chargeTime);
+	sprintf_s(chr1, "화살충전시간 : %f", _arrow._chargeTime);
 	TextOut(getMemDC(), 100, 200, chr1, strlen(chr1));
 }
 

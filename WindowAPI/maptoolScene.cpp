@@ -538,7 +538,6 @@ void maptoolScene::render()
 	if (_palettePage < SMAPLETILECOUNT) { IMAGEMANAGER->findImage("rightArrow")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
 	if (_palettePage < SMAPLETILECOUNT) { IMAGEMANAGER->findImage("rightArrow5")->render(getMemDC(), _rcArrow5[1].left, _rcArrow5[1].top); }
 
-
 	if (_setSaveLoad == true)
 	{
 		frameBoxRender(_rcSaveWindow, 1.0f); //세이브확인창프레임

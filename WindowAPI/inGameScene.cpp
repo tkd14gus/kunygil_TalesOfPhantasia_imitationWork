@@ -12,6 +12,7 @@ HRESULT inGameScene::init()
 	_player->init();
 	_subPlayer = new subplayer;
 	_subPlayer->init();
+
 	//제일 처음 시작할 때 시작 위치는 village(마을)
 	_mapLocation = 0;
 
@@ -335,7 +336,7 @@ void inGameScene::render()
 		_subPlayer->walkingInfo();
 		//위의 업데이트를 기반으로 이미지 출력
 		IMAGEMANAGER->findImage("chester")->scaleFrameRender(getMemDC(), _stateRC[1].right - 50, _stateRC[1].top + 20,
-			IMAGEMANAGER->findImage("chester")->getFrameX(), IMAGEMANAGER->findImage("chester")->getFrameY(), 1.0f);
+		IMAGEMANAGER->findImage("chester")->getFrameX(), IMAGEMANAGER->findImage("chester")->getFrameY(), 1.0f);
 
 		//TEXT의 색을 바꿔준다.
 		//하얀색
