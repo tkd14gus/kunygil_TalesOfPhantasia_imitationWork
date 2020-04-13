@@ -179,10 +179,12 @@ void maptoolScene::update()
 			_rcSaveLoad = RectMake(_rcPalette.left, WINSIZEY - 48, 96, 48);							//맵툴 UI
 			_rcEraser = RectMake(_rcPalette.left + 96, WINSIZEY - 48, 96, 48);						//맵툴 UI
 			_rcDummy2 = RectMake(_rcPalette.left + 96 * 2, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcDummy3 = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcslide = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 96, 48);						//맵툴 UI
-			_rcArrow[0] = RectMake(_rcPalette.left + 96 * 5, WINSIZEY - 48, 48, 48);					//맵툴 UI			 
-			_rcArrow[1] = RectMake(_rcPalette.left + 96 * 5.5f, WINSIZEY - 48, 48, 48);					//맵툴 UI			  
+			//_rcDummy3 = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);						//맵툴 UI
+			_rcslide = RectMake(_rcPalette.left + 96 * 3, WINSIZEY - 48, 96, 48);
+			_rcArrow5[0] = RectMake(_rcPalette.left + 96 * 4, WINSIZEY - 48, 48, 48);					//맵툴 UI
+			_rcArrow5[1] = RectMake(_rcPalette.left + 96 * 4.5f, WINSIZEY - 48, 48, 48);				//맵툴 UI				//맵툴 UI
+			_rcArrow[0] = RectMake(_rcPalette.left + 96 * 5, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
+			_rcArrow[1] = RectMake(_rcPalette.left + 96 * 5.5f, WINSIZEY - 48, 48, 48);					//맵툴 UI			   왠지 수정의예감
 		}
 
 		if (_slideTool == false && _rcPalette.top < WINSIZEY + 17) // 최소화시=>화면밖까지 내리기 (맨위에 일정이상 내려갔을시 버튼이동하는 이프문있음)
@@ -659,6 +661,18 @@ void maptoolScene::setSample() {
 
 void maptoolScene::setMap()
 {
+	//팝업 아래에서 버튼눌렀을때 뒤에 칠 안되게 넘겨주기
+
+
+	if (PtInRect(&_rcSaveLoad, _ptMouse)) { return; }
+	else if (PtInRect(&_rcslide, _ptMouse)) { return; }
+	else if (PtInRect(&_rcArrow5[0], _ptMouse)) { return; }
+	else if (PtInRect(&_rcArrow5[1], _ptMouse)) { return; }
+	else if (PtInRect(&_rcArrow[0], _ptMouse)) { return; }
+	else if (PtInRect(&_rcArrow[1], _ptMouse)) { return; }
+
+
+
 	for (int i = 0; i < TILEX * TILEY; i++)
 	{
 		if (PtInRect(&_tiles[i].rc, _ptMouse) && !PtInRect(&_rcPalette, _ptMouse))
