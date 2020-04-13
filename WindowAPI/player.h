@@ -4,12 +4,13 @@
 enum tagstate
 {
 	pIDLE,
-	pDEAD,
 	pRUN,
+	pHIT,
 	pWALK,
 	pJUMP,
 	pATTACK,
 	pGUARD,
+	pDEAD,
 	pWIN
 };
 
@@ -35,6 +36,8 @@ struct tagPlayer
 	image* atkshot;
 	image* atkmelee;
 	image* jump;
+
+	image* hit;				//히트 모션 추가 - 구민본
 
 	image * dead;
 	image* win;
@@ -102,6 +105,10 @@ public:
 	RECT getPlayerRc() { return _player.rc; }
 	//플레이어가 문 근처에 있는지 확인하기 위한 get함수
 	RECT getPlayerDoorRc() { return _playerDoorRc; }
+	//상태변경을위한 함수
+	tagstate getAction() { return _state; }
+	//상태변경 1.IDLE 2.RUN 3.HIT 4.WALK 5.JUMP 6.ATT 7.GUARD 8.DEAD 9.WIN
+	void setAction(int pattern);
 
 	// 플레이어 구조체를 초기화 하는 함수
 	void settingTagPlayer();
@@ -109,7 +116,10 @@ public:
 	void settingPlayerDoorRect();
 	// 스테이트 창 틀었을 때 캐릭터가 회전하는 이미지
 	void spinPlayer();
-
+	//플레이어 공격히트했을떄 출돌사각형없애기
+	void hitPlayerAttK() { _player.attXK = _player.attYK = 0; }
+	void playerWin();
+	void playerHit();
 
 	player() {}
 	~player() {}
