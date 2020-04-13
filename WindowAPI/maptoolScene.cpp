@@ -328,7 +328,6 @@ void maptoolScene::update()
 				}
 			}
 		}
-
 		if (INPUT->GetKey(VK_LBUTTON)) this->setMap();//타일 한 칸 채우기
 
 		if (INPUT->GetKey('A') && INPUT->GetKey(VK_LBUTTON)) this->setAllMap();//타일 전부 채우기+지우기
@@ -481,7 +480,7 @@ void maptoolScene::render()
 	//if (_palettePage <= SMAPLETILECOUNT) { IMAGEMANAGER->findImage("activateRight")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
 	//else { IMAGEMANAGER->findImage("Right")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
 	
-	
+
 	if (_setSaveLoad == true)
 	{
 		frameBoxRender(_rcSaveWindow, 1.0f); //세이브확인창프레임

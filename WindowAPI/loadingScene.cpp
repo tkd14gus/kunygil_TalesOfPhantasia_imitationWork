@@ -30,7 +30,8 @@ void loadingScene::update()
 	if (_loading->loadingDone())
 	{
 		//SCENEMANAGER->loadScene("게임화면");
-		SCENEMANAGER->loadScene("맵툴기초");
+		//SCENEMANAGER->loadScene("맵툴기초");
+		SCENEMANAGER->loadScene("전투화면");
 	}
 }
 
@@ -202,15 +203,10 @@ void loadingScene::loadingImage()
 	_loading->loadImage("leftArrow5", "Images\\UI\\Arrow5_0.bmp", 48, 48);
 	_loading->loadImage("rightArrow5", "Images\\UI\\Arrow5_1.bmp", 48, 48);
 
-
-
-	//_loading->loadImage("activateLeft", "Images/UI/activateLeftArrow.bmp", 48, 48);
-	//_loading->loadImage("Left" "Images/UI/LeftArrow.bmp", 48, 48);
-	//_loading->loadImage("activateRight", "Images/UI/activateRightArrow.bmp", 48, 48);
-	//_loading->loadImage("Right" "Images/UI/RightArrow.bmp", 48, 48);
 	//#====================================================================================================================#
 	//#									UI 이미지 종료																	   #
 	//#====================================================================================================================#
+
 
 	//#====================================================================================================================#
 	//#								Charicter, Enemy 이미지																   #
@@ -230,9 +226,6 @@ void loadingScene::loadingImage()
 	_loading->loadImage("stateWindow", "Images/inGameSprite/stateWIndow.bmp", WINSIZEX, WINSIZEY);
 
 }
-
-
-	
 
 
 //로딩사운드 함수(이곳에 사운드를 전부 넣어라)

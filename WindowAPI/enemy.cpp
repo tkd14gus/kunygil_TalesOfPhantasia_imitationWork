@@ -20,16 +20,16 @@ HRESULT enemy::init(POINT position)
 	_imageAttack2 = IMAGEMANAGER->findImage("mummyatt2");
 	_imageGuard = IMAGEMANAGER->findImage("mummyguard");
 	_imageDead = IMAGEMANAGER->findImage("mummydead");
+	_hp = 5;
 
-	
 	//적 개체 생성 위치
-	_state =eWALK;
-	playerWidth = _imageIdle->getWidth()-60;
+	_state = eWALK;
+	playerWidth = _imageIdle->getWidth() - 60;
 	playerheight = _imageIdle->getHeight() - 20;
 	_rc = RectMakeCenter(playerX, playerY, playerWidth, playerheight);
-	
+	_attRcK = RectMakeCenter(_rc.left - 20, playerY, 40, playerheight);
 	playerX = position.x;
-	playerY = position.y -playerheight/2;
+	playerY = position.y - playerheight / 2;
 
 	//#====================================================================================================
 	//#				위쪽에 불러온 이미지는 임시입니다
@@ -59,7 +59,7 @@ HRESULT enemy::init(POINT position)
 		_rc = RectMakeCenter(position.x, position.y, _image->getWidth()-50, _image->getHeight());
 		break;
 	}*/
-
+	_hitAtt = false;
 	collision = false;
 
 	//랜덤으로 총알 쿨타임 주는 변수 초기화
@@ -76,10 +76,11 @@ void enemy::release()
 void enemy::update()
 {
 	if (_fireCount < 250) { _fireCount++; }
-	_rc = RectMakeCenter(playerX , playerY, playerWidth, playerheight);
+	_rc = RectMakeCenter(playerX, playerY, playerWidth, playerheight);
+	_attRcK = RectMakeCenter(0, 0, 0, 0);
 
 
-	
+
 	//switch (_state) {
 	//case eIDLE:
 	//	//playerWidth = _imageIdle->getWidth() - 105;
@@ -121,13 +122,18 @@ void enemy::update()
 	//}
 
 	this->move();
+	if (_state == eIDLE) { collision = false; }
 	this->animation();
 }
 
 void enemy::render()
 {
 	this->draw();
-	
+
+	char str[32];
+	sprintf(str, "%d", _fireCount);
+	TextOut(getMemDC(), 100, 550, str, strlen(str));
+
 }
 
 void enemy::move()
@@ -143,7 +149,7 @@ void enemy::move()
 
 		break;
 	case false:
-		if (_currentFrameX == 0&& _state == eIDLE)
+		if (_state == eIDLE && _fireCount > 50)
 		{
 			_state = eWALK;
 		}
@@ -156,10 +162,19 @@ void enemy::move()
 		playerX--;
 		break;
 	case eHIT:
+		playerX += 3;
 		break;
 	case eATTACK1:
+		if (_currentFrameX > 3)
+		{
+			_attRcK = RectMakeCenter(_rc.left - 20, playerY, 40, playerheight);
+		}
 		break;
 	case eATTACK2:
+		if (_currentFrameX > 2)
+		{
+			_attRcK = RectMakeCenter(_rc.left, playerY, 40, playerheight);
+		}
 		break;
 	}
 }
@@ -167,36 +182,37 @@ void enemy::move()
 void enemy::draw()
 {
 	Rectangle(getMemDC(), _rc);
+	Rectangle(getMemDC(), _attRcK);
 	switch (_state) {
 	case eIDLE:
-		_imageIdle->render(getMemDC(), _rc.left - playerWidth / 2, _rc.top - 20);
+		_imageIdle->render(getMemDC(), _rc.left - playerWidth / 2 - 10, _rc.top - 20);
 		//_imageIdle->render(getMemDC(), _rc.left - 95, _rc.top - 20);
 		break;
 	case eWALK:
-		_imageWalk->frameRender(getMemDC(), _rc.left - playerWidth / 2, _rc.top - 20);
+		_imageWalk->frameRender(getMemDC(), _rc.left - playerWidth / 2 - 10, _rc.top - 20);
 		//_imageWalk->frameRender(getMemDC(), _rc.left - 65, _rc.top - 20);
 		break;
 	case eHIT:
-		_imageHit->render(getMemDC(), _rc.left - playerWidth / 2, _rc.top - 20);
+		_imageHit->render(getMemDC(), _rc.left - playerWidth / 2 - 10, _rc.top - 20);
 		//_imageHit->render(getMemDC(), _rc.left - 75, _rc.top - 20);
 		break;
 	case eATTACK1:
-		_imageAttack1->frameRender(getMemDC(), _rc.left - playerWidth / 2, _rc.top - 20);
+		_imageAttack1->frameRender(getMemDC(), _rc.left - playerWidth / 2 - 10, _rc.top - 20);
 		//_imageAttack1->frameRender(getMemDC(), _rc.left - 95, _rc.top - 20);
 		break;
 	case eATTACK2:
-		_imageAttack2->frameRender(getMemDC(), _rc.left - playerWidth / 2, _rc.top - 20);
+		_imageAttack2->frameRender(getMemDC(), _rc.left - playerWidth / 2 - 10, _rc.top - 20);
 		//_imageAttack2->frameRender(getMemDC(), _rc.left - 50, _rc.top - 5);
 		break;
 	case eGUARD:
-		_imageGuard->render(getMemDC(), _rc.left - playerWidth / 2, _rc.top - 20);
+		_imageGuard->render(getMemDC(), _rc.left - playerWidth / 2 - 10, _rc.top - 20);
 		//_imageGuard->render(getMemDC(), _rc.left - 60, _rc.top - 20);
 		break;
 	case eDEAD:
-		_imageDead->render(getMemDC(), _rc.left - playerWidth / 2, _rc.top - 20);
+		_imageDead->render(getMemDC(), _rc.left - playerWidth / 2 - 10, _rc.top - 20);
 		//_imageDead->render(getMemDC(), _rc.left - 33, _rc.top - 20);
 		break;
-	}	
+	}
 }
 
 void enemy::animation()
@@ -208,7 +224,7 @@ void enemy::animation()
 		if (_count % 20 == 0)
 		{
 			_currentFrameX++;
-			if (_currentFrameX >=3)
+			if (_currentFrameX >= 3)
 			{
 				_currentFrameX = 0;
 				_count = 0;
@@ -224,6 +240,7 @@ void enemy::animation()
 			_currentFrameX++;
 			if (_currentFrameX >= 5)
 			{
+				_hitAtt = false;
 				_state = eIDLE;
 				_currentFrameX = 0;
 				_fireCount = 0;
@@ -240,12 +257,23 @@ void enemy::animation()
 			_currentFrameX++;
 			if (_currentFrameX >= 4)
 			{
+				_hitAtt = false;
 				_state = eIDLE;
 				_currentFrameX = 0;
 				_fireCount = 0;
 				_count = 0;
 			}
 			_imageAttack2->setFrameX(_currentFrameX);
+		}
+		break;
+	case eHIT:
+		_count++;
+		if (_count > 18) { playerX -= 3; }
+		if (_count % 25 == 0)
+		{
+			_state = eIDLE;
+			_fireCount -= 30;
+			_count = 0;
 		}
 		break;
 	}
@@ -255,12 +283,12 @@ void enemy::setActionK(int pattern)
 {
 	STATE state;
 	if (pattern == 1) { state = eIDLE; }
-	if (pattern == 2) { state = eWALK; }
-	if (pattern == 3) { state = eHIT; }
-	if (pattern == 4) { state = eATTACK1; }
-	if (pattern == 5) { state = eATTACK2; }
-	if (pattern == 6) { state = eGUARD; }
-	if (pattern == 7) { state = eDEAD; }
+	else if (pattern == 2) { state = eWALK; }
+	else if (pattern == 3) { state = eHIT; }
+	else if (pattern == 4) { state = eATTACK1; }
+	else if (pattern == 5) { state = eATTACK2; }
+	else if (pattern == 6) { state = eGUARD; }
+	else if (pattern == 7) { state = eDEAD; }
 	if (_state != state)
 	{
 		_currentFrameX = 0;

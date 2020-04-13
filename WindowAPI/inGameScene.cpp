@@ -329,7 +329,7 @@ void inGameScene::render()
 		_player->spinPlayer();
 		//위의 업데이트를 기반으로 이미지 출력
 		IMAGEMANAGER->scaleFrameRender("cress", getMemDC(), _stateRC[0].right - 50, _stateRC[0].top + 20, IMAGEMANAGER->findImage("cress")->getFrameX(), IMAGEMANAGER->findImage("cress")->getFrameY(), 0.5f);
-		
+
 		//TEXT의 색을 바꿔준다.
 		//하얀색
 		SetTextColor(getMemDC(), RGB(255, 255, 255));
