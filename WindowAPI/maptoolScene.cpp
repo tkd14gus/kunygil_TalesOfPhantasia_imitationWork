@@ -28,12 +28,12 @@ HRESULT maptoolScene::init()
 	sprintf_s(_dataName, "MapData\\map%d.txt", _palettePage);
 	//현재타일(0,0)좌표로 초기화
 	_currentTile.pageNumber = _palettePage;
-	_currentTile.x = 0;
-	_currentTile.y = 0;
+	_currentTile.x[0] = 0;
+	_currentTile.y[0] = 0;
 
-	//현재 드래그 좌표 초기화(차후 지울수도 있음)
-	_currentTile.sampleStartX = 0;
-	_currentTile.sampleStartY = 0;
+	//현재 드래그 좌표 초기화
+	_currentTile.sampleStartX = 10;
+	_currentTile.sampleStartY =465;
 	_currentTile.sampleEndX = 0;
 	_currentTile.sampleEndY = 0;
 	_currentTile.sampleSizeX = 1;
@@ -243,8 +243,10 @@ void maptoolScene::update()
 		{
 			if (PtInRect(&_rcEraser, _ptMouse))
 			{
-				//이거 왜한거지
 				_currentTile.pageNumber = -1;
+				//이부분 지우면 지우개 사이즈가 선택한 타일 사이즈만큼 들쑥날쑥해집니다
+				_currentTile.sampleSizeX = 1;
+				_currentTile.sampleSizeY = 1;
 			}
 			if (PtInRect(&_rcDummy2, _ptMouse))
 			{
@@ -292,12 +294,12 @@ void maptoolScene::update()
 			//셈플타일 위에서 클릭했을 경우
 			for (int i = 0; i < SMAPLETILECOUNT; i++) {
 				if (PtInRect(&_sampleTile[i].rc, _ptMouse)) {
-					_currentTile.sampleStartX = _ptMouse.x;		//시작 x좌표
-					_currentTile.sampleStartY = _ptMouse.y;		//시작 y좌표
+					_currentTile.sampleStartX = _sampleTile[i].rc.left;		//시작 x좌표(타일 left)
+					_currentTile.sampleStartY = _sampleTile[i].rc.top;	//시작 y좌표(타일 top)
 
-					//프레임 시작 마우스 좌표를 못가져오길래 임시로 설정함
-					_currentTile.sampleStartPointX = 0;		//시작 x프레임 좌표
-					_currentTile.samplSetartPointY = 0;		//시작 y프레임 좌표
+					//프레임 시작 마우스 좌표
+					_currentTile.sampleStartPointX = _sampleTile[i].tileFrameX;		//시작 x프레임 좌표
+					_currentTile.samplSetartPointY = _sampleTile[i].tileFrameY;		//시작 y프레임 좌표
 				}
 			}
 		}
@@ -312,8 +314,8 @@ void maptoolScene::update()
 			//셈플타일 위에서 마우스를 뗐을 경우 드래그의 마지막좌표를 가져온다(타일 드래그 끝점)
 			for (int i = 0; i < SMAPLETILECOUNT; i++) {
 				if (PtInRect(&_sampleTile[i].rc, _ptMouse)) {
-					_currentTile.sampleEndX = _ptMouse.x;
-					_currentTile.sampleEndY = _ptMouse.y;
+					_currentTile.sampleEndX = _sampleTile[i].rc.right;
+					_currentTile.sampleEndY = _sampleTile[i].rc.bottom;
 
 					if (_currentTile.sampleEndX <= _currentTile.sampleStartX) {
 						_currentTile.sampleEndX = _currentTile.sampleStartX;
@@ -328,9 +330,49 @@ void maptoolScene::update()
 				}
 			}
 		}
-		if (INPUT->GetKey(VK_LBUTTON)) this->setMap();//타일 한 칸 채우기
+
+		if (INPUT->GetKey(VK_LBUTTON)) this->setMap();//타일 채우기
 
 		if (INPUT->GetKey('A') && INPUT->GetKey(VK_LBUTTON)) this->setAllMap();//타일 전부 채우기+지우기
+
+		if (INPUT->GetKeyDown(VK_RBUTTON)) {
+			//마우스 오른쪽을 눌러 칠하거나 지울 영역 선택하기
+			for (int i = 0; i < TILEX*TILEY; i++) {
+				if (PtInRect(&_tiles[i].rc, _ptMouse)) {
+					//영역 채우기는 기본적으로 1칸씩만 가능합니다
+					_currentTile.sampleSizeX = 1;
+					_currentTile.sampleSizeY = 1;
+
+					_drawField.startX = _tiles[i].rc.left;
+					_drawField.startY= _tiles[i].rc.top;
+
+					_drawField.startIndex = i;
+				}
+			}
+		}
+
+		if (INPUT->GetKeyUp(VK_RBUTTON)) {
+			//마우스 오른쪽을 떼서 채우기영역 설정 완료하기
+			for (int i = 0; i < TILEX*TILEY; i++) {
+				if (PtInRect(&_tiles[i].rc, _ptMouse)) {
+					_drawField.endX = _tiles[i].rc.right;
+					_drawField.endY = _tiles[i].rc.bottom;
+
+					if (_drawField.endX < _drawField.startX) {
+						_drawField.endX = _drawField.startX;
+					}
+
+					if (_drawField.endY < _drawField.startY) {
+						_drawField.endY = _drawField.startY;
+					}
+
+					_drawField.sizeX = (_drawField.endX - _drawField.startX) / 48;
+					_drawField.sizeY = (_drawField.endY - _drawField.startY) / 48;
+
+					this->setFieldMap(); //범위 채우기로 이동
+				}
+			}
+		}
 	}
 }
 
@@ -385,6 +427,21 @@ void maptoolScene::render()
 		else { continue; }
 	}
 
+
+	//타일이 그려질 위치&범위 보이게 만들기
+	for (int i = 0; i < TILEX*TILEY; i++) {
+		if (PtInRect(&_tiles[i].rc, _ptMouse)) {
+			selectRect = RectMake(_tiles[i].rc.left, _tiles[i].rc.top, _currentTile.sampleSizeX * 48, _currentTile.sampleSizeY * 48);
+	
+			if (INPUT->GetKey(VK_RBUTTON)) {
+				_drawField.dragWidth = _tiles[i].rc.right - _drawField.startX;
+				_drawField.dragHeight = _tiles[i].rc.bottom - _drawField.startY;
+				selectRect = RectMake(_drawField.startX,_drawField.startY,_drawField.dragWidth, _drawField.dragHeight);
+			}
+
+			FrameRect(getMemDC(), selectRect, RGB(0, 255, 0));
+		}
+	}
 
 	Rectangle(getMemDC(), _rcPalette);
 
@@ -474,13 +531,6 @@ void maptoolScene::render()
 	if (_palettePage < SMAPLETILECOUNT) { IMAGEMANAGER->findImage("rightArrow5")->render(getMemDC(), _rcArrow5[1].left, _rcArrow5[1].top); }
 
 
-	//if (_palettePage > 1) { IMAGEMANAGER->findImage("activateLeft")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
-	//else if (_palettePage == 1) { IMAGEMANAGER->findImage("Left")->render(getMemDC(), _rcArrow[0].left, _rcArrow[0].top); }
-	////샘플타일의 번호가 최대값보다 큰 경우는 없으므로 최대값보다 작은 경우에만 다음 타일로 넘어가는 화살표를 보여준다.
-	//if (_palettePage <= SMAPLETILECOUNT) { IMAGEMANAGER->findImage("activateRight")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
-	//else { IMAGEMANAGER->findImage("Right")->render(getMemDC(), _rcArrow[1].left, _rcArrow[1].top); }
-	
-
 	if (_setSaveLoad == true)
 	{
 		frameBoxRender(_rcSaveWindow, 1.0f); //세이브확인창프레임
@@ -522,13 +572,27 @@ void maptoolScene::render()
 
 	}
 
-	//char temp[100];
-	textOut(getMemDC(), 100, 100, _pageNum, RGB(255, 0, 0));
+
+	//샘플타일 내 드래그 상태 보이게 하기
+	if (PtInRect(&_rcPalette, _ptMouse)&&INPUT->GetKey(VK_LBUTTON)) {
+		for (int i = 0; i < 60; i++) {
+			if (PtInRect(&_sampleTile[i].rc, _ptMouse)) {
+				_dragRect.endX = _sampleTile[i].rc.right;
+				_dragRect.endY = _sampleTile[i].rc.bottom;
+			}
+		}
+		_dragRect.width = _dragRect.endX - _currentTile.sampleStartX;
+		_dragRect.height = _dragRect.endY - _currentTile.sampleStartY;
+		_dragRect.rc = RectMake(_currentTile.sampleStartX, _currentTile.sampleStartY, _dragRect.width, _dragRect.height);
+		FrameRect(getMemDC(), _dragRect.rc, RGB(255, 255, 0));
+	}
 }
 
 void maptoolScene::maptoolSetup()
 {
+
 	//_rcPalette = RectMakeCenter((_rcScreen.left + _rcScreen.right) / 2, _rcScreen.bottom - 192, 576, 288);
+	
 	for (int i = 0; i < 6; i++)
 	{
 		for (int j = 0; j < 10; j++)
@@ -556,64 +620,81 @@ void maptoolScene::maptoolSetup()
 	}																							    //세이브로드UI
 	_rcSave = RectMakeCenter(WINSIZEX / 2 - 70, WINSIZEY / 2 + 35, 80, 35);								    //세이브로드UI
 	_rcLoad = RectMakeCenter(WINSIZEX / 2 + 70, WINSIZEY / 2 + 35, 80, 35);								    //세이브로드UI
-
 }
 
 void maptoolScene::setSample() {
 	//선택된 x방향타일 갯수
-	_currentTile.sampleSizeX = (_currentTile.sampleEndX - _currentTile.sampleStartX) / 48 + 1;
+	_currentTile.sampleSizeX = (_currentTile.sampleEndX - _currentTile.sampleStartX) / 48;
 	//선택돤 y방향타일 갯수
-	_currentTile.sampleSizeY = (_currentTile.sampleEndY - _currentTile.sampleStartY) / 48 + 1;
+	_currentTile.sampleSizeY = (_currentTile.sampleEndY - _currentTile.sampleStartY) / 48;
 
-	if (PtInRect(&_rcPalette, _ptMouse))
-	{
-		for (int i = 0; i < SAMPLETILEX * SAMPLETILEY; i++)
-		{
-			if (PtInRect(&_sampleTile[i].rc, _ptMouse))
-			{
-				_currentTile.pageNumber = _palettePage;
-				_currentTile.x = _sampleTile[i].tileFrameX;
-				_currentTile.y = _sampleTile[i].tileFrameY;
-				_canMove = _sampleTile[i].canMove;
-				break;
-			}
-		}
+	_currentTile.pageNumber = _palettePage;
+	
+
+	//새로 선택했을 때 기존에 선택되어 있었던 타일은 지워지게 해야함
+	//안그러면 이후에 선택한 타일이 선택한 타일보다 작을 경우 이전 타일이 같이 그려짐
+	for (int i = 0; i < SAMPLETILEX; i++) {
+		_currentTile.x[i] = -1;
 	}
 
+	for (int i = 0; i < SAMPLETILEY; i++) {
+		_currentTile.y[i] = -1;
+	}
+
+	//좌표값 가져오기
+	for (int i = 0; i < _currentTile.sampleSizeX; i++) {
+		_currentTile.x[i] = _currentTile.sampleStartPointX + i;
+	}
+
+	for (int i = 0; i < _currentTile.sampleSizeY; i++) {
+		_currentTile.y[i] = _currentTile.samplSetartPointY + i;
+	}
 }
 
 void maptoolScene::setMap()
 {
 	for (int i = 0; i < TILEX * TILEY; i++)
 	{
-		if (PtInRect(&_tiles[i].rc, _ptMouse))
+		if (PtInRect(&_tiles[i].rc, _ptMouse) && !PtInRect(&_rcPalette, _ptMouse))
 		{
 			//가장 하단 레이어인가
 			if (_layer[0])
 			{
-				_tiles[i].canMove[0] = _canMove;
-				_tiles[i].imagePage[0] = _currentTile.pageNumber;
-				_tiles[i].tileFrameX[0] = _currentTile.x;
-				_tiles[i].tileFrameY[0] = _currentTile.y;
-				_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y);
+				for (int j = 0; j < _currentTile.sampleSizeY; j++) {
+					for (int n = 0; n < _currentTile.sampleSizeX; n++) {
+						_tiles[i + (j * TILEX + n)].canMove[0] = _canMove;
+						_tiles[i + (j * TILEX + n)].tileFrameX[0] = _currentTile.x[n];
+						_tiles[i + (j * TILEX + n)].tileFrameY[0] = _currentTile.y[j];
+						_tiles[i + (j * TILEX + n)].imagePage[0] = _currentTile.pageNumber;
+						_tiles[i + (j * TILEX + n)].terrain = terrainSelect(_currentTile.x[n], _currentTile.y[j]);		
+					}
+				}
 			}
 			//중간 레이어인가
 			if (_layer[1])
 			{
-				_tiles[i].canMove[1] = _canMove;
-				_tiles[i].tileFrameX[1] = _currentTile.x;
-				_tiles[i].tileFrameY[1] = _currentTile.y;
-				_tiles[i].imagePage[1] = _currentTile.pageNumber;
-				_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y);
+				for (int j = 0; j < _currentTile.sampleSizeY; j++) {
+					for (int n = 0; n < _currentTile.sampleSizeX; n++) {
+						_tiles[i + (j * TILEX + n)].canMove[1] = _canMove;
+						_tiles[i + (j * TILEX + n)].tileFrameX[1] = _currentTile.x[n];
+						_tiles[i + (j * TILEX + n)].tileFrameY[1] = _currentTile.y[j];
+						_tiles[i + (j * TILEX + n)].imagePage[1] = _currentTile.pageNumber;
+						_tiles[i + (j * TILEX + n)].terrain = terrainSelect(_currentTile.x[n], _currentTile.y[j]);
+					}
+				}
 			}
 			//가장 위 레이어인가
 			if (_layer[2])
 			{
-				_tiles[i].canMove[2] = _canMove;
-				_tiles[i].tileFrameX[2] = _currentTile.x;
-				_tiles[i].tileFrameY[2] = _currentTile.y;
-				_tiles[i].imagePage[2] = _currentTile.pageNumber;
-				_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y);
+				for (int j = 0; j < _currentTile.sampleSizeY; j++) {
+					for (int n = 0; n < _currentTile.sampleSizeX; n++) {
+						_tiles[i + (j * TILEX + n)].canMove[2] = _canMove;
+						_tiles[i + (j * TILEX + n)].tileFrameX[2] = _currentTile.x[n];
+						_tiles[i + (j * TILEX + n)].tileFrameY[2] = _currentTile.y[j];
+						_tiles[i + (j * TILEX + n)].imagePage[2] = _currentTile.pageNumber;
+						_tiles[i + (j * TILEX + n)].terrain = terrainSelect(_currentTile.x[n], _currentTile.y[j]);
+					}
+				}
 			}
 		}
 	}
@@ -626,29 +707,61 @@ void maptoolScene::setAllMap() {
 		{
 			_tiles[i].canMove[0] = _canMove;
 			_tiles[i].imagePage[0] = _currentTile.pageNumber;
-			_tiles[i].tileFrameX[0] = _currentTile.x;
-			_tiles[i].tileFrameY[0] = _currentTile.y;
-
-			//여기서 채움
-			_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y);
+			_tiles[i].tileFrameX[0] = _currentTile.x[0];
+			_tiles[i].tileFrameY[0] = _currentTile.y[0];
+			_tiles[i].terrain = terrainSelect(_currentTile.x[0], _currentTile.y[0]);
 		}
 		//중간 레이어
 		if (_layer[1])
 		{
 			_tiles[i].canMove[1] = _canMove;
-			_tiles[i].tileFrameX[1] = _currentTile.x;
-			_tiles[i].tileFrameY[1] = _currentTile.y;
+			_tiles[i].tileFrameX[1] = _currentTile.x[0];
+			_tiles[i].tileFrameY[1] = _currentTile.y[0];
 			_tiles[i].imagePage[1] = _currentTile.pageNumber;
-			_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y);
+			_tiles[i].terrain = terrainSelect(_currentTile.x[0], _currentTile.y[0]);
 		}
 		//가장 위 레이어
 		if (_layer[2])
 		{
 			_tiles[i].canMove[2] = _canMove;
-			_tiles[i].tileFrameX[2] = _currentTile.x;
-			_tiles[i].tileFrameY[2] = _currentTile.y;
+			_tiles[i].tileFrameX[2] = _currentTile.x[0];
+			_tiles[i].tileFrameY[2] = _currentTile.y[0];
 			_tiles[i].imagePage[2] = _currentTile.pageNumber;
-			_tiles[i].terrain = terrainSelect(_currentTile.x, _currentTile.y);
+			_tiles[i].terrain = terrainSelect(_currentTile.x[0], _currentTile.y[0]);
+		}
+	}
+}
+
+void maptoolScene::setFieldMap() {
+	for (int i = 0; i < _drawField.sizeY; i++) {
+		for (int j = 0; j < _drawField.sizeX; j++) {
+			//가장 하단 레이어
+			if (_layer[0])
+			{
+				_tiles[_drawField.startIndex + (i * TILEX + j)].canMove[0] = _canMove;
+				_tiles[_drawField.startIndex + (i * TILEX + j)].imagePage[0] = _currentTile.pageNumber;
+				_tiles[_drawField.startIndex + (i * TILEX + j)].tileFrameX[0] = _currentTile.x[0];
+				_tiles[_drawField.startIndex + (i * TILEX + j)].tileFrameY[0] = _currentTile.y[0];
+				_tiles[_drawField.startIndex + (i * TILEX + j)].terrain = terrainSelect(_currentTile.x[0], _currentTile.y[0]);
+			}
+			//중간 레이어
+			if (_layer[1])
+			{
+				_tiles[_drawField.startIndex + (i * TILEX + j)].canMove[1] = _canMove;
+				_tiles[_drawField.startIndex + (i * TILEX + j)].tileFrameX[1] = _currentTile.x[0];
+				_tiles[_drawField.startIndex + (i * TILEX + j)].tileFrameY[1] = _currentTile.y[0];
+				_tiles[_drawField.startIndex + (i * TILEX + j)].imagePage[1] = _currentTile.pageNumber;
+				_tiles[_drawField.startIndex + (i * TILEX + j)].terrain = terrainSelect(_currentTile.x[0], _currentTile.y[0]);
+			}
+			//가장 위 레이어
+			if (_layer[2])
+			{
+				_tiles[_drawField.startIndex + (i * TILEX + j)].canMove[2] = _canMove;
+				_tiles[_drawField.startIndex + (i * TILEX + j)].tileFrameX[2] = _currentTile.x[0];
+				_tiles[_drawField.startIndex + (i * TILEX + j)].tileFrameY[2] = _currentTile.y[0];
+				_tiles[_drawField.startIndex + (i * TILEX + j)].imagePage[2] = _currentTile.pageNumber;
+				_tiles[_drawField.startIndex + (i * TILEX + j)].terrain = terrainSelect(_currentTile.x[0], _currentTile.y[0]);
+			}
 		}
 	}
 }
