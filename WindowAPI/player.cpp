@@ -22,7 +22,7 @@ HRESULT player::init()
 	//_enemyY = 400;
 
 	// 게임이 시작할 때 전투씬이 아니다.
-	_isBattle = false;
+	_isBattle = true;
 	// 플레이어는 제일 먼저 시작할 때 아래를 바라보고 있다.
 	_direct = 1;
 	_player.cameraRc = RectMakeCenter(_player.x, _player.y, 300, 200);
@@ -241,7 +241,7 @@ void player::update()
 
 
 		//test - state attack -> 베기와 찌르기, 점프시에는 점프 베기 찌르기등으로 추가예정
-		if (INPUT->GetKeyDown('Z') && _player._state != pDEAD && _player._state != pJUMP && _player._state != pHIT && _player._state != pWIN && _player._state != pDEAD)
+		if (INPUT->GetKeyDown('Z') && _player._state != pDEAD && _player._state != pJUMP && _player._state != pHIT && _player._state != pWIN && _player._state != pDEAD && _player._state != pATTACK)
 		{
 			_player._state = pATTACK;
 			if (_player._state != pATTACK)
@@ -895,6 +895,9 @@ void player::animation()
 				if (_frameIndex == 7)
 				{
 					_isBattle = false;
+					_player.viewX = 0;
+					_player.x = 200;
+					_player.y = 460;
 					//SCENEMANAGER->loadScene("게임화면");
 				}
 			}

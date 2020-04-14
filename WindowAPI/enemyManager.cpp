@@ -76,7 +76,7 @@ void enemyManager::setMinion()
 		//	i--;
 		//	continue;
 		//}
-		enemy* _minion = new golem;
+		enemy* _minion = new jamir;
 		_minion->init(PointMake(minionXPos[i], 500));
 		_vMinion.push_back(_minion);
 	}

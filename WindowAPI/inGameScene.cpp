@@ -447,7 +447,6 @@ void inGameScene::changeBattleScene()
 	{
 		//배틀로 바꿔준다.
 		_player->setIsBattle(true);
-		_player->setPlayerXY(200, 460);
 		//플레이어 정보도 저장해준다.
 		PLAYERDATA->setPlayerData(_player);
 		//타일의 렉트 위치 저장
