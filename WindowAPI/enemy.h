@@ -31,7 +31,7 @@ public:
 	virtual HRESULT init()=0;
 	virtual HRESULT init(POINT position) = 0;
 	virtual void release() = 0;
-	virtual void update() = 0;
+	virtual void update(int playerViewX) = 0;
 	virtual void render() = 0;
 	 
 	virtual void move() = 0;		//업데이트
@@ -107,7 +107,7 @@ public:
 	HRESULT init();
 	HRESULT init(POINT position);
 	void release();
-	void update();
+	void update(int playerViewX);
 	void render();
 
 	virtual void move();		//업데이트
@@ -183,7 +183,7 @@ public:
 	HRESULT init();
 	HRESULT init(POINT position);
 	void release();
-	void update();
+	void update(int playerViewX);
 	void render();
 
 	virtual void move();		//업데이트

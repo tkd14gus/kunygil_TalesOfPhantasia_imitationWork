@@ -33,6 +33,7 @@ struct tagPlayer
 	int maxHp, hp;		//플레이어 hp
 	int maxTp, tp;		// 플레이어 tp
 	int attXK, attYK;		//<-무슨 역할인지 확인 필요
+	int viewX;				//랜더를위한값
 	float x, y;				//플레이어 좌표
 	float inGameX, inGameY;	//전투가 아니라 인게임 내에서 쓸 좌표
 	float speed;			//플레이어 이동속도
@@ -53,6 +54,7 @@ struct tagPlayer
 	image* dead;		//사망 이미지
 	image* win;			//승리 이미지
 
+	RECT cameraRc;
 	RECT rc;			//플레이어 충돌 사각형
 	RECT attack;		//공격 충돌 사각형
 	//RECT jumpAttack;  //공격 충돌 사각형

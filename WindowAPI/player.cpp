@@ -11,7 +11,7 @@ HRESULT player::init()
 	//프레임이미지초기화
 	_frameCount = 0;
 	_frameIndex = 0;
-
+	_player.viewX = 0;
 	//무적시간 초기화
 	//_immoTime = 0;
 
@@ -25,7 +25,7 @@ HRESULT player::init()
 	_isBattle = true;
 	// 플레이어는 제일 먼저 시작할 때 아래를 바라보고 있다.
 	_direct = 1;
-
+	_player.cameraRc = RectMakeCenter(_player.x, _player.y, 300, 200);
 	return S_OK;
 }
 
@@ -39,6 +39,8 @@ void player::update()
 	{
 		//실시간 플레이어 위치 및 속도
 		_player.rc = RectMakeCenter(_player.x, _player.y, 75, 80);
+		_player.cameraRc = RectMakeCenter(_player.x, _player.y, 300, 200);
+	
 		if (!(_player._state == pATTACK || _player._state == pJUMP))
 		{
 			_player.attXK = 0;
@@ -109,7 +111,9 @@ void player::update()
 			else if (_player._state == pJUMP)
 			{
 				_player._state = pJUMP;
-				_player.x -= 3;
+				if (_player.viewX == 0 && _player.x > 37) { _player.x -= 3; }
+				else if (_player.cameraRc.left < 0) { _player.viewX -= 3; }
+				else { _player.x -= 3; }
 			}
 			else if (_player._state == pHIT)
 			{
@@ -124,8 +128,10 @@ void player::update()
 				_player._state = pDEAD;
 				if (_frameIndex >= 2)
 				{
-					_player.sight = 0;				 //플레이어 시점 - 왼쪽
-					_player.x -= _player.speed;      //플레이어 좌표 변화
+					_player.sight = 0;					 //플레이어 시점 - 왼쪽
+					if (_player.viewX == 0 && _player.x > 37) { _player.x -= _player.speed; }
+					else if (_player.cameraRc.left < 0) { _player.viewX -= _player.speed; }
+					else { _player.x -= _player.speed; }	  //플레이어 좌표 변화
 				}
 			}
 			else
@@ -134,13 +140,17 @@ void player::update()
 				{
 					_player.sight = 0;				 //플레이어 시점 - 왼쪽
 					_player._state = pRUN;			 //플레이어 상태 - 뛰기
-					_player.x -= _player.speed;      //플레이어 좌표 변화
+					if (_player.viewX == 0 && _player.x > 37) { _player.x -= _player.speed; }
+					else if (_player.cameraRc.left < 0) { _player.viewX -= _player.speed; }
+					else { _player.x -= _player.speed; }    //플레이어 좌표 변화
 				}
 				else
 				{
 					_player.sight = 0;				 //플레이어 시점 - 왼쪽
 					_player._state = pWALK;			 //플레이어 상태 - 걷기
-					_player.x -= _player.speed;      //플레이어 좌표 변화
+					if (_player.viewX ==0  && _player.x > 37) { _player.x -= _player.speed; }
+					else if (_player.cameraRc.left < 0) { _player.viewX -= _player.speed; }
+					else { _player.x -= _player.speed; }      //플레이어 좌표 변화
 				}
 			}
 		}
@@ -171,7 +181,9 @@ void player::update()
 			else if (_player._state == pJUMP)
 			{
 				_player._state = pJUMP;
-				_player.x += 3;
+				if (_player.viewX == 900 && _player.x < WINSIZEX-37) { _player.x += _player.speed; }
+				else if (_player.cameraRc.right > WINSIZEX) { _player.viewX += 3; }
+				else { _player.x += 3; }
 			}
 			else if (_player._state == pHIT)
 			{
@@ -187,22 +199,29 @@ void player::update()
 				if (_frameIndex >= 2)
 				{
 					_player.sight = 1;				 //플레이어 시점 - 왼쪽
-					_player.x += _player.speed;                    //플레이어 좌표 변화
+					if (_player.viewX == 900 && _player.x < WINSIZEX - 37) { _player.x += _player.speed; }
+					else if (_player.cameraRc.right > WINSIZEX) { _player.viewX += _player.speed; }
+					else { _player.x += _player.speed; }                //플레이어 좌표 변화
 				}
 			}
 			else
 			{
 				if (INPUT->GetKey(VK_SHIFT))
 				{
+					
 					_player.sight = 1;				 //플레이어 시점 - 오른쪽
 					_player._state = pRUN;			         //플레이어 상태 - 뛰기
-					_player.x += _player.speed;                  //플레이어 좌표 변화
+					if (_player.viewX == 900 && _player.x < WINSIZEX - 37) { _player.x += _player.speed; }
+					else if (_player.cameraRc.right > WINSIZEX) { _player.viewX += _player.speed; }
+					else { _player.x += _player.speed; }                 //플레이어 좌표 변화
 				}
 				else
 				{
 					_player.sight = 1;				 //플레이어 시점 - 오른쪽
 					_player._state = pWALK;			         //플레이어 상태 - 걷기
-					_player.x += _player.speed;                  //플레이어 좌표 변화
+					if (_player.viewX == 900 && _player.x < WINSIZEX - 37) { _player.x += _player.speed; }
+					else if (_player.cameraRc.right > WINSIZEX) { _player.viewX += _player.speed; }
+					else { _player.x += _player.speed; }                  //플레이어 좌표 변화
 				}
 			}
 		}
@@ -324,8 +343,8 @@ void player::update()
 			_player._state = pWIN;
 		}
 
-
-
+		if (_player.viewX < 0) { _player.viewX = 0; }
+		else if (_player.viewX > 900) { _player.viewX = 900; }
 
 		//RECT temp;
 		////공격 타격범위와 적과의 충돌
@@ -430,6 +449,8 @@ void player::render()
 		Rectangle(getMemDC(), _player.rc);		//플레이어 타격범위 사각형
 
 		Rectangle(getMemDC(), _player.attack);		//플레이어 타격범위 사각형
+
+		FrameRect(getMemDC(), _player.cameraRc, RGB(140, 60, 180));
 
 		this->animation();					//플레이어 모션 애니메이션
 											//배틀일 땐 애니메이션으로 렌더하니까 뒤에 둔다.
@@ -797,7 +818,7 @@ void player::animation()
 			{
 				IMAGEMANAGER->frameRender("guard", getMemDC(), _player.rc.left, _player.rc.top);
 				//_frameCount++;
-				_player.atkSlash->setFrameY(0);
+				_player.guard->setFrameY(0);
 				if (_frameCount % 8 == 0)
 				{
 					IMAGEMANAGER->findImage("guard")->setFrameY(0);
@@ -807,14 +828,14 @@ void player::animation()
 						_frameCount = 0;
 						_frameIndex = 0;
 					}
-					_player.atkSlash->setFrameX(_frameIndex);
+					_player.guard->setFrameX(_frameIndex);
 				}
 			}
 			else if (_player.sight == true)
 			{
 				IMAGEMANAGER->frameRender("guard", getMemDC(), _player.rc.left, _player.rc.top);
 				//_frameCount++;
-				_player.atkSlash->setFrameY(1);
+				_player.guard->setFrameY(1);
 				if (_frameCount % 8 == 0)
 				{
 					IMAGEMANAGER->findImage("guard")->setFrameY(1);
@@ -822,7 +843,7 @@ void player::animation()
 					if (_frameIndex > 1)
 					{
 					}
-					_player.atkSlash->setFrameX(_frameIndex);
+					_player.guard->setFrameX(_frameIndex);
 				}
 			}
 			break;
@@ -884,7 +905,12 @@ void player::animation()
 				if (_frameIndex == 0) { IMAGEMANAGER->frameRender("hit", getMemDC(), _player.rc.left, _player.rc.top + 10); }
 				else { IMAGEMANAGER->frameRender("hit", getMemDC(), _player.rc.left, _player.rc.top + 3); }
 				_player.hit->setFrameY(0);
-				if (_frameCount % 80 < 50 && _frameIndex == 0) { _player.x--; }
+				if (_frameCount % 80 < 50 && _frameIndex == 0) 
+				{
+					if (_player.viewX == 0 && _player.x > 37) { _player.x --; }
+					else if (_player.cameraRc.left < 0) { _player.viewX --; }
+					else { _player.x --; }
+				}
 				if (_frameCount == 80 || _frameCount >= 120)
 				{
 					_frameIndex++;
@@ -902,7 +928,12 @@ void player::animation()
 				if (_frameIndex == 0) { IMAGEMANAGER->frameRender("hit", getMemDC(), _player.rc.left, _player.rc.top + 10); }
 				else { IMAGEMANAGER->frameRender("hit", getMemDC(), _player.rc.left, _player.rc.top + 3); }
 				_player.hit->setFrameY(1);
-				if (_frameCount % 80 < 50 && _frameIndex == 0) { _player.x++; }
+				if (_frameCount % 80 < 50 && _frameIndex == 0)
+				{
+					if (_player.viewX == 900 && _player.x < WINSIZEX - 37) { _player.x ++; }
+					else if (_player.cameraRc.right > WINSIZEX) { _player.viewX ++; }
+					else { _player.x ++; }
+				}
 				if (_frameCount == 80 || _frameCount >= 120)
 				{
 					_frameIndex++;

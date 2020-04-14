@@ -26,7 +26,7 @@ private:
 public:
 	HRESULT init();
 	void release();
-	void update();
+	void update(int playerViewX);
 	void render();
 
 	//미니언 세팅 => 초기화에 넣는다
