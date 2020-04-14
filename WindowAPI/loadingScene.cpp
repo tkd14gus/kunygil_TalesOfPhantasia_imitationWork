@@ -30,8 +30,8 @@ void loadingScene::update()
 	if (_loading->loadingDone())
 	{
 		//SCENEMANAGER->loadScene("게임화면");
-		//SCENEMANAGER->loadScene("맵툴기초");
-		SCENEMANAGER->loadScene("전투화면");
+		SCENEMANAGER->loadScene("맵툴기초");
+		//SCENEMANAGER->loadScene("전투화면");
 	}
 }
 
@@ -217,7 +217,7 @@ void loadingScene::loadingImage()
 	
 	
 	//#================================ M U M M Y =========================================================================#	
-	
+
 	_loading->loadFrameImage("mummydead", "Images/enemy/mummy/dead.bmp", 64 * 2, 46 * 4, 1, 2);
 	_loading->loadFrameImage("mummyguard", "Images/enemy/mummy/guard.bmp", 64 * 2, 46 * 4, 1, 2);
 	_loading->loadFrameImage("mummyhit", "Images/enemy/mummy/hit.bmp", 64 * 2, 46 * 4, 1, 2);

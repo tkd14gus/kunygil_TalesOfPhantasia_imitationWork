@@ -29,6 +29,7 @@ HRESULT mummy::init(POINT position)
 	_imageDead = IMAGEMANAGER->findImage("mummydead");
 	_hp = 5;
 	_attCd = 250;
+
 	//적 개체 생성 위치
 	_state = eWALK;
 	playerWidth = _imageIdle->getWidth() - 60;
@@ -487,6 +488,7 @@ void golem::render()
 
 void golem::move()
 {
+
 	//플레이어와 충돌하지 않을 경우 전진
 	switch (collision)
 	{

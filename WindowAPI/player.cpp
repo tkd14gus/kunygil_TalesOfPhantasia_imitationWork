@@ -49,7 +49,7 @@ void player::update()
 			_player.attack = RectMake(_player.rc.right - 20, _player.rc.top, _player.attXK, _player.attYK);
 			//_player.jumpAttack = RectMake(_rcPlayer.right - 20, _rcPlayer.top, 50, 160);
 		}
-		else if (!_player.sight == false)  //플레이어가 왼쪽을 바라보고 있을 때
+		else if (_player.sight == false)  //플레이어가 왼쪽을 바라보고 있을 때
 		{
 			_player.attack = RectMake(_player.rc.left - 20, _player.rc.top, _player.attXK, _player.attYK);
 			//_player.jumpAttack = RectMake(_rcPlayer.left - 20, _rcPlayer.top, 50, 160);
@@ -1605,4 +1605,5 @@ bool subplayer::checkArrowHitTheEnemy(POINT P)
 		else { return false; }
 	}
 	return false;
+
 }

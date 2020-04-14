@@ -143,7 +143,7 @@ private:
 	int _frameCount;
 
 	tagPlayer _subPlayer;	//tagPlayer 구조체로 subPlayer 생성
-
+	player _player;
 	ARROW _arrow;
 	image* _walkingDirect;	//4방향으로 걷는 이미지
 private:
@@ -152,6 +152,9 @@ private:
 	int _direct = 0;
 	float _enemyDistance;		//ai와 적의 거리
 	float _partyDistance;
+	//float _distance;		//ai와 적의 거리
+
+	tagstate _state;
 public:
 
 	HRESULT init();
@@ -163,6 +166,9 @@ public:
 	void animation();
 	//상태창에서 걷는 애니메이션 출력
 	void walkingInfo();
+
+	player setPlayer(player _playerAddress) { _player = _playerAddress; }
+
 
 	tagPlayer* getSubPlayer() { return &_subPlayer; }
 	void setSubPlayer(tagPlayer subPlayer) { _subPlayer = subPlayer; }

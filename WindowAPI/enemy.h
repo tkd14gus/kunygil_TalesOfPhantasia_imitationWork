@@ -63,6 +63,7 @@ public:
 
 	virtual int getEnemyX() = 0;				//몬스터 캐릭터간 방향 설정
 	virtual void setLeft(bool isLeft) = 0;				//몬스터 좌우 설정
+
 	enemy() {}
 	virtual ~enemy() {}
 };
@@ -89,7 +90,7 @@ private:
 	int playerheight;
 	int type;
 	int _attCd;
-	
+
 	MINIONTYPE _minionType;	//몹 종류
 	STATE _state;
 

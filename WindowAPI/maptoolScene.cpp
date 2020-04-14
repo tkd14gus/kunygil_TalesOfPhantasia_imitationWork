@@ -306,8 +306,8 @@ void maptoolScene::update()
 					_currentTile.sampleStartY = _sampleTile[i].rc.top;	//시작 y좌표(타일 top)
 
 					//프레임 시작 마우스 좌표
-					_currentTile.sampleStartPointX = _sampleTile[i].tileFrameX;		//시작 x프레임 좌표
-					_currentTile.samplSetartPointY = _sampleTile[i].tileFrameY;		//시작 y프레임 좌표
+					_currentTile.sampleStartPointX = _sampleTile[i].tileFrameX;		//오른쪽으로 드래그 할때 시작 x프레임 좌표
+					_currentTile.samplSetartPointY = _sampleTile[i].tileFrameY;		//아래로 드래그 할때 시작 y프레임 좌표
 				}
 			}
 		}
@@ -329,13 +329,16 @@ void maptoolScene::update()
 						int temp = _currentTile.sampleEndX - TILESIZE;
 						_currentTile.sampleEndX = _currentTile.sampleStartX + TILESIZE;
 						_currentTile.sampleStartX = temp;
+						_currentTile.sampleStartPointX = _sampleTile[i].tileFrameX;		//왼쪽으로 드래그 할때 시작 x프레임 좌표
 					}
 
 					if (_currentTile.sampleEndY <= _currentTile.sampleStartY) {
 						int temp = _currentTile.sampleEndY - TILESIZE;
 						_currentTile.sampleEndY = _currentTile.sampleStartY + TILESIZE;
 						_currentTile.sampleStartY = temp;
+						_currentTile.samplSetartPointY = _sampleTile[i].tileFrameY;		//위로 드래그 할때 시작 y프레임 좌표
 					}
+
 
 					//면적에 따른 브러쉬 만들기
 					this->setSample();
@@ -718,17 +721,8 @@ void maptoolScene::setSample() {
 	_currentTile.sampleSizeX = (_currentTile.sampleEndX - _currentTile.sampleStartX) / 48;
 	//선택돤 y방향타일 갯수
 	_currentTile.sampleSizeY = (_currentTile.sampleEndY - _currentTile.sampleStartY) / 48;
-	//cout << _currentTile.sampleEndY << " " << _currentTile.sampleStartY << endl;
-	
-
-	////선택된 x방향타일 갯수
-	//_currentTile.sampleSizeX = (_currentTile.sampleEndX - _currentTile.sampleStartX) / 48;
-	////선택돤 y방향타일 갯수
-	//_currentTile.sampleSizeY = (_currentTile.sampleEndY - _currentTile.sampleStartY) / 48;
 
 	_currentTile.pageNumber = _palettePage;
-
-	//cout << _currentTile.pageNumber << endl;
 	
 
 	//새로 선택했을 때 기존에 선택되어 있었던 타일은 지워지게 해야함
@@ -748,7 +742,6 @@ void maptoolScene::setSample() {
 
 	for (int i = 0; i < _currentTile.sampleSizeY; i++) {
 		_currentTile.y[i] = _currentTile.samplSetartPointY + i;
-		cout << _currentTile.samplSetartPointY << endl;
 	}
 }
 
@@ -780,7 +773,6 @@ void maptoolScene::setMap()
 						_tiles[i + (j * TILEX + n)].tileFrameY[0] = _currentTile.y[j];
 						_tiles[i + (j * TILEX + n)].imagePage[0] = _currentTile.pageNumber;
 						_tiles[i + (j * TILEX + n)].terrain = terrainSelect(_currentTile.x[n], _currentTile.y[j]);		
-						//cout << _canMove << " " << _currentTile.x[n] << " " << _currentTile.y[j] << " " << _currentTile.pageNumber << endl;
 					}
 				}
 			}
