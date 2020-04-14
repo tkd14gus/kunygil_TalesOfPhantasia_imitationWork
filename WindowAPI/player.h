@@ -34,6 +34,7 @@ struct tagPlayer
 	int maxTp, tp;		// 플레이어 tp
 	int attXK, attYK;		//<-무슨 역할인지 확인 필요
 	int viewX;				//랜더를위한값
+
 	float x, y;				//플레이어 좌표
 	float inGameX, inGameY;	//전투가 아니라 인게임 내에서 쓸 좌표
 	float speed;			//플레이어 이동속도
@@ -53,6 +54,7 @@ struct tagPlayer
 	image* hit;			//히트 모션 추가 - 구민본
 	image* dead;		//사망 이미지
 	image* win;			//승리 이미지
+
 
 	RECT cameraRc;
 	RECT rc;			//플레이어 충돌 사각형
@@ -119,6 +121,14 @@ public:
 	RECT getPlayerDoorRc() { return _playerDoorRc; }
 	//상태변경을위한 함수
 	tagstate getAction() { return _player._state; }
+	//배틀이 끝났을 떄 _isBattle로 필드로 되돌린다.
+	bool getIsBattle() { return _isBattle; }
+	//배틀이 시작될 때 바꿔줘야 한다.
+	void setIsBattle(bool isBattle) { _isBattle = isBattle; }
+	//플레이어의 데이터를 저장하면 x,y값도 저장된다.
+	//따라서 배틀 시작시에 다시 초기값을 돌려줘야 한다.
+	void setPlayerXY(int x, int y) { _player.x = x; _player.y = y; }
+
 	//상태변경 1.IDLE 2.RUN 3.HIT 4.WALK 5.JUMP 6.ATT 7.GUARD 8.DEAD 9.WIN
 	void setAction(int pattern);
 

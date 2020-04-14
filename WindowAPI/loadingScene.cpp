@@ -29,9 +29,9 @@ void loadingScene::update()
 	//로딩완료후 화면 변경
 	if (_loading->loadingDone())
 	{
-		//SCENEMANAGER->loadScene("게임화면");
+		SCENEMANAGER->loadScene("게임화면");
 		//SCENEMANAGER->loadScene("맵툴기초");
-		SCENEMANAGER->loadScene("전투화면");
+		//SCENEMANAGER->loadScene("전투화면");
 	}
 }
 
@@ -213,6 +213,7 @@ void loadingScene::loadingImage()
 	_loading->loadImage("commonbattlebg","Images/battlebackground/commonbattlebg.bmp",2000,433);
 	_loading->loadImage("bossbattle","Images/battlebackground/bossbattle.bmp",2000,500);
 	_loading->loadImage("bossbattlebg","Images/battlebackground/bossbattlebg.bmp",2000,433);
+	//_loading->loadImage("commonbattlebg","Images/battlebackground/commonbattlebg",2000,433);
 
 	//#====================================================================================================================#
 	//#								Charicter, Enemy 이미지																   #

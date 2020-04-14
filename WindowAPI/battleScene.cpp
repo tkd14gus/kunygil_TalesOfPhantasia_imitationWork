@@ -9,6 +9,15 @@ HRESULT battleScene::init()
 	_enemyManager->init();
 	_statusBox = RectMake(0, 500, 380, 250);
 	_enemyBox = RectMake(380, 500, 220, 250);
+
+	//만일 PLAYERDATA->getPlayerData()가 NULL이 아닐 때
+	//(제일 먼저 켜지면 NULL로 초기화됨)
+	//_player에 넣어준다.
+	if (PLAYERDATA->getPlayerData() != NULL)
+	{
+		_player = PLAYERDATA->getPlayerData();
+
+	}
 	return S_OK;
 }
 
@@ -105,6 +114,15 @@ void battleScene::update()
 	//플레이어 승리처리
 	_player->update();
 	_enemyManager->update(_player->getPlayer()->viewX);
+
+	//배틀상태가 아니라면(배틀이 끝났다면)
+	if (!_player->getIsBattle())
+	{
+		//플레이어 정보도 저장해준다.
+		PLAYERDATA->setPlayerData(_player);
+		//화면을 바꿔준다.
+		SCENEMANAGER->loadScene("게임화면");
+	}
 }
 
 void battleScene::render()

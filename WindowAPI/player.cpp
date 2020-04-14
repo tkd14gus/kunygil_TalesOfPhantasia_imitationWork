@@ -22,7 +22,7 @@ HRESULT player::init()
 	//_enemyY = 400;
 
 	// 게임이 시작할 때 전투씬이 아니다.
-	_isBattle = true;
+	_isBattle = false;
 	// 플레이어는 제일 먼저 시작할 때 아래를 바라보고 있다.
 	_direct = 1;
 	_player.cameraRc = RectMakeCenter(_player.x, _player.y, 300, 200);
@@ -894,7 +894,8 @@ void player::animation()
 				_player.win->setFrameX(_frameIndex);
 				if (_frameIndex == 7)
 				{
-					SCENEMANAGER->loadScene("게임화면");
+					_isBattle = false;
+					//SCENEMANAGER->loadScene("게임화면");
 				}
 			}
 			break;
