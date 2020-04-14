@@ -44,12 +44,12 @@ void player::update()
 			_player.attXK = 0;
 			_player.attYK = 0;
 		}
-		if (_player.sight == true)
+		if (_player.sight == true)	//플레이어가 오른쪽을 바라보고 있을 때
 		{
 			_player.attack = RectMake(_player.rc.right - 20, _player.rc.top, _player.attXK, _player.attYK);
 			//_player.jumpAttack = RectMake(_rcPlayer.right - 20, _rcPlayer.top, 50, 160);
 		}
-		else if (_player.sight == false)
+		else if (!_player.sight == false)  //플레이어가 왼쪽을 바라보고 있을 때
 		{
 			_player.attack = RectMake(_player.rc.left - 20, _player.rc.top, _player.attXK, _player.attYK);
 			//_player.jumpAttack = RectMake(_rcPlayer.left - 20, _rcPlayer.top, 50, 160);
@@ -125,7 +125,7 @@ void player::update()
 				if (_frameIndex >= 2)
 				{
 					_player.sight = 0;				 //플레이어 시점 - 왼쪽
-					_player.x -= _player.speed;                    //플레이어 좌표 변화
+					_player.x -= _player.speed;      //플레이어 좌표 변화
 				}
 			}
 			else
@@ -134,13 +134,13 @@ void player::update()
 				{
 					_player.sight = 0;				 //플레이어 시점 - 왼쪽
 					_player._state = pRUN;			 //플레이어 상태 - 뛰기
-					_player.x -= _player.speed;                    //플레이어 좌표 변화
+					_player.x -= _player.speed;      //플레이어 좌표 변화
 				}
 				else
 				{
 					_player.sight = 0;				 //플레이어 시점 - 왼쪽
 					_player._state = pWALK;			 //플레이어 상태 - 걷기
-					_player.x -= _player.speed;                    //플레이어 좌표 변화
+					_player.x -= _player.speed;      //플레이어 좌표 변화
 				}
 			}
 		}
@@ -985,7 +985,7 @@ void player::setAction(int pattern)
 
 void player::playerWin()
 {
-	if (_player._state != pWIN && !(_player._state == pJUMP || _player._state))
+	if (_player._state != pWIN && !(_player._state == pJUMP || _player._state == pATTACK))
 	{
 		_frameIndex = 0;
 		_frameCount = 0;
@@ -1237,14 +1237,13 @@ void subplayer::update()
 	if (_subPlayer._state == pRUN) { _subPlayer.speed = 3.0f; }	//pRun일 때는 속도를 3.0f로 설정
 	
 	//거리조절
-	if (_distance > 700)
+	if (_partyDistance > 50)
 	{
 		_subPlayer._state = pWALK;
-		_subPlayer.x++;
 	}
 	else
 	{
-		if (_distance >= 50) { _melee = false; }	//거리가 50 이상이면 활로 공격
+		if (_enemyDistance > 50) { _melee = false; }	//거리가 50 이상이면 활로 공격
 		else { _melee = true; }						//거리가 50 미만이면 근접 공격
 		_subPlayer._state = pATTACK;	//공격 상태로 전환
 	}
@@ -1277,11 +1276,12 @@ void subplayer::update()
 
 
 	//화살이 날아갈시 화살의 좌표 이동
-	if (_arrow._bShoot == true)
+	if (_arrow._bShoot)
 	{
 		_arrow._point.x += cosf(PI / 2) * 2 + _arrow._speed;
 		_arrow._point.y += -sinf(PI / 2) * 2;
 		_arrow._speed += 2.1f;
+		if (_arrow._point.y >= 500) { _arrow._bShoot = false; }
 	}
 
 }
@@ -1366,7 +1366,7 @@ void subplayer::render()
 	}
 
 	char chr[100];
-	sprintf_s(chr, "거리 : %f", _distance);
+	sprintf_s(chr, "거리 : %f", _enemyDistance);
 	TextOut(getMemDC(), 100, 150, chr, strlen(chr));
 
 	char chr1[100];
@@ -1470,6 +1470,7 @@ void subplayer::walkingInfo()
 //상태창에서 걷은 애니메이션 출력
 {
 	_frameCount++;
+
 	switch(_direct%4)
 	{
 	case 0:
@@ -1543,8 +1544,43 @@ void subplayer::walkingInfo()
 
 void subplayer::checkDistanceWithPlayer(POINT P)
 {
+	_partyDistance = powf(P.x - _subPlayer.x, 2.0f);
+	if (P.x < _subPlayer.x) { _subPlayer.sight = 0; }
+	else { _subPlayer.sight = 1; }
 }
 
-void subplayer::checkDistanceWithEnemy(POINT p)
+void subplayer::checkDistanceWithEnemy(POINT P)
 {
+	_enemyDistance = powf(P.x - _subPlayer.x, 2.0f);
+	if (P.x < _subPlayer.x) { _subPlayer.sight = 0; }
+	else { _subPlayer.sight = 1; }
+}
+
+bool subplayer::checkArrowHitTheEnemy(POINT P)
+{
+	float _dummy;	//화살 끝과 에너미 중심 사이의 거리를 저장할 임시변수
+
+	if (_subPlayer.sight)	//서브캐릭터가 오른쪽을 보고 있을 때
+	{
+		_dummy = P.x - this->_arrow._rc.right;	//화살의 오른쪽 끝과 에너미 중심점 사이의 거리를 저장
+
+		if (_dummy <= this->_arrow._speed)		//저장한 값이 화살의 속도보다 작거나 같을 경우 if문 처리
+		{
+			this->_arrow._point.x += _dummy;	//화살의 중심 좌표를 _dummy만큼 이동
+			return true;						//화살을 충돌처리
+		}
+		else { return false; }					//화살 끝과 에너미 중심 사이의 거리가 화살이 날아가는 속도값보다 크면 false를 반환한다.
+	}
+	else
+	{
+		_dummy = this->_arrow._rc.left - P.x;
+		
+		if (_dummy < this->_arrow._speed)
+		{
+			this->_arrow._point.x -= _dummy;
+			return true;
+		}
+		else { return false; }
+	}
+	return false;
 }

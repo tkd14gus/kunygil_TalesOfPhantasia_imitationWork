@@ -1,6 +1,7 @@
 #pragma once
 #include "gameNode.h"
 
+
 enum tagstate
 {
 	pIDLE,		//대기
@@ -140,16 +141,16 @@ private:
 	int _frameIndex;
 	int _frameCount;
 
-	tagPlayer _subPlayer;
-	player _player;
+	tagPlayer _subPlayer;	//tagPlayer 구조체로 subPlayer 생성
+
 	ARROW _arrow;
 	image* _walkingDirect;	//4방향으로 걷는 이미지
 private:
 	bool _melee;			//근접공격여부
 	bool _isLeft;
 	int _direct = 0;
-	float _distance;		//ai와 적의 거리
-
+	float _enemyDistance;		//ai와 적의 거리
+	float _partyDistance;
 public:
 
 	HRESULT init();
@@ -161,7 +162,6 @@ public:
 	void animation();
 	//상태창에서 걷는 애니메이션 출력
 	void walkingInfo();
-	player setPlayer(player _playerAddress) { _player = _playerAddress; }
 
 	tagPlayer* getSubPlayer() { return &_subPlayer; }
 	void setSubPlayer(tagPlayer subPlayer) { _subPlayer = subPlayer; }
@@ -172,7 +172,7 @@ public:
 
 	void checkDistanceWithPlayer(POINT P);
 	void checkDistanceWithEnemy(POINT p);
-
+	bool checkArrowHitTheEnemy(POINT P);
 	subplayer() {}
 	~subplayer() {}
 };
