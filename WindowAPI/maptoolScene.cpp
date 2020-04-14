@@ -326,11 +326,15 @@ void maptoolScene::update()
 					_currentTile.sampleEndY = _sampleTile[i].rc.bottom;
 
 					if (_currentTile.sampleEndX <= _currentTile.sampleStartX) {
-						_currentTile.sampleEndX = _currentTile.sampleStartX;
+						int temp = _currentTile.sampleEndX - TILESIZE;
+						_currentTile.sampleEndX = _currentTile.sampleStartX + TILESIZE;
+						_currentTile.sampleStartX = temp;
 					}
 
 					if (_currentTile.sampleEndY <= _currentTile.sampleStartY) {
-						_currentTile.sampleEndY = _currentTile.sampleStartY;
+						int temp = _currentTile.sampleEndY - TILESIZE;
+						_currentTile.sampleEndY = _currentTile.sampleStartY + TILESIZE;
+						_currentTile.sampleStartY = temp;
 					}
 
 					//면적에 따른 브러쉬 만들기
@@ -375,7 +379,6 @@ void maptoolScene::update()
 
 					_drawField.sizeX = (_drawField.endX - _drawField.startX) / 48;
 					_drawField.sizeY = (_drawField.endY - _drawField.startY) / 48;
-
 					this->setFieldMap(); //범위 채우기로 이동
 				}
 			}
@@ -391,7 +394,43 @@ void maptoolScene::update()
 			}
 			_dragRect.width = _dragRect.endX - _currentTile.sampleStartX;
 			_dragRect.height = _dragRect.endY - _currentTile.sampleStartY;
-			_dragRect.rc = RectMake(_currentTile.sampleStartX, _currentTile.sampleStartY, _dragRect.width, _dragRect.height);
+
+			if (_dragRect.width > 0)
+			{
+				//드래그 우측 아래로
+				if(_dragRect.height > 0)
+					_dragRect.rc = RectMake(_currentTile.sampleStartX, _currentTile.sampleStartY, _dragRect.width, _dragRect.height);
+				//드래그 우측 위로
+				else
+				{
+					//_dragRect.endY는 top의 위치지만 bottom까지 내려와야 하므로 그만큼 내려준다.
+					//_dragRect.height는 start의 top과 end의 bottom이므로 거꾸로 하면 48 * 2의 크기만큼 차이가 난다.
+					//그것을 매꿔준다.
+					if (_dragRect.height == 0)
+						_dragRect.height = 1;
+					_dragRect.rc = RectMake(_currentTile.sampleStartX, _dragRect.endY - TILESIZE, _dragRect.width, -_dragRect.height + TILESIZE * 2);
+				}
+			}
+			else
+			{
+				//드래그 좌측 아래로
+				if (_dragRect.height > 0)
+				{
+					if (_dragRect.width == 0)
+						_dragRect.width = 1;
+					//_dragRect.width = _currentTile.sampleStartX - _dragRect.endX;
+					_dragRect.rc = RectMake(_dragRect.endX - TILESIZE, _currentTile.sampleStartY, -_dragRect.width + TILESIZE * 2, _dragRect.height);
+				}
+				//드래그 좌측 위로
+				else
+				{
+					if (_dragRect.width == 0)
+						_dragRect.width = 1;
+					if (_dragRect.height == 0)
+						_dragRect.height = 1;
+					_dragRect.rc = RectMake(_dragRect.endX - TILESIZE, _dragRect.endY - TILESIZE, -_dragRect.width + TILESIZE * 2, -_dragRect.height + TILESIZE * 2);
+				}
+			}
 		}
 	}
 }
@@ -452,6 +491,43 @@ void maptoolScene::render()
 	for (int i = 0; i < TILEX*TILEY; i++) {
 		if (PtInRect(&_tiles[i].rc, _ptMouse)&&_editMode==false) {
 			selectRect = RectMake(_tiles[i].rc.left, _tiles[i].rc.top, _currentTile.sampleSizeX * 48, _currentTile.sampleSizeY * 48);
+
+			//if (_dragRect.width > 0)
+			//{
+			//	//드래그 우측 아래로
+			//	if (_dragRect.height > 0)
+			//		selectRect = RectMake(_tiles[i].rc.left, _tiles[i].rc.top, _currentTile.sampleSizeX * 48, _currentTile.sampleSizeY * 48);
+			//	//드래그 우측 위로
+			//	else
+			//	{
+			//		//_dragRect.endY는 top의 위치지만 bottom까지 내려와야 하므로 그만큼 내려준다.
+			//		//_dragRect.height는 start의 top과 end의 bottom이므로 거꾸로 하면 48 * 2의 크기만큼 차이가 난다.
+			//		//그것을 매꿔준다.
+			//		if (_dragRect.height == 0)
+			//			_dragRect.height = 1;
+			//		selectRect = RectMake(_tiles[i].rc.left, _tiles[i].rc.top, _currentTile.sampleSizeX * 48, _currentTile.sampleSizeY * 48);
+			//	}
+			//}
+			//else
+			//{
+			//	//드래그 좌측 아래로
+			//	if (_dragRect.height > 0)
+			//	{
+			//		if (_dragRect.width == 0)
+			//			_dragRect.width = 1;
+			//		//_dragRect.width = _currentTile.sampleStartX - _dragRect.endX;
+			//		_dragRect.rc = RectMake(_dragRect.endX - TILESIZE, _currentTile.sampleStartY, -_dragRect.width + TILESIZE * 2, _dragRect.height);
+			//	}
+			//	//드래그 좌측 위로
+			//	else
+			//	{
+			//		if (_dragRect.width == 0)
+			//			_dragRect.width = 1;
+			//		if (_dragRect.height == 0)
+			//			_dragRect.height = 1;
+			//		_dragRect.rc = RectMake(_dragRect.endX - TILESIZE, _dragRect.endY - TILESIZE, -_dragRect.width + TILESIZE * 2, -_dragRect.height + TILESIZE * 2);
+			//	}
+			//}
 	
 			if (INPUT->GetKey(VK_RBUTTON)) {
 				_drawField.dragWidth = _tiles[i].rc.right - _drawField.startX;
@@ -595,7 +671,8 @@ void maptoolScene::render()
 
 	}
 
-	if (PtInRect(&_rcPalette, _ptMouse) && INPUT->GetKey(VK_LBUTTON) && _editMode == false) {
+	RECT _rcDragPallette = RectMake(_rcPalette.left, _rcPalette.top, _rcPalette.right - _rcPalette.left - 48 * 2, _rcPalette.bottom - _rcPalette.top);
+	if (PtInRect(&_rcDragPallette, _ptMouse) && INPUT->GetKey(VK_LBUTTON) && _editMode == false) {
 		FrameRect(getMemDC(), _dragRect.rc, RGB(255, 255, 0));
 	}
 
@@ -636,12 +713,22 @@ void maptoolScene::maptoolSetup()
 }
 
 void maptoolScene::setSample() {
+
 	//선택된 x방향타일 갯수
 	_currentTile.sampleSizeX = (_currentTile.sampleEndX - _currentTile.sampleStartX) / 48;
 	//선택돤 y방향타일 갯수
 	_currentTile.sampleSizeY = (_currentTile.sampleEndY - _currentTile.sampleStartY) / 48;
+	//cout << _currentTile.sampleEndY << " " << _currentTile.sampleStartY << endl;
+	
+
+	////선택된 x방향타일 갯수
+	//_currentTile.sampleSizeX = (_currentTile.sampleEndX - _currentTile.sampleStartX) / 48;
+	////선택돤 y방향타일 갯수
+	//_currentTile.sampleSizeY = (_currentTile.sampleEndY - _currentTile.sampleStartY) / 48;
 
 	_currentTile.pageNumber = _palettePage;
+
+	//cout << _currentTile.pageNumber << endl;
 	
 
 	//새로 선택했을 때 기존에 선택되어 있었던 타일은 지워지게 해야함
@@ -661,6 +748,7 @@ void maptoolScene::setSample() {
 
 	for (int i = 0; i < _currentTile.sampleSizeY; i++) {
 		_currentTile.y[i] = _currentTile.samplSetartPointY + i;
+		cout << _currentTile.samplSetartPointY << endl;
 	}
 }
 
@@ -692,6 +780,7 @@ void maptoolScene::setMap()
 						_tiles[i + (j * TILEX + n)].tileFrameY[0] = _currentTile.y[j];
 						_tiles[i + (j * TILEX + n)].imagePage[0] = _currentTile.pageNumber;
 						_tiles[i + (j * TILEX + n)].terrain = terrainSelect(_currentTile.x[n], _currentTile.y[j]);		
+						//cout << _canMove << " " << _currentTile.x[n] << " " << _currentTile.y[j] << " " << _currentTile.pageNumber << endl;
 					}
 				}
 			}

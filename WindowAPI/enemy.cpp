@@ -438,7 +438,7 @@ HRESULT golem::init(POINT position)
 	_imageGuard = IMAGEMANAGER->findImage("golemguard");
 
 	_hp = 8;
-	_attCd = 200;
+	_attCd = 450;
 	//적 개체 생성 위치
 	_state = eWALK;
 	playerWidth = _imageIdle->getWidth() - 30;
