@@ -7,7 +7,6 @@ HRESULT battleScene::init()
 	_player->init();
 	_enemyManager = new enemyManager;
 	_enemyManager->init();
-
 	return S_OK;
 }
 
