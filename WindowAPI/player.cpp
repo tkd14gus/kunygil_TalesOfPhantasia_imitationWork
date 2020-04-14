@@ -895,6 +895,9 @@ void player::animation()
 				if (_frameIndex == 7)
 				{
 					_isBattle = false;
+					_player.viewX = 0;
+					_player.x = 200;
+					_player.y = 460;
 					//SCENEMANAGER->loadScene("게임화면");
 				}
 			}

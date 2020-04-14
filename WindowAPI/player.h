@@ -125,9 +125,6 @@ public:
 	bool getIsBattle() { return _isBattle; }
 	//배틀이 시작될 때 바꿔줘야 한다.
 	void setIsBattle(bool isBattle) { _isBattle = isBattle; }
-	//플레이어의 데이터를 저장하면 x,y값도 저장된다.
-	//따라서 배틀 시작시에 다시 초기값을 돌려줘야 한다.
-	void setPlayerXY(int x, int y) { _player.x = x; _player.y = y; }
 
 	//상태변경 1.IDLE 2.RUN 3.HIT 4.WALK 5.JUMP 6.ATT 7.GUARD 8.DEAD 9.WIN
 	void setAction(int pattern);
