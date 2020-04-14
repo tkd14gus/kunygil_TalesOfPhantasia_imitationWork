@@ -29,8 +29,8 @@ void loadingScene::update()
 	//로딩완료후 화면 변경
 	if (_loading->loadingDone())
 	{
-		//SCENEMANAGER->loadScene("게임화면");
-		SCENEMANAGER->loadScene("맵툴기초");
+		SCENEMANAGER->loadScene("게임화면");
+		//SCENEMANAGER->loadScene("맵툴기초");
 		//SCENEMANAGER->loadScene("전투화면");
 	}
 }
@@ -147,9 +147,6 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("map69", "map/citytile.bmp", 160, 96, 10, 6);
 
 	//#====================================================================================================================#
-
-
-	//#====================================================================================================================#
 	//#									UI 이미지																		   #
 	//#====================================================================================================================#
 	_loading->loadImage("FrameLT", "Images/UI/FrameLT.bmp", 17, 17);	 //프레임 모서리부분 키우려면 스케일랜더 사용할 것
@@ -173,6 +170,7 @@ void loadingScene::loadingImage()
 	_loading->loadImage("load", "Images/UI/load.bmp", 81, 36);
 	_loading->loadImage("textbox", "Images/UI/textbox.bmp", 600, 800);
 	_loading->loadImage("activetextbox", "Images/UI/activetextbox.bmp", 600, 800);
+	_loading->loadImage("accountbox", "Images/UI/accountbox.bmp", 600, 300);			//전투씬용
 
 	//#====================================================================================================================#
 	//#									Layer 층 표시 이미지																   #
@@ -207,6 +205,11 @@ void loadingScene::loadingImage()
 	//#									UI 이미지 종료																	   #
 	//#====================================================================================================================#
 
+	//#====================================================================================================================#
+	//#									Battle bg																		   #
+	//#====================================================================================================================#
+
+	//_loading->loadImage("commonbattlebg","Images/battlebackground/commonbattlebg",2000,433);
 
 	//#====================================================================================================================#
 	//#								Charicter, Enemy 이미지																   #
@@ -214,25 +217,25 @@ void loadingScene::loadingImage()
 	
 	
 	//#================================ M U M M Y =========================================================================#	
-	
-	_loading->loadImage("mummydead", "Images/enemy/mummy/dead.bmp", 64 * 2, 46 * 2);
-	_loading->loadImage("mummyguard", "Images/enemy/mummy/guard.bmp", 64 * 2, 46 * 2);
-	_loading->loadImage("mummyhit", "Images/enemy/mummy/hit.bmp", 64 * 2, 46 * 2);
-	_loading->loadImage("mummyidle", "Images/enemy/mummy/idle.bmp", 64 * 2, 46 * 2);
 
-	_loading->loadFrameImage("mummyatt1", "Images/enemy/mummy/attack1.bmp", 320 * 2, 46 * 2, 5, 1);
-	_loading->loadFrameImage("mummyatt2", "Images/enemy/mummy/attack2.bmp", 256 * 2, 46 * 2, 4, 1);
-	_loading->loadFrameImage("mummywalk", "Images/enemy/mummy/walk.bmp", 192 * 2, 46 * 2, 3, 1);
+	_loading->loadFrameImage("mummydead", "Images/enemy/mummy/dead.bmp", 64 * 2, 46 * 4, 1, 2);
+	_loading->loadFrameImage("mummyguard", "Images/enemy/mummy/guard.bmp", 64 * 2, 46 * 4, 1, 2);
+	_loading->loadFrameImage("mummyhit", "Images/enemy/mummy/hit.bmp", 64 * 2, 46 * 4, 1, 2);
+	_loading->loadFrameImage("mummyidle", "Images/enemy/mummy/idle.bmp", 64 * 2, 46 * 4, 1, 2);
+
+	_loading->loadFrameImage("mummyatt1", "Images/enemy/mummy/attack1.bmp", 320 * 2, 46 * 4, 5, 2);
+	_loading->loadFrameImage("mummyatt2", "Images/enemy/mummy/attack2.bmp", 256 * 2, 46 * 4, 4, 2);
+	_loading->loadFrameImage("mummywalk", "Images/enemy/mummy/walk.bmp", 192 * 2, 46 * 4, 3, 2);
 
 	//#================================ G O L E M =========================================================================#	
 
-	_loading->loadImage("golemguard", "Images/enemy/golem/guard.bmp", 80 * 2, 63 * 2);
-	_loading->loadImage("golemhit", "Images/enemy/golem/hit.bmp", 80 * 2, 63 * 2);
-	_loading->loadImage("golemidle", "Images/enemy/golem/idle.bmp", 80 * 2, 63 * 2);
+	_loading->loadFrameImage("golemguard", "Images/enemy/golem/guard.bmp", 80 * 2, 63 * 4, 1, 2);
+	_loading->loadFrameImage("golemhit", "Images/enemy/golem/hit.bmp", 80 * 2, 63 * 4, 1, 2);
+	_loading->loadFrameImage("golemidle", "Images/enemy/golem/idle.bmp", 80 * 2, 63 * 4, 1, 2);
 
-	_loading->loadFrameImage("golematt1", "Images/enemy/golem/attack1.bmp", 240 * 2, 63 * 2, 3, 1);
-	_loading->loadFrameImage("golematt2", "Images/enemy/golem/attack2.bmp", 160 * 2, 63 * 2, 2, 1);
-	_loading->loadFrameImage("golemwalk", "Images/enemy/golem/walk.bmp", 240 * 2, 63 * 2, 3, 1);
+	_loading->loadFrameImage("golematt1", "Images/enemy/golem/attack1.bmp", 240 * 2, 63 * 4, 3, 2);
+	_loading->loadFrameImage("golematt2", "Images/enemy/golem/attack2.bmp", 160 * 2, 63 * 4, 2, 2);
+	_loading->loadFrameImage("golemwalk", "Images/enemy/golem/walk.bmp", 240 * 2, 63 * 4, 3, 2);
 
 
 	//#====================================================================================================================#

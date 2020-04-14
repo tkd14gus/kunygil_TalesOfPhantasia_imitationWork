@@ -13,8 +13,9 @@ HRESULT inGameScene::init()
 	_subPlayer = new subplayer;
 	_subPlayer->init();
 
-	//제일 처음 시작할 때 시작 위치는 village(마을)
-	_mapLocation = 0;
+	//저장이 되어 있다면 불러온다.
+	//이미 맵데이터에서 0으로 초기화 되어 있음
+	_mapLocation = PLAYERDATA->getMapLocation();
 
 	//카메라는 항상 중앙을 비치고 있어야 한다.
 	_rcScreen = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2, WINSIZEX, WINSIZEY);
@@ -30,12 +31,9 @@ HRESULT inGameScene::init()
 	if (PLAYERDATA->getPlayerData() != NULL)
 	{
 		_player = PLAYERDATA->getPlayerData();
-	}
-	//만일 PLAYERDATA->getTilesRC()[0].left가 0이라면
-	//배틀신으로 이동한 적이 없다는 말이다.
-	//즉, 렉트의 이동이 없었으므로 굳이 데이터를 저장할 필요 없다.
-	if (PLAYERDATA->getTilesRC()[0].left != 0)
-	{
+		//어차피 플레이어가 데이터를 받아오지 않는다면
+		//타일을 받아올 필요없으니
+		//플레이어 조건하고 같이 받아준다.
 		for (int i = 0; i < TILEX * TILEY; i++)
 		{
 			_tiles[i].rc = PLAYERDATA->getTilesRC()[i];
@@ -51,13 +49,15 @@ HRESULT inGameScene::init()
 			_stateRC[i] = RectMake(300 * (i % 2), 405, 300, 250);
 	}
 
+	cout << _mapLocation << " " << _player->getPlayer()->inGameX << " " << _player->getPlayer()->inGameY << " " << _tiles[0].rc.left << " " << _tiles[0].rc.top << endl;
+
 	return S_OK;
 }
 
 void inGameScene::release()
 {
-	_player->release();
-	SAFE_DELETE(_player);
+//_player->release();
+//SAFE_DELETE(_player);
 }
 
 void inGameScene::update()
@@ -443,14 +443,19 @@ void inGameScene::tileSetting()
 void inGameScene::changeBattleScene()
 {
 	//아직 전투씬이 완성 안 되어 있어서 일단 주석처리
-	//int ran = RANDOM->Range(500);
-	//
-	//if(ran % 500 == 0)
-	//{
-	//	SCENEMANAGER->loadScene("전투화면");
-	//	//플레이어 정보도 저장해준다.
-	//	PLAYERDATA->setPlayerData(_player);
-	//	//타일의 렉트 위치 저장
-	//	PLAYERDATA->setTilesRC(_tiles)
-	//}
+	int ran = RANDOM->Range(500);
+	
+	if(ran % 500 == 0)
+	{
+		//배틀로 바꿔준다.
+		_player->setIsBattle(true);
+		//플레이어 정보도 저장해준다.
+		PLAYERDATA->setPlayerData(_player);
+		//타일의 렉트 위치 저장
+		PLAYERDATA->setTilesRC(_tiles);
+		//맵의 위치도 저장
+		PLAYERDATA->setMapLocation(_mapLocation);
+		//화면을 전투화면으로 바꿔준다.
+		SCENEMANAGER->loadScene("전투화면");
+	}
 }
