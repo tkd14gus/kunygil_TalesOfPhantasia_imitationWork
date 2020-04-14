@@ -211,6 +211,10 @@ void loadingScene::loadingImage()
 	//#====================================================================================================================#
 	//#								Charicter, Enemy 이미지																   #
 	//#====================================================================================================================#
+	
+	
+	//#================================ M U M M Y =========================================================================#	
+	
 	_loading->loadImage("mummydead", "Images/enemy/mummy/dead.bmp", 64 * 2, 46 * 2);
 	_loading->loadImage("mummyguard", "Images/enemy/mummy/guard.bmp", 64 * 2, 46 * 2);
 	_loading->loadImage("mummyhit", "Images/enemy/mummy/hit.bmp", 64 * 2, 46 * 2);
@@ -219,6 +223,18 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("mummyatt1", "Images/enemy/mummy/attack1.bmp", 320 * 2, 46 * 2, 5, 1);
 	_loading->loadFrameImage("mummyatt2", "Images/enemy/mummy/attack2.bmp", 256 * 2, 46 * 2, 4, 1);
 	_loading->loadFrameImage("mummywalk", "Images/enemy/mummy/walk.bmp", 192 * 2, 46 * 2, 3, 1);
+
+	//#================================ G O L E M =========================================================================#	
+
+	_loading->loadImage("golemguard", "Images/enemy/golem/guard.bmp", 80 * 2, 63 * 2);
+	_loading->loadImage("golemhit", "Images/enemy/golem/hit.bmp", 80 * 2, 63 * 2);
+	_loading->loadImage("golemidle", "Images/enemy/golem/idle.bmp", 80 * 2, 63 * 2);
+
+	_loading->loadFrameImage("golematt1", "Images/enemy/golem/attack1.bmp", 240 * 2, 63 * 2, 3, 1);
+	_loading->loadFrameImage("golematt2", "Images/enemy/golem/attack2.bmp", 160 * 2, 63 * 2, 2, 1);
+	_loading->loadFrameImage("golemwalk", "Images/enemy/golem/walk.bmp", 240 * 2, 63 * 2, 3, 1);
+
+
 	//#====================================================================================================================#
 	//#									inGameScene안에서 쓰일 이미지															   #
 	//#====================================================================================================================#

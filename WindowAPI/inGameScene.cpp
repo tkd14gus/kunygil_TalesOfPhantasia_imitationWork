@@ -10,6 +10,8 @@ HRESULT inGameScene::init()
 	//플레이어 클래스 초기화
 	_player = new player;
 	_player->init();
+	_subPlayer = new subplayer;
+	_subPlayer->init();
 
 	//제일 처음 시작할 때 시작 위치는 village(마을)
 	_mapLocation = 0;
@@ -330,21 +332,32 @@ void inGameScene::render()
 		//위의 업데이트를 기반으로 이미지 출력
 		IMAGEMANAGER->scaleFrameRender("cress", getMemDC(), _stateRC[0].right - 50, _stateRC[0].top + 20, IMAGEMANAGER->findImage("cress")->getFrameX(), IMAGEMANAGER->findImage("cress")->getFrameY(), 0.5f);
 
+		//서브 캐릭터의 이미지가 걷는 모습 업데이트
+		_subPlayer->walkingInfo();
+		//위의 업데이트를 기반으로 이미지 출력
+		IMAGEMANAGER->findImage("chester")->scaleFrameRender(getMemDC(), _stateRC[1].right - 50, _stateRC[1].top + 20,
+		IMAGEMANAGER->findImage("chester")->getFrameX(), IMAGEMANAGER->findImage("chester")->getFrameY(), 1.0f);
+
 		//TEXT의 색을 바꿔준다.
 		//하얀색
 		SetTextColor(getMemDC(), RGB(255, 255, 255));
 		//레벨 출력
 		sprintf(_stateWin, "LV : %d", _player->getPlayer()->lv);
 		TextOut(getMemDC(), _stateRC[0].left + 20, _stateRC[0].top + 50, _stateWin, strlen(_stateWin));
+		sprintf(_stateWin, "LV : %d", _subPlayer->getSubPlayer()->lv);
+		TextOut(getMemDC(), _stateRC[1].left + 20, _stateRC[1].top + 50, _stateWin, strlen(_stateWin));
 		//최대 HP와 현재 HP출력
 		//Y축만 위에것보다 30 더해줬음
 		sprintf(_stateWin, "HP : %d / %d", _player->getPlayer()->hp, _player->getPlayer()->maxHp);
 		TextOut(getMemDC(), _stateRC[0].left + 20, _stateRC[0].top + 80, _stateWin, strlen(_stateWin));
+		sprintf(_stateWin, "HP : %d / %d", _subPlayer->getSubPlayer()->hp, _subPlayer->getSubPlayer()->maxHp);
+		TextOut(getMemDC(), _stateRC[1].left + 20, _stateRC[1].top + 80, _stateWin, strlen(_stateWin));
 		//최대 TP와 현재 TP출력
 		//Y축만 위에것보다 30 더해줬음
 		sprintf(_stateWin, "TP : %d / %d", _player->getPlayer()->tp, _player->getPlayer()->maxTp);
 		TextOut(getMemDC(), _stateRC[0].left + 20, _stateRC[0].top + 110, _stateWin, strlen(_stateWin));
-
+		sprintf(_stateWin, "TP: %d / %d", _subPlayer->getSubPlayer()->tp, _subPlayer->getSubPlayer()->maxTp);
+		TextOut(getMemDC(), _stateRC[1].left + 20, _stateRC[1].top + 110, _stateWin, strlen(_stateWin));
 		//다시 검정색으로 바꿔주자
 		SetTextColor(getMemDC(), RGB(0, 0, 0));
 	}

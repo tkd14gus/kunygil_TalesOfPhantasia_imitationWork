@@ -37,12 +37,15 @@ void battleScene::update()
 		//몬스터가 공격햇을때
 		if (IntersectRect(&_rc, &_player->getPlayer()->attack, &_enemyManager->getMinion()[i]->getRect()) || _enemyManager->getMinion()[i]->getActionK() == eHIT)
 		{
-			if (_enemyManager->getMinion()[i]->getActionK() == eHIT) {}
+			if (_enemyManager->getMinion()[i]->getActionK() == eHIT) 
+			{
+		
+			}
 			else
 			{
 				_player->hitPlayerAttK();
 				_enemyManager->getMinion()[i]->setHpK(_enemyManager->getMinion()[i]->getHpK() - 1);
-				if (_enemyManager->getMinion()[i]->getActionK() != eATTACK1 && _enemyManager->getMinion()[i]->getActionK() != eATTACK2)
+				if (_enemyManager->getMinion()[i]->getActionK() != eATTACK1 && _enemyManager->getMinion()[i]->getActionK() != eATTACK2 || _enemyManager->getMinion()[i]->getHpK()<1)
 				{
 					_enemyManager->getMinion()[i]->setCountK(0);
 					_enemyManager->getMinion()[i]->setActionK(3);
@@ -54,7 +57,7 @@ void battleScene::update()
 		{
 
 			_enemyManager->getMinion()[i]->setCollision(true);
-			if (_enemyManager->getMinion()[i]->getAttCountK() == 250)
+			if (_enemyManager->getMinion()[i]->getAttCountK() == _enemyManager->getMinion()[i]->getAttCd())
 			{
 				if (_enemyManager->getMinion()[i]->getActionK() == eIDLE || _enemyManager->getMinion()[i]->getActionK() == eWALK)
 				{
@@ -67,8 +70,6 @@ void battleScene::update()
 		}
 		//캐릭과 몬스터 충돌했을때
 		else { _enemyManager->getMinion()[i]->setCollision(false); }
-
-
 
 		if (_enemyManager->getMinion()[i]->getHpK() <= 0 && _enemyManager->getMinion()[i]->getCountK() > 20)
 		{
