@@ -24,7 +24,7 @@ void battleScene::update()
 {
 	for (int i = 0; i < _enemyManager->getMinion().size(); i++)
 	{
-		if (_enemyManager->getMinion()[i]->getEnemyX() - _player->getPlayer()->x >0) //캐릭터가 왼쪽 몬스터가 오른쪽
+		if (_enemyManager->getMinion()[i]->getEnemyX() - (_player->getPlayer()->x+_player->getPlayer()->viewX) >0) //캐릭터가 왼쪽 몬스터가 오른쪽
 		{
 			if (_enemyManager->getMinion()[i]->getActionK() == eIDLE || _enemyManager->getMinion()[i]->getActionK() == eWALK)
 			{
@@ -32,7 +32,7 @@ void battleScene::update()
 			}
 			
 		}
-		else if (_enemyManager->getMinion()[i]->getEnemyX() - _player->getPlayer()->x <= 0) // 몬스터가 오른쪽 캐릭터가 왼쪽
+		else if (_enemyManager->getMinion()[i]->getEnemyX() - (_player->getPlayer()->x + _player->getPlayer()->viewX) <= 0) // 몬스터가 오른쪽 캐릭터가 왼쪽
 		{
 			if (_enemyManager->getMinion()[i]->getActionK() == eIDLE || _enemyManager->getMinion()[i]->getActionK() == eWALK)
 			{
@@ -43,7 +43,7 @@ void battleScene::update()
 		RECT _rc;
 		if (IntersectRect(&_rc, &_player->getPlayer()->rc, &_enemyManager->getMinion()[i]->getAtt()) && _enemyManager->getMinion()[i]->getHitAtt() == true)
 		{
-			if (_enemyManager->getMinion()[i]->getEnemyX() - _player->getPlayer()->x > 0) { _player->setSight(true); } //캐릭터왼쪽
+			if (_enemyManager->getMinion()[i]->getEnemyX() -(_player->getPlayer()->x + _player->getPlayer()->viewX) > 0) { _player->setSight(true); } //캐릭터왼쪽
 			else { _player->setSight(false); } //캐릭터오른쪽
 			_enemyManager->getMinion()[i]->setHitAtt(false);
 			if (_player->getAction() == pDEAD) {}
@@ -104,11 +104,16 @@ void battleScene::update()
 
 	//플레이어 승리처리
 	_player->update();
-	_enemyManager->update();
+	_enemyManager->update(_player->getPlayer()->viewX);
 }
 
 void battleScene::render()
 {
+	//IMAGEMANAGER->findImage("commonbattlebg")->render(getMemDC(), 0, 0, _player->getPlayer()->viewX, 0, WINSIZEX, 433);
+	//IMAGEMANAGER->findImage("commonbattle")->render(getMemDC(), 0, 0, (float)_player->getPlayer()->viewX*1.5F, 0, WINSIZEX,500);
+	//
+	IMAGEMANAGER->findImage("bossbattlebg")->render(getMemDC(), 0, 0, _player->getPlayer()->viewX, 0, WINSIZEX, 433);
+	IMAGEMANAGER->findImage("bossbattle")->render(getMemDC(), 0, 0, (float)_player->getPlayer()->viewX*1.5F, 0, WINSIZEX, 500);
 	_player->render();
 	_enemyManager->render();
 	frameBoxRender(_statusBox, 1.0f);

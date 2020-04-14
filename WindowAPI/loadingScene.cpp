@@ -209,7 +209,10 @@ void loadingScene::loadingImage()
 	//#									Battle bg																		   #
 	//#====================================================================================================================#
 
-	//_loading->loadImage("commonbattlebg","Images/battlebackground/commonbattlebg",2000,433);
+	_loading->loadImage("commonbattle","Images/battlebackground/commonbattle.bmp",2000,500);
+	_loading->loadImage("commonbattlebg","Images/battlebackground/commonbattlebg.bmp",2000,433);
+	_loading->loadImage("bossbattle","Images/battlebackground/bossbattle.bmp",2000,500);
+	_loading->loadImage("bossbattlebg","Images/battlebackground/bossbattlebg.bmp",2000,433);
 
 	//#====================================================================================================================#
 	//#								Charicter, Enemy ÀÌ¹ÌÁö																   #

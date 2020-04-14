@@ -27,7 +27,7 @@ void enemyManager::release()
 	SAFE_DELETE(_bullet);
 }
 
-void enemyManager::update()
+void enemyManager::update(int playerViewX)
 {
 	//총알 업데이트
 	//_bullet->update();
@@ -35,7 +35,7 @@ void enemyManager::update()
 	//벡터에 담긴 미니언들 업데이트
 	for (int i = 0; i < _vMinion.size(); i++)
 	{
-		_vMinion[i]->update();
+		_vMinion[i]->update(playerViewX);
 	}
 
 	//미니언 총알발사

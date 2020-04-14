@@ -81,10 +81,10 @@ void mummy::release()
 {
 }
 
-void mummy::update()
+void mummy::update(int playerViewX)
 {
 	if (_fireCount < _attCd) { _fireCount++; }
-	_rc = RectMakeCenter(playerX, playerY, playerWidth, playerheight);
+	_rc = RectMakeCenter(playerX- playerViewX, playerY, playerWidth, playerheight);
 	_attRcK = RectMakeCenter(0, 0, 0, 0);
 
 
@@ -462,10 +462,10 @@ void golem::release()
 {
 }
 
-void golem::update()
+void golem::update(int playerViewX)
 {
 	if (_fireCount < _attCd) { _fireCount++; }
-	_rc = RectMakeCenter(playerX, playerY, playerWidth, playerheight);
+	_rc = RectMakeCenter(playerX- playerViewX, playerY, playerWidth, playerheight);
 	_attRcK = RectMakeCenter(0, 0, 0, 0);
 
 
