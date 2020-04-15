@@ -230,8 +230,8 @@ void loadingScene::loadingImage()
 
 	_loading->loadImage("weapon", "Images/UI/weapon.bmp", 133, 45);
 	_loading->loadImage("weapon_off", "Images/UI/weapon_off.bmp", 133, 45);
-	_loading->loadImage("armer", "Images/UI/armer.bmp", 133, 45);
-	_loading->loadImage("armer_off", "Images/UI/armer_off.bmp", 133, 45);
+	_loading->loadImage("armor", "Images/UI/armor.bmp", 133, 45);
+	_loading->loadImage("armor_off", "Images/UI/armor_off.bmp", 133, 45);
 	_loading->loadImage("ring", "Images/UI/ring.bmp", 133, 45);
 	_loading->loadImage("ring_off", "Images/UI/ring_off.bmp", 133, 45);
 	_loading->loadImage("portion", "Images/UI/portion.bmp", 133, 45);
@@ -313,7 +313,7 @@ void loadingScene::loadingImage()
 	_loading->loadImage("weaponAttribute (0)", "Images/itemInfo/weaponAttribute (0).bmp", 350, 35, true, RGB(255, 0, 255));
 
 	_loading->loadImage("weaponG", "Images/itemInfo/weapon.bmp", 133, 45, true, RGB(255, 0, 255));
-	_loading->loadImage("armerG", "Images/itemInfo/armer.bmp", 133, 45, true, RGB(255, 0, 255));
+	_loading->loadImage("armorG", "Images/itemInfo/armor.bmp", 133, 45, true, RGB(255, 0, 255));
 	_loading->loadImage("ringG", "Images/itemInfo/ring.bmp", 133, 45, true, RGB(255, 0, 255));
 	_loading->loadImage("portionG", "Images/itemInfo/portion.bmp", 133, 45, true, RGB(255, 0, 255));
 
