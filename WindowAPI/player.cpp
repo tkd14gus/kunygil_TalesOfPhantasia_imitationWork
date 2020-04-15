@@ -22,9 +22,10 @@ HRESULT player::init()
 	//_enemyY = 400;
 
 	// 게임이 시작할 때 전투씬이 아니다.
-	_isBattle = true;
+	_isBattle = false;
 	// 플레이어는 제일 먼저 시작할 때 아래를 바라보고 있다.
 	_direct = 1;
+	_battleCount = 0;
 	_player.cameraRc = RectMakeCenter(_player.x, _player.y, 300, 200);
 	return S_OK;
 }
@@ -899,6 +900,11 @@ void player::animation()
 				if (_frameIndex == 7)
 				{
 					_isBattle = false;
+					//4가되면 보스를 만난다.
+					//그리고 보스를 만나면 다시 0으로
+					_battleCount++;
+					if (_battleCount >= 5)
+						_battleCount = 0;
 					_player.viewX = 0;
 					_player.x = 200;
 					_player.y = 460;

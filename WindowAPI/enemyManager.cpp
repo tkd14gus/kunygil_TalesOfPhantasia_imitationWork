@@ -3,13 +3,13 @@
 #include "player.h"
 
 
-HRESULT enemyManager::init()
+HRESULT enemyManager::init(int battleCount)
 {
 	//미니언 생성, 보스, 일반몬스터
 	//따로 함수로 빼서 처리하면 관리및 보기에 편하다
 
 	//미니언 생성
-	this->setMinion();
+	this->setMinion(battleCount);
 	//보스생성
 	//this->setBoss();
 
@@ -57,10 +57,10 @@ void enemyManager::render()
 	}
 }
 
-void enemyManager::setMinion()
+void enemyManager::setMinion(int battleCount)
 {
-	for (int i = 0; i < ENEMYAMOUNT; i++)
-	{
+	//for (int i = 0; i < ENEMYAMOUNT; i++)
+	//{
 		//for (int i = 0; i < ENEMYAMOUNT; i++)
 	//{
 	//	if (i == 0)
@@ -79,6 +79,11 @@ void enemyManager::setMinion()
 	//	//	continue;
 	//	//}
 	//}
+		
+	//}
+
+	if (battleCount != 4)
+	{
 		int ran = RANDOM->Range(3);
 		for (int j = 0; j < ran; j++)
 		{
@@ -94,6 +99,13 @@ void enemyManager::setMinion()
 			_vMinion.push_back(_minion);
 		}
 	}
+	else
+	{
+		enemy* _minion = new jamir;
+		_minion->init(PointMake(RANDOM->Range(950, 1000), 500));
+		_vMinion.push_back(_minion);
+	}
+
 }
 
 void enemyManager::setBoss() {

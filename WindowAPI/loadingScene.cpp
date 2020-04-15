@@ -310,13 +310,17 @@ void loadingScene::loadingImage()
 	_loading->loadImage("9", "Images/itemInfo/9.bmp", 20, 20, true, RGB(255, 0, 255));
 	_loading->loadImage("x", "Images/itemInfo/x.bmp", 20, 20, true, RGB(255, 0, 255));
 	//#====================================================================================================================#
-	//#									startScene 백그라운드																   #
+	//#									startSceneUI																	   #
 	//#====================================================================================================================#
-	_loading->loadImage("startBackGround", "Images/startBackGround.bmp", WINSIZEX, WINSIZEY);
+	_loading->loadImage("startBackGround", "Images/startUI/startBackGround.bmp", WINSIZEX, WINSIZEY);
+	_loading->loadImage("gameStartOff", "Images/startUI/gameStartOff.bmp", 350, 35);
+	_loading->loadImage("gameStartOn", "Images/startUI/gameStartOn.bmp", 350, 35);
+	_loading->loadImage("mapToolOff", "Images/startUI/mapToolOff.bmp", 350, 35);
+	_loading->loadImage("mapToolOn", "Images/startUI/mapToolOn.bmp", 350, 35);
 	//#====================================================================================================================#
-	//#									startScene 백그라운드																   #
+	//#									loadingBackGround																   #
 	//#====================================================================================================================#
-	_loading->loadImage("loadingBackGround", "Images/loadingBackGround.bmp", WINSIZEX, WINSIZEY);
+	//_loading->loadImage("loadingBackGround", "Images/loadingBackGround.bmp", WINSIZEX, WINSIZEY);
 }
 
 

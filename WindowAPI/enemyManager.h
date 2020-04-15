@@ -24,13 +24,13 @@ private:
 	int _count;
 
 public:
-	HRESULT init();
+	HRESULT init(int battleCount);
 	void release();
 	void update(int playerViewX);
 	void render();
 
 	//미니언 세팅 => 초기화에 넣는다
-	void setMinion();
+	void setMinion(int battleCount);
 	//미니언 총알발사
 	void minionBulletFire();
 	//미니언 삭제

@@ -8,7 +8,6 @@ HRESULT battleScene::init()
 	_subPlayer = new subplayer;
 	_subPlayer->init();
 	_enemyManager = new enemyManager;
-	_enemyManager->init();
 	_statusBox = RectMake(0, 500, 380, 250);
 	_enemyBox = RectMake(380, 500, 220, 250);
 
@@ -24,6 +23,11 @@ HRESULT battleScene::init()
 	{
 		_subPlayer = PLAYERDATA->getSubPlayerData();
 	}
+
+	_subPlayer->setSubPlayerXY(200, 414);
+
+	_enemyManager->init(_player->getBattleCount());
+
 	return S_OK;
 }
 

@@ -86,6 +86,8 @@ private:
 
 	bool _isBattle;	//플레이어가 현재 배틀씬인지 아닌지
 
+	int _battleCount; //4번째마다 보스가 등장함
+
 public:
 
 	HRESULT init();
@@ -126,6 +128,8 @@ public:
 	bool getIsBattle() { return _isBattle; }
 	//배틀이 시작될 때 바꿔줘야 한다.
 	void setIsBattle(bool isBattle) { _isBattle = isBattle; }
+	//몇번째 전투인지 확인하기 위해
+	int getBattleCount() { return _battleCount; }
 
 	//상태변경 1.IDLE 2.RUN 3.HIT 4.WALK 5.JUMP 6.ATT 7.GUARD 8.DEAD 9.WIN
 	void setAction(int pattern);
@@ -190,6 +194,9 @@ public:
 
 	int getDirect() { return _direct; }
 	void setDirect(int direct) { _direct = direct; }
+
+	//배틀씬이 시작할때마다 위치 초기화
+	void setSubPlayerXY(int x, int y) { _subPlayer.x = x; _subPlayer.y = y; }
 	
 	void checkDistanceWithPlayer(float x);
 	void checkDistanceWithEnemy(float x);
