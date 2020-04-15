@@ -87,11 +87,11 @@ void mummy::update(int playerViewX)
 {
 	if (_fireCount < _attCd) { _fireCount++; }
 	_rc = RectMakeCenter(playerX- playerViewX, playerY, playerWidth, playerheight);
-	if (_rc.left < 0)
+	if (playerX - playerWidth / 2 < 0)
 	{
 		playerX = playerWidth / 2;
 	}
-	else if (_rc.right > 1500)
+	else if (playerX + playerWidth / 2 > 1500)
 	{
 		playerX = 1500 - playerWidth / 2;
 	}
@@ -201,8 +201,8 @@ void mummy::move()
 
 void mummy::draw()
 {
-	Rectangle(getMemDC(), _rc);
-	Rectangle(getMemDC(), _attRcK);
+	//Rectangle(getMemDC(), _rc);
+	//Rectangle(getMemDC(), _attRcK);
 	switch (_state) {
 	case eIDLE:
 		if (_isLeft) { _imageIdle->frameRender(getMemDC(), _rc.left - playerWidth / 2-10 , _rc.top - 20); }
@@ -476,11 +476,11 @@ void golem::update(int playerViewX)
 {
 	if (_fireCount < _attCd) { _fireCount++; }
 	_rc = RectMakeCenter(playerX- playerViewX, playerY, playerWidth, playerheight);
-	if (_rc.left < 0)
+	if (playerX - playerWidth / 2 < 0)
 	{
 		playerX = playerWidth / 2;
 	}
-	else if (_rc.right > 1500)
+	else if (playerX + playerWidth / 2 > 1500)
 	{
 		playerX = 1500 - playerWidth / 2;
 	}
@@ -540,8 +540,8 @@ void golem::move()
 
 void golem::draw()
 {
-	Rectangle(getMemDC(), _rc);
-	Rectangle(getMemDC(), _attRcK);
+	//Rectangle(getMemDC(), _rc);
+	//Rectangle(getMemDC(), _attRcK);
 	switch (_state) {
 	case eIDLE:
 		if (_isLeft) { _imageIdle->frameRender(getMemDC(), _rc.left - playerWidth / 2 + 20, _rc.top - 20); }
@@ -814,11 +814,11 @@ void jamir::update(int playerViewX)
 	_rc = RectMakeCenter(playerX - playerViewX, playerY, playerWidth, playerheight);
 	if (_fireCount < _attCd) { _fireCount++; }
 	
-	if (_rc.left < 0)
+	if (playerX - playerWidth / 2 < 0)
 	{
 		playerX = playerWidth / 2;
 	}
-	else if (_rc.right > 1500)
+	else if (playerX + playerWidth / 2 > 1500)
 	{
 		playerX = 1500 - playerWidth / 2;
 	}
@@ -826,7 +826,7 @@ void jamir::update(int playerViewX)
 	_attRcK = RectMakeCenter(0, 0, 0, 0);
 
 
-	
+
 	this->move();
 	if (_state == eIDLE) { collision = false; }
 
@@ -917,8 +917,8 @@ void jamir::move()
 
 void jamir::draw()
 {
-	Rectangle(getMemDC(), _rc);
-	Rectangle(getMemDC(), _attRcK);
+	//Rectangle(getMemDC(), _rc);
+	//Rectangle(getMemDC(), _attRcK);
 	switch (_state) {
 	case eIDLE:
 		if (_isLeft) { _imageIdle->frameRender(getMemDC(), _rc.left - playerWidth / 2 + 20, _rc.top - 20); }

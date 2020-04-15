@@ -76,9 +76,13 @@ void enemyManager::setMinion()
 		//	i--;
 		//	continue;
 		//}
-		enemy* _minion = new jamir;
+		enemy* _minion = new mummy;
 		_minion->init(PointMake(minionXPos[i], 500));
 		_vMinion.push_back(_minion);
+		
+		// enemy* _gminion = new golem;								//°ñ·½¼ÒÈ¯Å×½ºÆ®
+		// _gminion->init(PointMake(minionXPos[i], 500));
+		// _vMinion.push_back(_gminion);
 	}
 }
 
