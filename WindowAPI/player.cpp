@@ -445,11 +445,11 @@ void player::render()
 	if (_isBattle)
 	{
 				
-		//Rectangle(getMemDC(), _stage);
+		////Rectangle(getMemDC(), _stage);
 
-		Rectangle(getMemDC(), _player.rc);		//플레이어 타격범위 사각형
+		//Rectangle(getMemDC(), _player.rc);		//플레이어 타격범위 사각형
 
-		Rectangle(getMemDC(), _player.attack);		//플레이어 타격범위 사각형
+		//Rectangle(getMemDC(), _player.attack);		//플레이어 타격범위 사각형
 
 		FrameRect(getMemDC(), _player.cameraRc, RGB(140, 60, 180));
 
@@ -1115,7 +1115,7 @@ void player::settingTagPlayer()
 	_player.speed = 3.0f;
 
 
-	_player.hp = _player.maxHp = 5;			//초기 설정 - 체력 5
+	_player.hp = _player.maxHp = 12;			//초기 설정 - 체력 5
 	_player.tp = _player.maxTp = 5;			//초기 설정 - TP 5
 	_player.lv = 1;
 	_player.attXK = 0;
@@ -1404,7 +1404,7 @@ void subplayer::update(int playerViewX)
 
 void subplayer::render()
 {
-	Rectangle(getMemDC(), _subPlayer.rc);
+	//Rectangle(getMemDC(), _subPlayer.rc);
 
 	switch (_subPlayer._state)
 	{
@@ -1431,7 +1431,7 @@ void subplayer::render()
 	case pATTACK:
 		if (_melee)
 		{
-			Rectangle(getMemDC(), _subPlayer.attack);
+			//Rectangle(getMemDC(), _subPlayer.attack);
 			if (_subPlayer.sight)
 			{
 				IMAGEMANAGER->findImage("subMelee")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);

@@ -59,28 +59,6 @@ void enemyManager::render()
 
 void enemyManager::setMinion(int battleCount)
 {
-	//for (int i = 0; i < ENEMYAMOUNT; i++)
-	//{
-		//for (int i = 0; i < ENEMYAMOUNT; i++)
-	//{
-	//	if (i == 0)
-	//	{
-	//		minionXPos.push_back(RANDOM->Range(950, 1000));
-	//	}
-	//	if (i > 0)
-	//	{
-	//		minionXPos.push_back(RANDOM->Range(minionXPos[i - 1] + 50, minionXPos[i - 1] + 150));
-	//	}
-	//	//minionXPos.push_back(rand() % WINSIZEX / 2 + WINSIZEX / 2 - 50);
-	//	//위치 안겹치게
-	//	//100은 대략적인 거리 수치입니다
-	//	//if (i != 0 && minionXPos[i] - minionXPos[i - 1] < -100 && minionXPos[i] - minionXPos[i - 1] > 100) {
-	//	//	i--;
-	//	//	continue;
-	//	//}
-	//}
-		
-	//}
 
 	if (battleCount != 4)
 	{
@@ -104,6 +82,10 @@ void enemyManager::setMinion(int battleCount)
 		enemy* _minion = new jamir;
 		_minion->init(PointMake(RANDOM->Range(950, 1000), 500));
 		_vMinion.push_back(_minion);
+		
+		// enemy* _gminion = new golem;								//골렘소환테스트
+		// _gminion->init(PointMake(minionXPos[i], 500));
+		// _vMinion.push_back(_gminion);
 	}
 
 }

@@ -11,6 +11,9 @@ HRESULT battleScene::init()
 	_statusBox = RectMake(0, 500, 380, 250);
 	_enemyBox = RectMake(380, 500, 220, 250);
 
+	mummy = golem = 0;
+
+
 	//만일 PLAYERDATA->getPlayerData()가 NULL이 아닐 때
 	//(제일 먼저 켜지면 NULL로 초기화됨)
 	//_player에 넣어준다.
@@ -44,13 +47,19 @@ void battleScene::release()
 void battleScene::update()
 {
 	_subPlayer->checkDistanceWithPlayer(_player->getPlayer()->x);
+	mummy = 0;
+	golem = 0;
+	jamirHp = 0;
 
 	for (int i = 0; i < _enemyManager->getMinion().size(); i++)
 	{
+		if (_enemyManager->getMinion()[i]->getEnemyType() == JAMIR) { jamirHp = _enemyManager->getMinion()[i]->getHpK(); }
+		else if (_enemyManager->getMinion()[i]->getEnemyType() == MUMMY) { mummy++; }
+		else if (_enemyManager->getMinion()[i]->getEnemyType() == GOLEM) { golem++; }
 		_subPlayer->checkDistanceWithEnemy(_enemyManager->getMinion()[i]->getEnemyX());	//몬스터와 서브 캐릭터 위치 측정
 		
 		
-		if (_enemyManager->getMinion()[i]->getEnemyX() - _player->getPlayer()->x >0) //캐릭터가 왼쪽 몬스터가 오른쪽
+		if (_enemyManager->getMinion()[i]->getEnemyX() - (_player->getPlayer()->x + _player->getPlayer()->viewX) >0) //캐릭터가 왼쪽 몬스터가 오른쪽
 		{
 			if (_enemyManager->getMinion()[i]->getActionK() == eIDLE || _enemyManager->getMinion()[i]->getActionK() == eWALK)
 			{
@@ -206,10 +215,53 @@ void battleScene::render()
 	frameBoxRender(_statusBox, 1.0f);
 	frameBoxRender(_enemyBox, 1.0f);
 	
-	//char str[32];
-	//sprintf(str, "%d,%d", _ptMouse.x, _ptMouse.y);
-	//TextOut(getMemDC(), 100, 650, str, strlen(str));
+	IMAGEMANAGER->findImage("Thp")->render(getMemDC(), 312, 520);
+	
+	IMAGEMANAGER->findImage("Tcress")->render(getMemDC(), 30, 550);
+	NumberRender(330, 550, _player->getPlayer()->hp);
+
+	IMAGEMANAGER->findImage("Tchester")->render(getMemDC(), 30, 590);
+	NumberRender(330, 590, _subPlayer->getSubPlayer()->hp);
+	if (mummy != 0) 
+	{ 
+		IMAGEMANAGER->findImage("Tmummy")->render(getMemDC(), 410, 540);
+		NumberRender(560, 540, mummy);
+	}
+
+	if (mummy == 0 && golem != 0)
+	{
+		IMAGEMANAGER->findImage("Tgolem")->render(getMemDC(), 410, 540);
+		NumberRender(560, 540, golem);
+	}
+	else if(mummy != 0 && golem != 0)
+	{
+		IMAGEMANAGER->findImage("Tgolem")->render(getMemDC(), 410, 580); 
+		NumberRender(560, 580, golem);
+	}
+
+	if (jamirHp != 0)
+	{
+		IMAGEMANAGER->findImage("Tjamir")->render(getMemDC(), 450, 530);
+		IMAGEMANAGER->findImage("Thp")->render(getMemDC(), 410, 575);
+		NumberRender(550, 575, jamirHp);
+	}
 	_subPlayer->render();
+}
+
+void battleScene::NumberRender(int x, int y, int hp)
+{
+	int a = x;
+	int b;
+		//char str[32];
+		for (int i = 1; i < 10000; i *= 10)
+		{
+			if (hp < i) { break; }
+			b = (hp / i) % 10;
+			IMAGEMANAGER->findImage("number")->frameRender(getMemDC(), a, y, b, 0);
+			a -= 16;
+
+		}
+	
 }
 
 void battleScene::frameBoxRender(RECT rc, float scale)

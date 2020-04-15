@@ -176,6 +176,29 @@ void loadingScene::loadingImage()
 
 	_loading->loadImage("box", "Images/UI/box.bmp", 580,480);
 
+	//캐릭터,몬스터이름
+	_loading->loadImage("Tcress", "Images/UI/inbattle/Cress.bmp", 98, 18);
+	_loading->loadImage("Tchester", "Images/UI/inbattle/Chester.bmp", 138, 18);
+	_loading->loadImage("Tmummy", "Images/UI/inbattle/Mummy.bmp",90,18);
+	_loading->loadImage("Tgolem", "Images/UI/inbattle/Golem.bmp",90,18);
+	_loading->loadImage("Tjamir", "Images/UI/inbattle/Jamir.bmp",90,18);
+	_loading->loadImage("Thp", "Images/UI/inbattle/hp.bmp",36,18);
+
+
+	_loading->loadFrameImage("number", "Images/UI/inbattle/Numbers.bmp", 80*2, 8*2, 10, 1);
+	//텍스트박스용 숫자
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	char str[32];
+	//	char strr[64];
+	//
+	//	sprintf_s(str, "num%d", i);
+	//	sprintf_s(strr, "Images/UI/inbattle/num%d.bmp", i);
+	//
+	//	_loading->loadImage(str, strr, 16, 16);
+	//
+	//}
+
 	//#====================================================================================================================#
 	//#									Layer 층 표시 이미지																   #
 	//#====================================================================================================================#

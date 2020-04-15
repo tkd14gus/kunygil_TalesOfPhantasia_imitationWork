@@ -64,6 +64,8 @@ public:
 	enemy() {}
 	virtual ~enemy() {}
 };
+
+
 class mummy : public enemy
 {
 private:
@@ -132,6 +134,7 @@ public:
 	int getCountK() { return _count; }								//외부 자극으로부터 모션을 무조건 0부터 해야하는 상태를 위한 함수
 	void setCountK(int count) { _count = count; }					//외부 자극으로부터 모션을 무조건 0부터 해야하는 상태를 위한 함수
 
+	int getHpMax() { return 0; }
 	int getHpK() { return _hp; }
 	void setHpK(int hp) { _hp = hp; }
 
@@ -140,8 +143,6 @@ public:
 
 	mummy() {}
 	~mummy() {}
-
-	int getHpMax() { return 0; }									//필요 없지만 가상함수때문에 만듬
 };
 
 class golem : public enemy
@@ -212,6 +213,7 @@ public:
 	void setCountK(int count) { _count = count; }					//외부 자극으로부터 모션을 무조건 0부터 해야하는 상태를 위한 함수
 
 
+	int getHpMax() { return 0; }
 	int getHpK() { return _hp; }
 	void setHpK(int hp) { _hp = hp; }
 
@@ -220,8 +222,6 @@ public:
 
 	golem() {}
 	~golem() {}
-
-	int getHpMax() { return 0; }									//필요 없지만 가상함수때문에 만듬
 };
 
 
