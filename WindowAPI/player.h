@@ -18,6 +18,7 @@ enum tagstate
 struct ARROW	//화살 구조체
 {
 	bool _bShoot;		//화살을 발사했는지 판단
+	bool _flyDirect;	//화살이 날아가는 방향
 	float _speed;		//화살이 날아가는 속도
 	float _chargeTime;	//화살 장전 시간
 
@@ -152,18 +153,19 @@ private:
 	int _frameCount;
 
 	tagPlayer _subPlayer;	//tagPlayer 구조체로 subPlayer 생성
-	player _player;
-	ARROW _arrow;
+	//player _player;
+
+	ARROW _arrow;			//화살 초기값 설정용
 	image* _walkingDirect;	//4방향으로 걷는 이미지
 private:
 	bool _melee;			//근접공격여부
 	bool _isLeft;
 	int _direct = 0;
-	float _enemyDistance;		//ai와 적의 거리
 	float _partyDistance;
 	//float _distance;		//ai와 적의 거리
 
 	tagstate _state;
+	float _enemyDistance;		//ai와 적의 거리
 public:
 
 	HRESULT init();
@@ -175,20 +177,25 @@ public:
 	void animation();
 	//상태창에서 걷는 애니메이션 출력
 	void walkingInfo();
+	
+	tagPlayer* getSubPlayer() { return &_subPlayer; }					//서브플레이어의 정보를 얻는 함수
+	void setSubPlayer(tagPlayer subPlayer) { _subPlayer = subPlayer; }	//서브플레이어의 정보를 설정하는 함수
+	
+	RECT getArrowInfo() { return _arrow._rc; }		//화살의 모든 정보를 넘겨주는 함수
+	//player setPlayer(player _playerAddress) { _player = _playerAddress; }
+	//
+	//
+	//tagPlayer* getSubPlayer() { return &_subPlayer; }
+	//void setSubPlayer(tagPlayer subPlayer) { _subPlayer = subPlayer; }
 
-	player setPlayer(player _playerAddress) { _player = _playerAddress; }
-
-
-	tagPlayer* getSubPlayer() { return &_subPlayer; }
-	void setSubPlayer(tagPlayer subPlayer) { _subPlayer = subPlayer; }
-
-	void setSubPlayerState(tagstate state) { _subPlayer._state = state; }
 	int getDirect() { return _direct; }
 	void setDirect(int direct) { _direct = direct; }
-
-	void checkDistanceWithPlayer(POINT P);
-	void checkDistanceWithEnemy(POINT p);
-	bool checkArrowHitTheEnemy(POINT P);
+	
+	void checkDistanceWithPlayer(float x);
+	void checkDistanceWithEnemy(float x);
+	//몹과 화살이 충돌했는지 확인하는 함수
+	//battleScene에서 intersectRect 처리해주세요
+	void checkArrowHitTheEnemy(bool b);
 	subplayer() {}
 	~subplayer() {}
 };
