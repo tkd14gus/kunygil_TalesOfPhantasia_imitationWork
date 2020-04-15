@@ -31,8 +31,8 @@ void loadingScene::update()
 	{
 		//SCENEMANAGER->loadScene("게임화면");
 		//SCENEMANAGER->loadScene("맵툴기초");
-		SCENEMANAGER->loadScene("전투화면");
-		//SCENEMANAGER->loadScene("시작화면");
+		//SCENEMANAGER->loadScene("전투화면");
+		SCENEMANAGER->loadScene("시작화면");
 		//SCENEMANAGER->loadScene("상점화면임시");
 	}
 }
@@ -309,6 +309,14 @@ void loadingScene::loadingImage()
 	_loading->loadImage("8", "Images/itemInfo/8.bmp", 20, 20, true, RGB(255, 0, 255));
 	_loading->loadImage("9", "Images/itemInfo/9.bmp", 20, 20, true, RGB(255, 0, 255));
 	_loading->loadImage("x", "Images/itemInfo/x.bmp", 20, 20, true, RGB(255, 0, 255));
+	//#====================================================================================================================#
+	//#									startScene 백그라운드																   #
+	//#====================================================================================================================#
+	_loading->loadImage("startBackGround", "Images/startBackGround.bmp", WINSIZEX, WINSIZEY);
+	//#====================================================================================================================#
+	//#									startScene 백그라운드																   #
+	//#====================================================================================================================#
+	_loading->loadImage("loadingBackGround", "Images/loadingBackGround.bmp", WINSIZEX, WINSIZEY);
 }
 
 

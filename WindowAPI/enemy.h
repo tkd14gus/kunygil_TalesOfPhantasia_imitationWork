@@ -140,6 +140,8 @@ public:
 
 	mummy() {}
 	~mummy() {}
+
+	int getHpMax() { return 0; }									//필요 없지만 가상함수때문에 만듬
 };
 
 class golem : public enemy
@@ -218,6 +220,8 @@ public:
 
 	golem() {}
 	~golem() {}
+
+	int getHpMax() { return 0; }									//필요 없지만 가상함수때문에 만듬
 };
 
 

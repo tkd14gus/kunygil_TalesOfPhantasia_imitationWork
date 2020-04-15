@@ -61,24 +61,38 @@ void enemyManager::setMinion()
 {
 	for (int i = 0; i < ENEMYAMOUNT; i++)
 	{
-		if (i == 0)
+		//for (int i = 0; i < ENEMYAMOUNT; i++)
+	//{
+	//	if (i == 0)
+	//	{
+	//		minionXPos.push_back(RANDOM->Range(950, 1000));
+	//	}
+	//	if (i > 0)
+	//	{
+	//		minionXPos.push_back(RANDOM->Range(minionXPos[i - 1] + 50, minionXPos[i - 1] + 150));
+	//	}
+	//	//minionXPos.push_back(rand() % WINSIZEX / 2 + WINSIZEX / 2 - 50);
+	//	//위치 안겹치게
+	//	//100은 대략적인 거리 수치입니다
+	//	//if (i != 0 && minionXPos[i] - minionXPos[i - 1] < -100 && minionXPos[i] - minionXPos[i - 1] > 100) {
+	//	//	i--;
+	//	//	continue;
+	//	//}
+	//}
+		int ran = RANDOM->Range(3);
+		for (int j = 0; j < ran; j++)
 		{
-			minionXPos.push_back(RANDOM->Range(950, 1000));
+			enemy* _minion = new golem;
+			_minion->init(PointMake(RANDOM->Range(1100, 1300) + j * RANDOM->Range(100, 200), 500));
+			_vMinion.push_back(_minion);
 		}
-		if (i > 0)
+		ran = RANDOM->Range(1, 5);
+		for (int j = 0; j < ran; j++)
 		{
-			minionXPos.push_back(RANDOM->Range(minionXPos[i - 1] + 50, minionXPos[i - 1] + 150));
+			enemy* _minion = new mummy;
+			_minion->init(PointMake(RANDOM->Range(950, 1000) + j * RANDOM->Range(50, 100), 500));
+			_vMinion.push_back(_minion);
 		}
-		//minionXPos.push_back(rand() % WINSIZEX / 2 + WINSIZEX / 2 - 50);
-		//위치 안겹치게
-		//100은 대략적인 거리 수치입니다
-		//if (i != 0 && minionXPos[i] - minionXPos[i - 1] < -100 && minionXPos[i] - minionXPos[i - 1] > 100) {
-		//	i--;
-		//	continue;
-		//}
-		enemy* _minion = new jamir;
-		_minion->init(PointMake(minionXPos[i], 500));
-		_vMinion.push_back(_minion);
 	}
 }
 

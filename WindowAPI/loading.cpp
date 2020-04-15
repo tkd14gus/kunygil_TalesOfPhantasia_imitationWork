@@ -94,18 +94,18 @@ HRESULT loadItem::init(string strKey, const char * fileName, float x, float y, i
 HRESULT loading::init()
 {
 	//로딩화면 백그라운드 이미지 초기화
-	_background = IMAGEMANAGER->addImage("bgLoadingScene", "bgLoadingScene.bmp", WINSIZEX, WINSIZEY);
+	_background = IMAGEMANAGER->addImage("loadingBackGround", "Images/loadingBackGround.bmp", WINSIZEX, WINSIZEY);
 
 	//로딩바 이미지 초기화
-	IMAGEMANAGER->addImage("loadingBarFront", "loadingBarFront.bmp", 600, 20);
-	IMAGEMANAGER->addImage("loadingBarBack", "loadingBarBack.bmp", 600, 20);
+	IMAGEMANAGER->addImage("loadingBarFront", "loadingBarFront.bmp", 500, 20);
+	IMAGEMANAGER->addImage("loadingBarBack", "loadingBarBack.bmp", 500, 20);
 
 	//로딩바 클래스 초기화
 	_loadingBar = new progressBar;
 	_loadingBar->init("loadingBarFront", "loadingBarBack");
 	//_loadingBar->setGauge(0, 0);
 	//로딩바 위치
-	_loadingBar->setPos(100, 500);
+	_loadingBar->setPos(50, 500);
 
 	//현재 게이지
 	_currentGauge = 0;

@@ -4,7 +4,7 @@
 class startScene : public gameNode
 {
 private:
-	RECT _rc;
+	RECT _rc[2];
 
 public:
 	HRESULT init();
