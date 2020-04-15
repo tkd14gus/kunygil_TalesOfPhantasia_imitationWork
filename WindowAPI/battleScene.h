@@ -6,7 +6,8 @@
 class battleScene : public gameNode
 {
 private:
-	player* _player; //플레이어 클래스
+	player* _player;				//플레이어 클래스
+	subplayer* _subPlayer;			//서브플레이어 클래스
 	enemyManager* _enemyManager;	//적매니져 클래스
 	RECT _statusBox;
 	RECT _enemyBox;

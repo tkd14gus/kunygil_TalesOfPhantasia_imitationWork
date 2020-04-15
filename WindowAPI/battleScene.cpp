@@ -5,6 +5,8 @@ HRESULT battleScene::init()
 {
 	_player = new player;
 	_player->init();
+	_subPlayer = new subplayer;
+	_subPlayer->init();
 	_enemyManager = new enemyManager;
 	_enemyManager->init();
 	_statusBox = RectMake(0, 500, 380, 250);
@@ -16,14 +18,21 @@ void battleScene::release()
 {
 	_player->release();
 	SAFE_DELETE(_player);
+	_subPlayer->release();
+	SAFE_DELETE(_subPlayer);
 	_enemyManager->release();
 	SAFE_DELETE(_enemyManager);
 }
 
 void battleScene::update()
 {
+	_subPlayer->checkDistanceWithPlayer(_player->getPlayer()->x);
+
 	for (int i = 0; i < _enemyManager->getMinion().size(); i++)
 	{
+		_subPlayer->checkDistanceWithEnemy(_enemyManager->getMinion()[i]->getEnemyX());	//몬스터와 서브 캐릭터 위치 측정
+		
+		
 		if (_enemyManager->getMinion()[i]->getEnemyX() - _player->getPlayer()->x >0) //캐릭터가 왼쪽 몬스터가 오른쪽
 		{
 			if (_enemyManager->getMinion()[i]->getActionK() == eIDLE || _enemyManager->getMinion()[i]->getActionK() == eWALK)
@@ -53,6 +62,9 @@ void battleScene::update()
 				_player->playerHit();
 			}
 		}
+		//아래 함수의 bool변수 자리에 _subPlayer->getArrowInfo()._rc랑 몹rc intersectRect 한 결과 넣어주세요
+		_subPlayer->checkArrowHitTheEnemy(IntersectRect(&_rc, &_subPlayer->getArrowInfo(), &_enemyManager->getMinion()[i]->getRect()));
+
 		//몬스터가 공격햇을때
 		if (IntersectRect(&_rc, &_player->getPlayer()->attack, &_enemyManager->getMinion()[i]->getRect()) || _enemyManager->getMinion()[i]->getActionK() == eHIT)
 		{
@@ -104,6 +116,7 @@ void battleScene::update()
 
 	//플레이어 승리처리
 	_player->update();
+	_subPlayer->update();
 	_enemyManager->update();
 }
 
@@ -117,6 +130,7 @@ void battleScene::render()
 	//char str[32];
 	//sprintf(str, "%d,%d", _ptMouse.x, _ptMouse.y);
 	//TextOut(getMemDC(), 100, 650, str, strlen(str));
+	_subPlayer->render();
 }
 
 void battleScene::frameBoxRender(RECT rc, float scale)
