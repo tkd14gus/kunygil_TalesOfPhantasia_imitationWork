@@ -39,6 +39,10 @@ HRESULT inGameScene::init()
 			_tiles[i].rc = PLAYERDATA->getTilesRC()[i];
 		}
 	}
+	if (PLAYERDATA->getSubPlayerData() != NULL)
+	{
+		_subPlayer = PLAYERDATA->getSubPlayerData();
+	}
 
 	//state렉트 위치에 맞게 초기화
 	for (int i = 0; i < 4; i++)
@@ -449,6 +453,7 @@ void inGameScene::changeBattleScene()
 		_player->setIsBattle(true);
 		//플레이어 정보도 저장해준다.
 		PLAYERDATA->setPlayerData(_player);
+		PLAYERDATA->setSubPlayerData(_subPlayer);
 		//타일의 렉트 위치 저장
 		PLAYERDATA->setTilesRC(_tiles);
 		//맵의 위치도 저장
