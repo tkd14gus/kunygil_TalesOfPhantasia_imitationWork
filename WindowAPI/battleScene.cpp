@@ -46,7 +46,8 @@ void battleScene::update()
 		{
 			if (_enemyManager->getMinion()[i]->getActionK() == eIDLE || _enemyManager->getMinion()[i]->getActionK() == eWALK)
 			{
-				_enemyManager->getMinion()[i]->setLeft(true);
+				if (_enemyManager->getMinion()[i]->getEnemyType() == JAMIR && _enemyManager->getMinion()[i]->getActionK() == eWALK) {}
+				else { _enemyManager->getMinion()[i]->setLeft(true); }
 			}
 			
 		}
@@ -54,10 +55,12 @@ void battleScene::update()
 		{
 			if (_enemyManager->getMinion()[i]->getActionK() == eIDLE || _enemyManager->getMinion()[i]->getActionK() == eWALK)
 			{
-				_enemyManager->getMinion()[i]->setLeft(false);
+				if(_enemyManager->getMinion()[i]->getEnemyType() == JAMIR && _enemyManager->getMinion()[i]->getActionK() == eWALK){ }
+				else { _enemyManager->getMinion()[i]->setLeft(false); }
 			}
 		}
 		//몬스터 좌우설정
+
 		RECT _rc;
 		if (IntersectRect(&_rc, &_player->getPlayer()->rc, &_enemyManager->getMinion()[i]->getAtt()) && _enemyManager->getMinion()[i]->getHitAtt() == true)
 		{
@@ -75,6 +78,7 @@ void battleScene::update()
 		_subPlayer->checkArrowHitTheEnemy(IntersectRect(&_rc, &_subPlayer->getArrowInfo(), &_enemyManager->getMinion()[i]->getRect()));
 
 		//몬스터가 공격햇을때
+
 		if (IntersectRect(&_rc, &_player->getPlayer()->attack, &_enemyManager->getMinion()[i]->getRect()) || _enemyManager->getMinion()[i]->getActionK() == eHIT)
 		{
 			if (_enemyManager->getMinion()[i]->getActionK() == eHIT) 
@@ -84,7 +88,11 @@ void battleScene::update()
 			else
 			{
 				_player->hitPlayerAttK();
-				_enemyManager->getMinion()[i]->setHpK(_enemyManager->getMinion()[i]->getHpK() - 1);
+				if (_enemyManager->getMinion()[i]->getActionK() == eATTACK2&& _enemyManager->getMinion()[i]->getEnemyType() == JAMIR)
+				{
+					_enemyManager->getMinion()[i]->setHpK(_enemyManager->getMinion()[i]->getHpK() + 1);
+				}
+				else { _enemyManager->getMinion()[i]->setHpK(_enemyManager->getMinion()[i]->getHpK() - 1); }
 				if (_enemyManager->getMinion()[i]->getActionK() != eATTACK1 && _enemyManager->getMinion()[i]->getActionK() != eATTACK2 || _enemyManager->getMinion()[i]->getHpK()<1)
 				{
 					_enemyManager->getMinion()[i]->setCountK(0);
@@ -93,24 +101,63 @@ void battleScene::update()
 			}
 		}
 		//몬스터가 공격받앗을때
+		else if (_enemyManager->getMinion()[i]->getEnemyType() == JAMIR && _enemyManager->getMinion()[i]->getAttCountK() == _enemyManager->getMinion()[i]->getAttCd() && _enemyManager->getMinion()[i]->getActionK() == eIDLE)
+		{
+			if (_enemyManager->getMinion()[i]->getHpK() > _enemyManager->getMinion()[i]->getHpMax() / 2)
+			{
+					_enemyManager->getMinion()[i]->setHitAtt(true);
+			_enemyManager->getMinion()[i]->setActionK(2);
+			}
+			else
+			{
+				int a;
+				a = RANDOM->Range(1, 2);
+				if (a == 1)
+				{
+					_enemyManager->getMinion()[i]->setHitAtt(true);
+					_enemyManager->getMinion()[i]->setActionK(2);
+				}
+				else if (a == 2)
+				{
+					_enemyManager->getMinion()[i]->setActionK(5);
+				}
+			}
+		}
 		else if (IntersectRect(&_rc, &_player->getPlayer()->rc, &_enemyManager->getMinion()[i]->getRect()))
 		{
 
-			_enemyManager->getMinion()[i]->setCollision(true);
-			if (_enemyManager->getMinion()[i]->getAttCountK() == _enemyManager->getMinion()[i]->getAttCd())
+			if (_enemyManager->getMinion()[i]->getEnemyType() == JAMIR)
 			{
-				if (_enemyManager->getMinion()[i]->getActionK() == eIDLE || _enemyManager->getMinion()[i]->getActionK() == eWALK)
+				_enemyManager->getMinion()[i]->setCollision(true);
+				if (_enemyManager->getMinion()[i]->getAttCountK() < _enemyManager->getMinion()[i]->getAttCd())
 				{
-					_enemyManager->getMinion()[i]->setHitAtt(true);
-					_enemyManager->getMinion()[i]->setCountK(0);
-					_enemyManager->getMinion()[i]->setActionK(RANDOM->Range(4, 5));				
+					if (_enemyManager->getMinion()[i]->getAttCountK() % 50 == 0)
+					{
+						_enemyManager->getMinion()[i]->setHitAtt(true);
+						_enemyManager->getMinion()[i]->setActionK(4);
+					}
+
+				}
+				
+			}
+			else
+			{
+				_enemyManager->getMinion()[i]->setCollision(true);
+				if (_enemyManager->getMinion()[i]->getAttCountK() == _enemyManager->getMinion()[i]->getAttCd())
+				{
+					if (_enemyManager->getMinion()[i]->getActionK() == eIDLE || _enemyManager->getMinion()[i]->getActionK() == eWALK)
+					{
+						_enemyManager->getMinion()[i]->setHitAtt(true);
+						_enemyManager->getMinion()[i]->setCountK(0);
+
+						{ _enemyManager->getMinion()[i]->setActionK(RANDOM->Range(4, 5)); }
+					}
 				}
 			}
-
 		}
 		//캐릭과 몬스터 충돌했을때
-		else { _enemyManager->getMinion()[i]->setCollision(false); }
-
+		//else { _enemyManager->getMinion()[i]->setCollision(false); }
+		if (!IntersectRect(&_rc, &_player->getPlayer()->rc, &_enemyManager->getMinion()[i]->getRect())) { _enemyManager->getMinion()[i]->setCollision(false); }
 		if (_enemyManager->getMinion()[i]->getHpK() <= 0 && _enemyManager->getMinion()[i]->getCountK() > 20)
 		{
 			_enemyManager->removeMinion(i);

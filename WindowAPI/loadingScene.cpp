@@ -31,9 +31,9 @@ void loadingScene::update()
 	{
 		//SCENEMANAGER->loadScene("게임화면");
 		//SCENEMANAGER->loadScene("맵툴기초");
-		//SCENEMANAGER->loadScene("전투화면");
+		SCENEMANAGER->loadScene("전투화면");
 		//SCENEMANAGER->loadScene("시작화면");
-		SCENEMANAGER->loadScene("상점화면임시");
+		//SCENEMANAGER->loadScene("상점화면임시");
 	}
 }
 
@@ -254,6 +254,17 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("golematt2", "Images/enemy/golem/attack2.bmp", 160 * 2, 63 * 4, 2, 2);
 	_loading->loadFrameImage("golemwalk", "Images/enemy/golem/walk.bmp", 240 * 2, 63 * 4, 3, 2);
 
+
+	//#================================ J A M I R =========================================================================#	
+
+	_loading->loadFrameImage("jamirdead", "Images/enemy/jamir/dead.bmp", 81 * 2, 60 * 4, 1, 2);
+	_loading->loadFrameImage("jamirguard", "Images/enemy/jamir/guard.bmp", 81 * 2, 60 * 4, 1, 2);
+	_loading->loadFrameImage("jamirhit", "Images/enemy/jamir/hit.bmp", 81 * 2, 60 * 4, 1, 2);
+							  
+	_loading->loadFrameImage("jamiridle", "Images/enemy/jamir/idle.bmp", 81 * 4 * 2, 60 * 4, 4, 2);
+	_loading->loadFrameImage("jamirdash", "Images/enemy/jamir/dash.bmp", 81 * 5 * 2, 60 * 4, 5, 2);
+	_loading->loadFrameImage("jamiratt", "Images/enemy/jamir/attack.bmp", 81 * 5 * 2, 60 * 4, 5, 2);
+	_loading->loadFrameImage("jamirskill", "Images/enemy/jamir/skill.bmp", 81 * 8 * 2, 60 * 2, 8, 1); 
 
 	//#====================================================================================================================#
 	//#									inGameScene안에서 쓰일 이미지															   #

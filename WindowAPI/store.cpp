@@ -196,24 +196,24 @@ void store::itemSet(int itemType) {
 			switch (itemType)
 			{
 			case ITEM_WEAPON:
-				sprintf_s(sItemName, "weaponName (%d)", i);
-				sprintf_s(sItemImage, "weaponImage (%d)", i);
-				sprintf_s(sAttributeImage, "weaponAttribute (%d)", i);
+				sprintf_s(sItemName, "weaponName (%d)", section);
+				sprintf_s(sItemImage, "weaponImage (%d)", section);
+				sprintf_s(sAttributeImage, "weaponAttribute (%d)", section);
 				break;
 			case ITEM_ARMOR:
-				sprintf_s(sItemName, "armorName (%d)", i);
-				sprintf_s(sItemImage, "armorImage (%d)", i);
-				sprintf_s(sAttributeImage, "armorAttribute (%d)", i);
+				sprintf_s(sItemName, "armorName (%d)", section);
+				sprintf_s(sItemImage, "armorImage (%d)", section);
+				sprintf_s(sAttributeImage, "armorAttribute (%d)", section);
 				break;
 			case ITEM_RING:
-				sprintf_s(sItemName, "ringName (%d)", i);
-				sprintf_s(sItemImage, "ringImage (%d)", i);
-				sprintf_s(sAttributeImage, "ringAttribute (%d)", i);
+				sprintf_s(sItemName, "ringName (%d)", section);
+				sprintf_s(sItemImage, "ringImage (%d)", section);
+				sprintf_s(sAttributeImage, "ringAttribute (%d)", section);
 				break;
 			case ITEM_POTION:
-				sprintf_s(sItemName, "portionName (%d)", i);
-				sprintf_s(sItemImage, "portionImage (%d)", i);
-				sprintf_s(sAttributeImage, "portionAttribute (%d)", i);
+				sprintf_s(sItemName, "portionName (%d)", section);
+				sprintf_s(sItemImage, "portionImage (%d)", section);
+				sprintf_s(sAttributeImage, "portionAttribute (%d)", section);
 				break;
 			}
 
