@@ -1279,24 +1279,43 @@ void subplayer::release()
 
 }
 
-void subplayer::update()
+void subplayer::update(int playerViewX)
 {
 	this->animation();
 
+
 	//ai의 위치
-	_subPlayer.rc = RectMake(_subPlayer.x, _subPlayer.y, 77, 91);
+	_subPlayer.viewX = _subPlayer.x - playerViewX;
+	_subPlayer.rc = RectMake(_subPlayer.viewX, _subPlayer.y, 77, 91);
+	
 	//이동 상태에 따른 속도 변경
 	if (_subPlayer._state == pWALK) 
 	{
 		_subPlayer.speed = 1.0f;	//pWALK일 때는 속도를 1.0f로 설정
-		if (_subPlayer.sight) { _subPlayer.x += _subPlayer.speed; }
-		else { _subPlayer.x -= _subPlayer.speed; }
+		if (_subPlayer.sight) 
+		{
+			if (_subPlayer.rc.right < 0) { _subPlayer.viewX += _subPlayer.speed; }
+			else { _subPlayer.x += _subPlayer.speed; }
+		}
+		else 
+		{
+			if (_subPlayer.rc.left > WINSIZEX) { _subPlayer.viewX -= _subPlayer.speed; }
+			else { _subPlayer.x -= _subPlayer.speed; }
+		}
 	}
 	if (_subPlayer._state == pRUN)
 	{
 		_subPlayer.speed = 3.0f; 	//pRun일 때는 속도를 3.0f로 설정
-		if (_subPlayer.sight) { _subPlayer.x += _subPlayer.speed; }
-		else { _subPlayer.x -= _subPlayer.speed; }
+		if (_subPlayer.sight)
+		{
+			if (_subPlayer.rc.left < 0) { _subPlayer.viewX += _subPlayer.speed; }
+			else { _subPlayer.x += _subPlayer.speed; }
+		}
+		else
+		{
+			if (_subPlayer.rc.right > WINSIZEX) { _subPlayer.viewX -= _subPlayer.speed; }
+			else { _subPlayer.x -= _subPlayer.speed; }
+		}
 	}
 	
 	//거리조절
@@ -1725,17 +1744,17 @@ void subplayer::walkingInfo()
 
 void subplayer::checkDistanceWithPlayer(float x)
 {
-	_partyDistance = sqrt(powf(x - (_subPlayer.rc.left + _subPlayer.rc.right)/2, 2.0f));
-	if (x < _subPlayer.x) { _subPlayer.sight = 0; }
+	_partyDistance = sqrt(powf(x - _subPlayer.viewX, 2.0f));
+	if (x < _subPlayer.viewX) { _subPlayer.sight = 0; }
 	else { _subPlayer.sight = 1; }
 }
 
 void subplayer::checkDistanceWithEnemy(float x)
 {
-	_enemyDistance = sqrt(powf(x - (_subPlayer.rc.left + _subPlayer.rc.right) / 2, 2.0f));
+	_enemyDistance = sqrt(powf(x - _subPlayer.viewX, 2.0f));
 	if (_subPlayer._state == pATTACK)
 	{
-		if (x < _subPlayer.x) { _subPlayer.sight = 0; }
+		if (x < _subPlayer.viewX) { _subPlayer.sight = 0; }
 		else { _subPlayer.sight = 1; }
 	}
 }

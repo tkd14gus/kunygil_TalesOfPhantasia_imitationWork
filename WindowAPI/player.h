@@ -170,7 +170,7 @@ public:
 
 	HRESULT init();
 	void release();
-	void update();
+	void update(int playerViewX);
 	void render();
 
 	//enum태그 변화에 따라 변하는 플레이어 모션

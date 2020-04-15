@@ -20,6 +20,10 @@ HRESULT battleScene::init()
 		_player = PLAYERDATA->getPlayerData();
 
 	}
+	/*if (PLAYERDATA->getSubPlayerData() != NULL)
+	{
+		_subPlayer = PLAYERDATA->getSubPlayerData();
+	}*/
 	return S_OK;
 }
 
@@ -172,7 +176,7 @@ void battleScene::update()
 
 	//플레이어 승리처리
 	_player->update();
-	_subPlayer->update();
+	_subPlayer->update(_player->getPlayer()->viewX);
 	_enemyManager->update(_player->getPlayer()->viewX);
 
 	//배틀상태가 아니라면(배틀이 끝났다면)

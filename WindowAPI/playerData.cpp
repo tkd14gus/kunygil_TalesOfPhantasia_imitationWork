@@ -21,6 +21,15 @@ player * playerData::getPlayerData()
 	else
 		return NULL;
 }
+subplayer* playerData::getSubPlayerData()
+{
+	if (_subPlayer != NULL)
+	{
+		return _subPlayer;
+	}
+	else
+		return NULL;
+}
 //타일의 RECT정보를 보내준다.(load)
 RECT* playerData::getTilesRC()
 {

@@ -3,12 +3,14 @@
 #include "tileNode.h"
 
 class player;
+class subplayer;
 
 class playerData : public singletonBase <playerData>
 {
 private:
 	//플레이어 데이터를 저장해야 하기 때문에 변수 선언
 	player* _player;
+	subplayer* _subPlayer;
 	//타일의 RECT위치를 받기위해
 	RECT _tilesRC[TILEX * TILEY];
 
@@ -20,8 +22,12 @@ public:
 
 	//플레이어 데이터를 저장한다.(save)
 	void setPlayerData(player* player) { _player = player; }
+	void setSubPlayerDaya(subplayer* subPlayer) { _subPlayer = subPlayer; }
 	//플레이어 데이터를 보내준다.(load)
 	player* getPlayerData();
+	subplayer* getSubPlayerData();
+
+
 
 	//타일의 RECT위치를 저장(save)
 	void setTilesRC(tagTile tilesRC[TILEX * TILEY]);
