@@ -161,6 +161,8 @@
     <ClInclude Include="iniData.h" />
     <ClInclude Include="iniTestScene.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="inven.h" />
+    <ClInclude Include="item.h" />
     <ClInclude Include="loading.h" />
     <ClInclude Include="loadingScene.h" />
     <ClInclude Include="mainGame.h" />
@@ -177,6 +179,8 @@
     <ClInclude Include="soundTestScene.h" />
     <ClInclude Include="startScene.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="store.h" />
+    <ClInclude Include="storeScene.h" />
     <ClInclude Include="tileNode.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
@@ -194,6 +198,8 @@
     <ClCompile Include="iniData.cpp" />
     <ClCompile Include="iniTestScene.cpp" />
     <ClCompile Include="input.cpp" />
+    <ClCompile Include="inven.cpp" />
+    <ClCompile Include="item.cpp" />
     <ClCompile Include="loading.cpp" />
     <ClCompile Include="loadingScene.cpp" />
     <ClCompile Include="mainGame.cpp" />
@@ -208,6 +214,8 @@
     <ClCompile Include="soundManager.cpp" />
     <ClCompile Include="soundTestScene.cpp" />
     <ClCompile Include="startScene.cpp" />
+    <ClCompile Include="store.cpp" />
+    <ClCompile Include="storeScene.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="winMain.cpp" />
     <ClCompile Include="stdafx.cpp">

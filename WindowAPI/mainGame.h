@@ -10,6 +10,10 @@
 #include "soundTestScene.h"
 #include "maptoolScene.h"
 #include "battleScene.h"
+#include "storeScene.h"
+
+//임시로 넣어둠
+#include "store.h"
 
 
 class mainGame : public gameNode

@@ -29,9 +29,11 @@ void loadingScene::update()
 	//로딩완료후 화면 변경
 	if (_loading->loadingDone())
 	{
-		SCENEMANAGER->loadScene("게임화면");
+		//SCENEMANAGER->loadScene("게임화면");
 		//SCENEMANAGER->loadScene("맵툴기초");
 		//SCENEMANAGER->loadScene("전투화면");
+		//SCENEMANAGER->loadScene("시작화면");
+		SCENEMANAGER->loadScene("상점화면임시");
 	}
 }
 
@@ -172,6 +174,8 @@ void loadingScene::loadingImage()
 	_loading->loadImage("activetextbox", "Images/UI/activetextbox.bmp", 600, 800);
 	_loading->loadImage("accountbox", "Images/UI/accountbox.bmp", 600, 300);			//전투씬용
 
+	_loading->loadImage("box", "Images/UI/box.bmp", 580,480);
+
 	//#====================================================================================================================#
 	//#									Layer 층 표시 이미지																   #
 	//#====================================================================================================================#
@@ -200,6 +204,15 @@ void loadingScene::loadingImage()
 	_loading->loadImage("rightArrow", "Images\\UI\\Arrow1.bmp", 48, 48);
 	_loading->loadImage("leftArrow5", "Images\\UI\\Arrow5_0.bmp", 48, 48);
 	_loading->loadImage("rightArrow5", "Images\\UI\\Arrow5_1.bmp", 48, 48);
+
+	_loading->loadImage("weapon", "Images/UI/weapon.bmp", 133, 45);
+	_loading->loadImage("weapon_off", "Images/UI/weapon_off.bmp", 133, 45);
+	_loading->loadImage("armer", "Images/UI/armer.bmp", 133, 45);
+	_loading->loadImage("armer_off", "Images/UI/armer_off.bmp", 133, 45);
+	_loading->loadImage("ring", "Images/UI/ring.bmp", 133, 45);
+	_loading->loadImage("ring_off", "Images/UI/ring_off.bmp", 133, 45);
+	_loading->loadImage("portion", "Images/UI/portion.bmp", 133, 45);
+	_loading->loadImage("portion_off", "Images/UI/portion_off.bmp", 133, 45);
 
 	//#====================================================================================================================#
 	//#									UI 이미지 종료																	   #
@@ -247,7 +260,44 @@ void loadingScene::loadingImage()
 	//#====================================================================================================================#
 	_loading->loadFrameImage("cress", "Images/inGameSprite/cress.bmp", 320, 512, 5, 4);
 	_loading->loadImage("stateWindow", "Images/inGameSprite/stateWIndow.bmp", WINSIZEX, WINSIZEY);
+	_loading->loadImage("backGround_Back", "Image/background/backGround_back.bmp", WINSIZEX * 3, WINSIZEY);
 
+	//#====================================================================================================================#
+	//#									인벤/상점용 이미지															   #
+	//#====================================================================================================================#
+	_loading->loadImage("armorName (0)", "Images/itemInfo/armorName (0).bmp", 200, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("portionName (0)", "Images/itemInfo/portionName (0).bmp", 200, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("ringName (0)", "Images/itemInfo/ringName (0).bmp", 200, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("weaponName (0)", "Images/itemInfo/weaponName (0).bmp", 200, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("armorImage (0)", "Images/itemInfo/armorImage (0).bmp", 100, 100, true, RGB(255, 0, 255));
+	_loading->loadImage("portionImage (0)", "Images/itemInfo/portionImage (0).bmp", 100, 100, true, RGB(255, 0, 255));
+	_loading->loadImage("ringImage (0)", "Images/itemInfo/ringImage (0).bmp", 100, 100, true, RGB(255, 0, 255));
+	_loading->loadImage("weaponImage (0)", "Images/itemInfo/weaponImage (0).bmp", 100, 100, true, RGB(255, 0, 255));
+	_loading->loadImage("armorAttribute (0)", "Images/itemInfo/armorAttribute (0).bmp", 350, 35, true, RGB(255, 0, 255));
+	_loading->loadImage("portionAttribute (0)", "Images/itemInfo/portionAttribute (0).bmp", 350, 35, true, RGB(255, 0, 255));
+	_loading->loadImage("ringAttribute (0)", "Images/itemInfo/ringAttribute (0).bmp", 350, 35, true, RGB(255, 0, 255));
+	_loading->loadImage("weaponAttribute (0)", "Images/itemInfo/weaponAttribute (0).bmp", 350, 35, true, RGB(255, 0, 255));
+
+	_loading->loadImage("weaponG", "Images/itemInfo/weapon.bmp", 133, 45, true, RGB(255, 0, 255));
+	_loading->loadImage("armerG", "Images/itemInfo/armer.bmp", 133, 45, true, RGB(255, 0, 255));
+	_loading->loadImage("ringG", "Images/itemInfo/ring.bmp", 133, 45, true, RGB(255, 0, 255));
+	_loading->loadImage("portionG", "Images/itemInfo/portion.bmp", 133, 45, true, RGB(255, 0, 255));
+
+	_loading->loadImage("gold", "Images/itemInfo/gold.bmp", 64, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("total", "Images/itemInfo/total.bmp", 80, 20, true, RGB(255, 0, 255));
+
+
+	_loading->loadImage("0", "Images/itemInfo/0.bmp", 20, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("1", "Images/itemInfo/1.bmp", 20, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("2", "Images/itemInfo/2.bmp", 20, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("3", "Images/itemInfo/3.bmp", 20, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("4", "Images/itemInfo/4.bmp", 20, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("5", "Images/itemInfo/5.bmp", 20, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("6", "Images/itemInfo/6.bmp", 20, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("7", "Images/itemInfo/7.bmp", 20, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("8", "Images/itemInfo/8.bmp", 20, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("9", "Images/itemInfo/9.bmp", 20, 20, true, RGB(255, 0, 255));
+	_loading->loadImage("x", "Images/itemInfo/x.bmp", 20, 20, true, RGB(255, 0, 255));
 }
 
 

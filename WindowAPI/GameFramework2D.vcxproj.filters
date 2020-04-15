@@ -64,6 +64,9 @@
     <Filter Include="MainGame\맵툴기초">
       <UniqueIdentifier>{864a6446-612f-454a-8423-0cecac3dc06b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\상점">
+      <UniqueIdentifier>{bf5910ba-ecfa-43f6-a090-9e3d65b272ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="commonMacroFunction.h">
@@ -162,6 +165,18 @@
     <ClInclude Include="battleScene.h">
       <Filter>MainGame\씬테스트</Filter>
     </ClInclude>
+    <ClInclude Include="inven.h">
+      <Filter>MainGame\상점</Filter>
+    </ClInclude>
+    <ClInclude Include="item.h">
+      <Filter>MainGame\상점</Filter>
+    </ClInclude>
+    <ClInclude Include="store.h">
+      <Filter>MainGame\상점</Filter>
+    </ClInclude>
+    <ClInclude Include="storeScene.h">
+      <Filter>MainGame\씬테스트</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -252,6 +267,18 @@
       <Filter>MainGame\맵툴기초</Filter>
     </ClCompile>
     <ClCompile Include="battleScene.cpp">
+      <Filter>MainGame\씬테스트</Filter>
+    </ClCompile>
+    <ClCompile Include="inven.cpp">
+      <Filter>MainGame\상점</Filter>
+    </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>MainGame\상점</Filter>
+    </ClCompile>
+    <ClCompile Include="store.cpp">
+      <Filter>MainGame\상점</Filter>
+    </ClCompile>
+    <ClCompile Include="storeScene.cpp">
       <Filter>MainGame\씬테스트</Filter>
     </ClCompile>
   </ItemGroup>
