@@ -1,13 +1,18 @@
 #include "stdafx.h"
 #include "playerData.h"
+#include "player.h"
 
 HRESULT playerData::init()
 {
+	_subPlayer = new subplayer;
+	_subPlayer->init();
 	return S_OK;
 }
 
 void playerData::release()
 {
+	_subPlayer->release();
+	SAFE_DELETE(_subPlayer);
 }
 
 player * playerData::getPlayerData()

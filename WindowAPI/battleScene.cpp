@@ -20,10 +20,10 @@ HRESULT battleScene::init()
 		_player = PLAYERDATA->getPlayerData();
 
 	}
-	/*if (PLAYERDATA->getSubPlayerData() != NULL)
+	if (PLAYERDATA->getSubPlayerData() != NULL)
 	{
 		_subPlayer = PLAYERDATA->getSubPlayerData();
-	}*/
+	}
 	return S_OK;
 }
 
@@ -184,6 +184,7 @@ void battleScene::update()
 	{
 		//플레이어 정보도 저장해준다.
 		PLAYERDATA->setPlayerData(_player);
+		PLAYERDATA->setSubPlayerData(_subPlayer);
 		//화면을 바꿔준다.
 		SCENEMANAGER->loadScene("게임화면");
 	}

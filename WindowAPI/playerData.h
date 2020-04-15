@@ -22,7 +22,7 @@ public:
 
 	//플레이어 데이터를 저장한다.(save)
 	void setPlayerData(player* player) { _player = player; }
-	void setSubPlayerDaya(subplayer* subPlayer) { _subPlayer = subPlayer; }
+	void setSubPlayerData(subplayer* subPlayer) { _subPlayer = subPlayer; }
 	//플레이어 데이터를 보내준다.(load)
 	player* getPlayerData();
 	subplayer* getSubPlayerData();
