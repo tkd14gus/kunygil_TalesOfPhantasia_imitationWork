@@ -64,26 +64,18 @@ void inGameScene::release()
 
 void inGameScene::update()
 {
-	//POINT po = { IMAGEMANAGER->findImage("cress")->getX(), IMAGEMANAGER->findImage("cress")->getY() };
-	//for (int i = 0; i < TILEX * TILEY; i++)
-	//{
-	//	if (PtInRect(&_tiles[i].rc, po))
-	//	{
-	//		sprintf_s()
-	//		//_tiles[i].imagePage
-	//		HANDLE file;
-	//		DWORD read;
-	//		file = CreateFile(str, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	//
-	//		ReadFile(file, _sampleTile, sizeof(tagSampleTile) * (SAMPLETILEX - 2) * SAMPLETILEY, &read, NULL);
-	//		CloseHandle(file);
-	//		_direct[0] = _tiles[i].direct[0];
-	//		_direct[1] = _tiles[i].direct[1];
-	//		_direct[2] = _tiles[i].direct[2];
-	//		_direct[3] = _tiles[i].direct[3];
-	//		break;
-	//	}
-	//}
+	POINT po = { IMAGEMANAGER->findImage("cress")->getX(), IMAGEMANAGER->findImage("cress")->getY() };
+	for (int i = 0; i < TILEX * TILEY; i++)
+	{
+		if (PtInRect(&_tiles[i].rc, po))
+		{
+			_direct[0] = _tiles[i].direct[0];
+			_direct[1] = _tiles[i].direct[1];
+			_direct[2] = _tiles[i].direct[2];
+			_direct[3] = _tiles[i].direct[3];
+			//break;
+		}
+	}
 	//상태창이 열리지 않은 상태라면.
 	if (!_isStateWinOpen)
 	{
@@ -100,13 +92,13 @@ void inGameScene::update()
 					//만약 플레이어의 Y좌표가 WINSIZEY / 2보다 위에 있으면 더이상 올라가면 안된다.
 					//그걸 계산해줘서 타일의 움직임을 제안한다.
 					//아래의 모든 타일의 움직임을 제안하는 if문은 같은 원리이다.
-					if (_player->getPlayerY() < WINSIZEY / 2)
+					if (_player->getPlayerY() <= WINSIZEY / 2)
 					{
 						_tiles[i].rc.top -= 10;
 						_tiles[i].rc.bottom -= 10;
 					}
 					//만약 플레이어의 Y좌표가 (48 * 150 - WINSIZEY / 2)아래에 있으면 타일이 움직이면 안되기 때문에 1씩 빼준다.
-					if (_player->getPlayerY() > (48 * 150 - WINSIZEY / 2))
+					if (_player->getPlayerY() >= (48 * 150 - WINSIZEY / 2))
 					{
 						_tiles[i].rc.top -= 10;
 						_tiles[i].rc.bottom -= 10;
@@ -131,13 +123,13 @@ void inGameScene::update()
 					_tiles[i].rc.top -= 10;
 					_tiles[i].rc.bottom -= 10;
 					//만약 플레이어의 Y좌표가 WINSIZEY / 2보다 위에 있으면 타일이 움직이면 안되기 때문에 1씩 더해준다.
-					if (_player->getPlayerY() < WINSIZEY / 2)
+					if (_player->getPlayerY() <= WINSIZEY / 2)
 					{
 						_tiles[i].rc.top += 10;
 						_tiles[i].rc.bottom += 10;
 					}
 					//만약 플레이어의 Y좌표가 (48 * 150 - WINSIZEY / 2)이상이면 더이상 올라가면 안된다.
-					if (_player->getPlayerY() > (48 * 150 - WINSIZEY / 2))
+					if (_player->getPlayerY() >= (48 * 150 - WINSIZEY / 2))
 					{
 						_tiles[i].rc.top += 10;
 						_tiles[i].rc.bottom += 10;
@@ -164,13 +156,13 @@ void inGameScene::update()
 					_tiles[i].rc.left -= 10;
 					_tiles[i].rc.right -= 10;
 					//만약 플레이어의 X좌표가 (48 * 120 - WINSIZEX / 2) - 40이상이면 더이상 이동하면 안된다.
-					if (_player->getPlayerX() > (48 * 120 - WINSIZEX / 2))
+					if (_player->getPlayerX() >= (48 * 120 - WINSIZEX / 2))
 					{
 						_tiles[i].rc.left += 10;
 						_tiles[i].rc.right += 10;
 					}
 					//만약 플레이어의 X좌표가  WINSIZEX / 2 - 40보다 위에 있으면 타일이 움직이면 안되기 때문에 1씩 더해준다.
-					if (_player->getPlayerX() < WINSIZEX / 2)
+					if (_player->getPlayerX() <= WINSIZEX / 2)
 					{
 						_tiles[i].rc.left += 10;
 						_tiles[i].rc.right += 10;
@@ -197,13 +189,13 @@ void inGameScene::update()
 					_tiles[i].rc.left += 10;
 					_tiles[i].rc.right += 10;
 					//만약 플레이어의 X좌표가  WINSIZEX / 2 - 40보다 위에 있으면 타일이 움직이면 안되기 때문에 1씩 더해준다.
-					if (_player->getPlayerX() < WINSIZEX / 2)
+					if (_player->getPlayerX() <= WINSIZEX / 2 + 32)
 					{
 						_tiles[i].rc.left -= 10;
 						_tiles[i].rc.right -= 10;
 					}
 					//만약 플레이어의 X좌표가 (48 * 120 - WINSIZEX / 2) - 40이상이면 더이상 이동하면 안된다.
-					if (_player->getPlayerX() > (48 * 120 - WINSIZEX / 2))
+					if (_player->getPlayerX() >= (48 * 120 - WINSIZEX / 2))
 					{
 						_tiles[i].rc.left -= 10;
 						_tiles[i].rc.right -= 10;
@@ -414,13 +406,13 @@ void inGameScene::mapSetting(int mapLocation)
 
 	if (mapLocation == 0)
 		//file = CreateFile("MapSave/save1.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		file = CreateFile("save1.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		file = CreateFile("MapSave/save1.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	else if (mapLocation == 1)
 		//file = CreateFile("MapSave/save2.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		file = CreateFile("save2.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		file = CreateFile("MapSave/save2.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	else
 		//file = CreateFile("MapSave/save3.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		file = CreateFile("save3.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		file = CreateFile("MapSave/save3.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
 	CloseHandle(file);

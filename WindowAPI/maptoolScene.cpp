@@ -124,10 +124,10 @@ void maptoolScene::update()
 
 			if (_setSaveSlot == 0)
 			{
-				sprintf_s(_mapName, "save1.mapsave");
+				sprintf_s(_mapName, "MapSave/save1.mapsave");
 			}	//슬롯1번파일으로 이름변경
-			else if (_setSaveSlot == 1) { sprintf_s(_mapName, "save2.mapsave"); }	//슬롯2번파일으로 이름변경
-			else if (_setSaveSlot == 2) { sprintf_s(_mapName, "save3.mapsave"); }	//슬롯3번파일으로 이름변경
+			else if (_setSaveSlot == 1) { sprintf_s(_mapName, "MapSave/save2.mapsave"); }	//슬롯2번파일으로 이름변경
+			else if (_setSaveSlot == 2) { sprintf_s(_mapName, "MapSave/save3.mapsave"); }	//슬롯3번파일으로 이름변경
 
 		}
 		if (INPUT->GetKeyUp(VK_LBUTTON))
@@ -769,6 +769,10 @@ void maptoolScene::setMap()
 				for (int j = 0; j < _currentTile.sampleSizeY; j++) {
 					for (int n = 0; n < _currentTile.sampleSizeX; n++) {
 						_tiles[i + (j * TILEX + n)].canMove[0] = _canMove;
+						_tiles[i + (j * TILEX + n)].direct[0] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[0];
+						_tiles[i + (j * TILEX + n)].direct[1] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[1];
+						_tiles[i + (j * TILEX + n)].direct[2] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[2];
+						_tiles[i + (j * TILEX + n)].direct[3] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[3];
 						_tiles[i + (j * TILEX + n)].tileFrameX[0] = _currentTile.x[n];
 						_tiles[i + (j * TILEX + n)].tileFrameY[0] = _currentTile.y[j];
 						_tiles[i + (j * TILEX + n)].imagePage[0] = _currentTile.pageNumber;
@@ -782,6 +786,10 @@ void maptoolScene::setMap()
 				for (int j = 0; j < _currentTile.sampleSizeY; j++) {
 					for (int n = 0; n < _currentTile.sampleSizeX; n++) {
 						_tiles[i + (j * TILEX + n)].canMove[1] = _canMove;
+						_tiles[i + (j * TILEX + n)].direct[0] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[0];
+						_tiles[i + (j * TILEX + n)].direct[1] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[1];
+						_tiles[i + (j * TILEX + n)].direct[2] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[2];
+						_tiles[i + (j * TILEX + n)].direct[3] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[3];
 						_tiles[i + (j * TILEX + n)].tileFrameX[1] = _currentTile.x[n];
 						_tiles[i + (j * TILEX + n)].tileFrameY[1] = _currentTile.y[j];
 						_tiles[i + (j * TILEX + n)].imagePage[1] = _currentTile.pageNumber;
@@ -795,6 +803,10 @@ void maptoolScene::setMap()
 				for (int j = 0; j < _currentTile.sampleSizeY; j++) {
 					for (int n = 0; n < _currentTile.sampleSizeX; n++) {
 						_tiles[i + (j * TILEX + n)].canMove[2] = _canMove;
+						_tiles[i + (j * TILEX + n)].direct[0] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[0];
+						_tiles[i + (j * TILEX + n)].direct[1] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[1];
+						_tiles[i + (j * TILEX + n)].direct[2] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[2];
+						_tiles[i + (j * TILEX + n)].direct[3] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[3];
 						_tiles[i + (j * TILEX + n)].tileFrameX[2] = _currentTile.x[n];
 						_tiles[i + (j * TILEX + n)].tileFrameY[2] = _currentTile.y[j];
 						_tiles[i + (j * TILEX + n)].imagePage[2] = _currentTile.pageNumber;

@@ -410,6 +410,8 @@ void player::update(bool direct)
 				_direct = 2;
 				//위쪽으로 움직이므로 X좌표만 --시켜준다.
 				_player.inGameX -= 10;
+				if (_player.inGameX <= 32)
+					_player.inGameX += 10;
 			}
 		}
 		// 왼쪽키를 땠을 떄
