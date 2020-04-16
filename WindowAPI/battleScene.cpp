@@ -91,10 +91,80 @@ void battleScene::update()
 				_player->playerHit();
 			}
 		}
+		if (IntersectRect(&_rc, &_subPlayer->getSubPlayer()->rc, &_enemyManager->getMinion()[i]->getAtt()) 
+			&& _enemyManager->getMinion()[i]->getHitAtt())
+		{
+			if (_enemyManager->getMinion()[i]->getEnemyX() 
+				- (_subPlayer->getSubPlayer()->x + _subPlayer->getSubPlayer()->viewX) > 0) 
+			{
+				_subPlayer->setSight(true);		//캐릭터왼쪽
+			}
+			else { _player->setSight(false); }	//캐릭터오른쪽
+			
+			_enemyManager->getMinion()[i]->setHitAtt(false);
+			
+			if (_subPlayer->getSubPlayer()->_state == pDEAD) {}
+			else if (_subPlayer->getSubPlayer()->_state == pGUARD) {}
+			else if (_subPlayer->getSubPlayer()->_state != pHIT) { _subPlayer->subPlayerHit(); }
+		}
 		//아래 함수의 bool변수 자리에 _subPlayer->getArrowInfo()._rc랑 몹rc intersectRect 한 결과 넣어주세요
-		_subPlayer->checkArrowHitTheEnemy(IntersectRect(&_rc, &_subPlayer->getArrowInfo(), &_enemyManager->getMinion()[i]->getRect()));
+
 
 		//몬스터가 공격햇을때
+
+
+		if (_subPlayer->getArrowInfo()._bShoot)		//화살 공격 히트 처리
+		{
+			if (IntersectRect(&_rc, &_subPlayer->getArrowRect(), &_enemyManager->getMinion()[i]->getRect())
+				|| _enemyManager->getMinion()[i]->getActionK() == eHIT)
+			{
+				if (_enemyManager->getMinion()[i]->getActionK() == eHIT)
+				{
+
+				}
+				else
+				{
+					_subPlayer->checkArrowHitTheEnemy(true);
+					_subPlayer->hitPlayerAttK();
+					if (_enemyManager->getMinion()[i]->getActionK() == eATTACK2 && _enemyManager->getMinion()[i]->getEnemyType() == JAMIR)
+					{
+						_enemyManager->getMinion()[i]->setHpK(_enemyManager->getMinion()[i]->getHpK() + 1);
+					}
+					else { _enemyManager->getMinion()[i]->setHpK(_enemyManager->getMinion()[i]->getHpK() - 1); }
+					if (_enemyManager->getMinion()[i]->getActionK() != eATTACK1 && _enemyManager->getMinion()[i]->getActionK() != eATTACK2 || _enemyManager->getMinion()[i]->getHpK() < 1)
+					{
+						_enemyManager->getMinion()[i]->setCountK(0);
+						_enemyManager->getMinion()[i]->setActionK(3);
+					}
+				}
+			}
+		}
+		//서브 플레이어 근접 공격
+		else
+		{
+			if (IntersectRect(&_rc, &_subPlayer->getSubPlayer()->attack, &_enemyManager->getMinion()[i]->getRect())
+				|| _enemyManager->getMinion()[i]->getActionK() == eHIT)
+			{
+				if (_enemyManager->getMinion()[i]->getActionK() == eHIT)
+				{
+
+				}
+				else
+				{
+					_subPlayer->hitPlayerAttK();
+					if (_enemyManager->getMinion()[i]->getActionK() == eATTACK2 && _enemyManager->getMinion()[i]->getEnemyType() == JAMIR)
+					{
+						_enemyManager->getMinion()[i]->setHpK(_enemyManager->getMinion()[i]->getHpK() + 1);
+					}
+					else { _enemyManager->getMinion()[i]->setHpK(_enemyManager->getMinion()[i]->getHpK() - 1); }
+					if (_enemyManager->getMinion()[i]->getActionK() != eATTACK1 && _enemyManager->getMinion()[i]->getActionK() != eATTACK2 || _enemyManager->getMinion()[i]->getHpK() < 1)
+					{
+						_enemyManager->getMinion()[i]->setCountK(0);
+						_enemyManager->getMinion()[i]->setActionK(3);
+					}
+				}
+			}
+		}
 
 		if (IntersectRect(&_rc, &_player->getPlayer()->attack, &_enemyManager->getMinion()[i]->getRect()) || _enemyManager->getMinion()[i]->getActionK() == eHIT)
 		{
@@ -117,13 +187,16 @@ void battleScene::update()
 				}
 			}
 		}
+
+		
+		
 		//몬스터가 공격받앗을때
 		else if (_enemyManager->getMinion()[i]->getEnemyType() == JAMIR && _enemyManager->getMinion()[i]->getAttCountK() == _enemyManager->getMinion()[i]->getAttCd() && _enemyManager->getMinion()[i]->getActionK() == eIDLE)
 		{
 			if (_enemyManager->getMinion()[i]->getHpK() > _enemyManager->getMinion()[i]->getHpMax() / 2)
 			{
-					_enemyManager->getMinion()[i]->setHitAtt(true);
-			_enemyManager->getMinion()[i]->setActionK(2);
+				_enemyManager->getMinion()[i]->setHitAtt(true);
+				_enemyManager->getMinion()[i]->setActionK(2);
 			}
 			else
 			{
@@ -185,6 +258,7 @@ void battleScene::update()
 	if (_enemyManager->getMinion().empty() == true)
 	{
 		_player->playerWin();
+		_subPlayer->subPlayerWin();
 	}
 
 	//플레이어 승리처리
@@ -197,6 +271,7 @@ void battleScene::update()
 	{
 		//플레이어 정보도 저장해준다.
 		PLAYERDATA->setPlayerData(_player);
+		_subPlayer->setState(pIDLE);
 		PLAYERDATA->setSubPlayerData(_subPlayer);
 		//화면을 바꿔준다.
 		SCENEMANAGER->loadScene("게임화면");

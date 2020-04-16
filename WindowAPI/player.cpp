@@ -1235,6 +1235,7 @@ HRESULT subplayer::init()
 	_subPlayer.atkshot = IMAGEMANAGER->addFrameImage("subShot", "Images/subplayer/chester_battel_shoot.bmp", 728, 198, 8, 2);
 	//근접 공격 모션
 	_subPlayer.atkmelee = IMAGEMANAGER->addFrameImage("subMelee", "Images/subplayer/chester_battel_physical.bmp", 202,180,2, 2);
+	_subPlayer.hit = IMAGEMANAGER->addFrameImage("subHit", "Images/subplayer/chester_hit.bmp", 90, 168, 1, 2);
 	//사망 모션
 	_subPlayer.dead = IMAGEMANAGER->addFrameImage("subDead", "Images/subplayer/chester_battel_dead.bmp", 279, 210, 3, 2);
 	//승리 모션
@@ -1272,7 +1273,7 @@ HRESULT subplayer::init()
 	_subPlayer.attXK = 0;
 	_subPlayer.attYK = 0;
 
-
+	_direct = 1;
 	//프레임이미지초기화
 	_frameCount = 0;
 	_frameIndex = 0;
@@ -1295,7 +1296,7 @@ void subplayer::update(int playerViewX)
 	_subPlayer.rc = RectMake(_subPlayer.viewX, _subPlayer.y, 77, 91);
 	
 	//이동 상태에 따른 속도 변경
-	if (_subPlayer._state == pWALK) 
+	if (_subPlayer._state == pWALK && _subPlayer._state != pWIN) 
 	{
 		_subPlayer.speed = 1.0f;	//pWALK일 때는 속도를 1.0f로 설정
 		if (_subPlayer.sight) 
@@ -1309,7 +1310,7 @@ void subplayer::update(int playerViewX)
 			else { _subPlayer.x -= _subPlayer.speed; }
 		}
 	}
-	if (_subPlayer._state == pRUN)
+	if (_subPlayer._state == pRUN && _subPlayer._state != pWIN)
 	{
 		_subPlayer.speed = 3.0f; 	//pRun일 때는 속도를 3.0f로 설정
 		if (_subPlayer.sight)
@@ -1325,29 +1326,35 @@ void subplayer::update(int playerViewX)
 	}
 	
 	//거리조절
-	if (_partyDistance > 200)
+	if (_partyDistance > 200 && !(_subPlayer._state == pWIN || _subPlayer._state == pHIT))
 	{
 		_subPlayer._state = pRUN;
 		_arrow._chargeTime = 0.0f;
 	}
-	else if (_partyDistance > 100)
+	else if (_partyDistance > 100 && !(_subPlayer._state == pWIN || _subPlayer._state == pHIT))
 	{
 		_subPlayer._state = pWALK;
 		_arrow._chargeTime = 0.0f;
 	}
 	else
 	{
-		if (_enemyDistance < 100) 
-		{ 
-			_melee = true; 
+		if (_enemyDistance < 100 && !(_subPlayer._state == pWIN || _subPlayer._state == pHIT))
+		{
+			_meleeCool++;
+
+			_melee = true;
+			if (_subPlayer.sight) { _frameIndex = 0; }
+			else { _frameIndex = 1; }
+			_frameCount++;
+
 			_subPlayer._state = pATTACK;
 		}
-		else if (_enemyDistance < 500)
+		else if (_enemyDistance < 500 && !(_subPlayer._state == pWIN || _subPlayer._state == pHIT))
 		{
 			_melee = false;
 			_subPlayer._state = pATTACK;
 		}
-		else
+		else if(!(_subPlayer._state == pWIN || _subPlayer._state == pHIT))
 		{
 			_subPlayer._state = pIDLE;
 			_arrow._chargeTime = 0.0f;
@@ -1355,14 +1362,21 @@ void subplayer::update(int playerViewX)
 	}
 
 	//공격
-	if (_subPlayer._state == pATTACK)
+	if (_subPlayer._state == pATTACK && !(_subPlayer._state == pWIN || _subPlayer._state == pHIT))
 	{
 		//근접 상태일 경우 근접 공격을 한다.
 		if(_melee)
 		{
-			_frameIndex = 0;
-			if (_subPlayer.sight == true) { _subPlayer.attack = RectMake(_subPlayer.rc.right, _subPlayer.y, 20, 91); }
-			else { _subPlayer.attack = RectMake(_subPlayer.rc.left-20, _subPlayer.y, _subPlayer.rc.left, 91); }
+			_subPlayer.attXK = 10;
+			_subPlayer.attYK = 91;
+			if (_subPlayer.sight == true) 
+			{
+				_subPlayer.attack = RectMake(_subPlayer.rc.right, _subPlayer.y, _subPlayer.attXK, _subPlayer.attYK); 
+			}
+			else 
+			{
+				_subPlayer.attack = RectMake(_subPlayer.rc.left-20, _subPlayer.y, _subPlayer.attXK, _subPlayer.attYK); 
+			}
 		}
 		//근접이 아닐시 활을 쏜다.
 		else
@@ -1373,9 +1387,11 @@ void subplayer::update(int playerViewX)
 				_arrow._bShoot = true;		//화살 발사
 				_arrow._chargeTime = 0.0f;	//화살 장전 시간을 초기화.
 				_arrow._speed = 2.1f;
+				_arrow._attXK = 17;
+				_arrow._attYK = 11;
 				_arrow._point.x = (float(_subPlayer.rc.left) + float((_subPlayer.rc.right - _subPlayer.rc.left) / 2));	//x좌표
 				_arrow._point.y = (float(_subPlayer.rc.top) + float((_subPlayer.rc.bottom - _subPlayer.rc.top) / 2));	//y좌표
-				_arrow._rc = RectMakeCenter(_arrow._point.x - 1, _arrow._point.y - 1, 17, 11);		//화살 Rect 설정.
+				_arrow._rc = RectMakeCenter(_arrow._point.x - 1, _arrow._point.y - 1, _arrow._attXK, _arrow._attYK);		//화살 Rect 설정.
 				_arrow._flyDirect = _subPlayer.sight;
 			}
 			else
@@ -1396,8 +1412,9 @@ void subplayer::update(int playerViewX)
 		//지금은 y축 안변하니까 주석처리
 		//_arrow._point.y += -sinf(PI / 2) * 2;
 		//if (_arrow._point.y >= 500) { _arrow._bShoot = false; }
-		_arrow._rc = RectMakeCenter(_arrow._point.x - 1, _arrow._point.y - 1, 17, 11); //화살 POINT 이동시켰으니
-																					   //화살 RECT도 감
+		_arrow._rc = RectMakeCenter(_arrow._point.x - 1, _arrow._point.y - 1, _arrow._attXK, _arrow._attYK); 
+		//화살 POINT 이동시켰으니
+		//화살 RECT도 감
 	}
 
 }
@@ -1409,60 +1426,29 @@ void subplayer::render()
 	switch (_subPlayer._state)
 	{
 	case pIDLE:
-		if (_subPlayer.sight)
-		{
-			IMAGEMANAGER->findImage("subIdle")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
-		}
-		else
-		{
-			IMAGEMANAGER->findImage("subIdle")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
-		}
+		IMAGEMANAGER->findImage("subIdle")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top-5);
 		break;
 	case pWALK:
-		if (_subPlayer.sight)
-		{
-			IMAGEMANAGER->findImage("subWalk")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
-		}
-		else
-		{
-			IMAGEMANAGER->findImage("subWalk")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
-		}
+		IMAGEMANAGER->findImage("subWalk")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top-6);
 		break;
 	case pATTACK:
 		if (_melee)
 		{
-			//Rectangle(getMemDC(), _subPlayer.attack);
-			if (_subPlayer.sight)
-			{
-				IMAGEMANAGER->findImage("subMelee")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
-			}
-			else
-			{
-				IMAGEMANAGER->findImage("subMelee")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
-			}
+			IMAGEMANAGER->findImage("subMelee")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
 		}
 		else
 		{
-			if (_subPlayer.sight)
-			{
-				IMAGEMANAGER->findImage("subShot")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
-			}
-			else
-			{
-				IMAGEMANAGER->findImage("subShot")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
-
-			}
+			IMAGEMANAGER->findImage("subShot")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
 		}
 		break;
 	case pRUN:
-		if (_subPlayer.sight)
-		{
 			IMAGEMANAGER->findImage("subRun")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
-		}
-		else
-		{
-			IMAGEMANAGER->findImage("subRun")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
-		}
+		break;
+	case pWIN:
+		IMAGEMANAGER->findImage("subWin")->frameRender(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
+		break;
+	case pHIT:
+		IMAGEMANAGER->findImage("subHit")->render(getMemDC(), _subPlayer.rc.left, _subPlayer.rc.top);
 		break;
 	default:
 		break;
@@ -1551,6 +1537,7 @@ void subplayer::animation()
 		break;
 	}
 	case pATTACK:
+	{
 		if (_melee)	//근접 공격을 할 때
 		{
 			_frameCount++;
@@ -1560,7 +1547,7 @@ void subplayer::animation()
 				if (_frameCount % 8 == 0)
 				{
 					_frameIndex++;
-					if (_frameIndex > 2)
+					if (_frameIndex > 1)
 						//근접 공격의 이미지 프레임은 2개
 						//따라서 _frameIndex가 1보다 큰 경우는 공격이 끝난 것으로 판단한다.
 					{
@@ -1599,6 +1586,7 @@ void subplayer::animation()
 				{
 					_frameIndex++;
 					if (_arrow._bShoot == false) { _frameIndex = 2; }	//발사를 아직 안했다면 프레임 반복
+					else { _frameIndex = 6; }
 					if (_frameIndex > 7)
 						//원거리 공격의 이미지 프레임은 8개
 						//따라서 _frameIndex가 7보다 큰 경우는 공격이 끝난 것으로 판단한다.
@@ -1631,7 +1619,7 @@ void subplayer::animation()
 			}
 		}
 		break;
-
+	}
 	case pRUN:
 	{
 		if(_subPlayer.sight)
@@ -1664,6 +1652,40 @@ void subplayer::animation()
 		}
 		break;
 	}
+	case pWIN:				  //대기상태
+	{
+		if (_subPlayer.sight == true)
+		{
+			_subPlayer.win->setFrameY(0);
+			_frameCount++;
+			if (_frameCount % 20 == 0)
+			{
+				_frameIndex++;
+				if (_frameIndex > 2) { _frameIndex = 2; }
+			}
+			_subPlayer.win->setFrameX(_frameIndex);
+		}
+		else
+		{
+			_subPlayer.win->setFrameY(1);
+			_frameCount--;
+			if (_frameCount % 20 == 0)
+			{
+				_frameIndex++;
+				if (_frameIndex < 0) { _frameIndex = 0; }
+			}
+			_subPlayer.win->setFrameX(_frameIndex);
+		}
+		break;
+	}
+	case pHIT:
+	{
+		_frameCount++;
+		if (_subPlayer.sight) { _subPlayer.hit->setFrameY(0); }
+		else { _subPlayer.hit->setFrameY(1); }
+		if (_frameCount > 60) { _subPlayer._state = pIDLE; }
+	}
+	break;
 	default:
 		break;
 	}
@@ -1682,14 +1704,15 @@ void subplayer::walkingInfo()
 	case 0:
 	{
 		_walkingDirect->setFrameY(_direct);
-		if (_frameCount % 10 == 0)
+		if (_frameCount % 8 == 0)
 		{
 			if (_isLeft) { _frameIndex++; }
 			else { _frameIndex--; }
 			if (_frameIndex == 4 || _frameIndex == 0) { _isLeft = !_isLeft; }
 		}
-		if (_frameCount % 90 == 0)
+		if (_frameCount % 500 == 0)
 		{
+			_walkingDirect->setFrameX(0);
 			_direct = 3;
 		}
 		_walkingDirect->setFrameX(_frameIndex);
@@ -1698,14 +1721,15 @@ void subplayer::walkingInfo()
 	case 1:
 	{
 		_walkingDirect->setFrameY(_direct);
-		if (_frameCount % 10 == 0)
+		if (_frameCount % 8 == 0)
 		{
 			if (_isLeft) { _frameIndex++; }
 			else { _frameIndex--; }
 			if (_frameIndex == 4 || _frameIndex == 0) { _isLeft = !_isLeft; }
 		}
-		if (_frameCount % 90 == 0)
+		if (_frameCount % 500 == 0)
 		{
+			_walkingDirect->setFrameX(0);
 			_direct = 2;
 		}
 		_walkingDirect->setFrameX(_frameIndex);
@@ -1714,14 +1738,15 @@ void subplayer::walkingInfo()
 	case 2:
 	{
 		_walkingDirect->setFrameY(_direct);
-		if (_frameCount % 10 == 0)
+		if (_frameCount % 8 == 0)
 		{
 			if (_isLeft) { _frameIndex++; }
 			else { _frameIndex--; }
 			if (_frameIndex == 4 || _frameIndex == 0) { _isLeft = !_isLeft; }
 		}
-		if (_frameCount % 90 == 0)
+		if (_frameCount % 500 == 0)
 		{
+			_walkingDirect->setFrameX(0);
 			_direct = 0;
 		}
 		_walkingDirect->setFrameX(_frameIndex);
@@ -1730,14 +1755,15 @@ void subplayer::walkingInfo()
 	case 3:
 	{
 		_walkingDirect->setFrameY(_direct);
-		if (_frameCount % 10 == 0)
+		if (_frameCount % 8 == 0)
 		{
 			if (_isLeft) { _frameIndex++; }
 			else { _frameIndex--; }
 			if (_frameIndex == 4 || _frameIndex == 0) { _isLeft = !_isLeft; }
 		}
-		if (_frameCount % 90 == 0)
+		if (_frameCount % 500 == 0)
 		{
+			_walkingDirect->setFrameX(0);
 			_direct = 1;
 		}
 		_walkingDirect->setFrameX(_frameIndex);
@@ -1758,7 +1784,7 @@ void subplayer::checkDistanceWithPlayer(float x)
 void subplayer::checkDistanceWithEnemy(float x)
 {
 	_enemyDistance = sqrt(powf(x - _subPlayer.viewX, 2.0f));
-	if (_subPlayer._state == pATTACK)
+	if (_subPlayer._state == pATTACK && _subPlayer._state != pWIN)
 	{
 		if (x < _subPlayer.viewX) { _subPlayer.sight = 0; }
 		else { _subPlayer.sight = 1; }
@@ -1773,4 +1799,52 @@ void subplayer::checkArrowHitTheEnemy(bool b)
 								//아니면 계속 날아감
 	}
 
+}
+
+void subplayer::hitPlayerAttK()
+{
+	if (_arrow._bShoot)
+	{
+		_arrow._attXK = 0;
+		_arrow._attYK = 0;
+		_arrow._rc = RectMakeCenter(_arrow._point.x - 1, _arrow._point.y - 1, _arrow._attXK, _arrow._attYK);
+	}
+	else
+	{
+		_subPlayer.attXK = 0;
+		_subPlayer.attYK = 0;
+		if (_subPlayer.sight == true)
+		{
+			_subPlayer.attack = RectMake(_subPlayer.rc.right, _subPlayer.y, _subPlayer.attXK, _subPlayer.attYK);
+		}
+		else
+		{
+			_subPlayer.attack = RectMake(_subPlayer.rc.left - 20, _subPlayer.y, _subPlayer.attXK, _subPlayer.attYK);
+		}
+	}
+}
+
+void subplayer::subPlayerWin()
+{
+	if (_subPlayer._state != pWIN)
+	{
+		_subPlayer._state = pWIN;
+		_arrow._bShoot = false;
+		if (_subPlayer.sight == true) { _frameIndex = 0; }
+		else { _frameIndex = 2; }
+		_frameCount = 0;
+		return;
+	}
+}
+
+void subplayer::subPlayerHit()
+{
+	_subPlayer.hp--;
+	if (_subPlayer.hp > 0)
+	{
+		_subPlayer.gravity = 3.f;
+		_subPlayer._state = pHIT;
+	}
+	_frameIndex = 0;
+	_frameCount = 0;
 }
