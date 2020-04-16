@@ -47,6 +47,7 @@ private:
 
 private:
 	tagTile _tiles[TILEX * TILEY];	//인게임화면에 사용되는 타일 총 400개
+	tagTile _saveTile[TILEX * TILEY];
 	tagSampleTile _sampleTile[60]; //샘플타일 총 (12-2)*6 = 60개
 	tagCurrentTile _currentTile;	//현재타일
 

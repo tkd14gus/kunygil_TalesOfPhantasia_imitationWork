@@ -60,7 +60,7 @@ void maptoolScene::update()
 		if (INPUT->GetKeyDown(VK_D))
 		{
 			_editMode = false;
-			sprintf(_dataName, "MapData/map%d.txt", _currentTile.pageNumber);
+			sprintf(_dataName, "MapData/map%d.txt", _palettePage);
 			saveMapData(_dataName);
 		}
 		if (INPUT->GetKeyDown(VK_1))
@@ -76,9 +76,9 @@ void maptoolScene::update()
 
 		if (_editCanMove)
 		{
-			for (int i = 0; i < SAMPLETILEX * SAMPLETILEY; i++)
+				if (INPUT->GetKeyDown(VK_LBUTTON) && _ptMouse.x<535)
 			{
-				if (INPUT->GetKeyDown(VK_LBUTTON))
+			for (int i = 0; i < SAMPLETILEX * SAMPLETILEY; i++)
 				{
 					if (PtInRect(&_sampleTile[i].rc, _ptMouse))
 					{
@@ -882,9 +882,18 @@ void maptoolScene::save(char* str)
 	HANDLE file;
 	DWORD write;
 
+	for (int i = 0; i < TILEY; i++)
+	{
+		for (int j = 0; j < TILEX; j++)
+		{
+			_saveTile[i * TILEX + j] = _tiles[i * TILEX + j];
+			_saveTile[i * TILEX + j].rc = RectMake(48 * j, 48 * i, 48, 48);
+		}
+	}
+
 	file = CreateFile(str, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &write, NULL);
+	WriteFile(file, _saveTile, sizeof(tagTile) * TILEX * TILEY, &write, NULL);
 	CloseHandle(file);
 }
 void maptoolScene::load(char* str)

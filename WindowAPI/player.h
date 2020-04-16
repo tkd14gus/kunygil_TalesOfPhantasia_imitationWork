@@ -46,7 +46,7 @@ struct tagPlayer
 	image* run;		//달리기 이미지
 	image* guard;	//방어 이미지
 
-	image* atkSlash;	
+	image* atkSlash;
 	image* atkstab;
 	image* atkshot;		//원거리 공격 이미지
 	image* atkmelee;	//근접 공격 이미지
@@ -92,7 +92,7 @@ public:
 
 	HRESULT init();
 	void release();
-	void update();
+	void update(bool direct = true);
 	void render();
 
 
@@ -181,10 +181,10 @@ public:
 	void animation();
 	//상태창에서 걷는 애니메이션 출력
 	void walkingInfo();
-	
+
 	tagPlayer* getSubPlayer() { return &_subPlayer; }					//서브플레이어의 정보를 얻는 함수
 	void setSubPlayer(tagPlayer subPlayer) { _subPlayer = subPlayer; }	//서브플레이어의 정보를 설정하는 함수
-	
+
 	RECT getArrowInfo() { return _arrow._rc; }		//화살의 모든 정보를 넘겨주는 함수
 	//player setPlayer(player _playerAddress) { _player = _playerAddress; }
 	//
@@ -197,7 +197,7 @@ public:
 
 	//배틀씬이 시작할때마다 위치 초기화
 	void setSubPlayerXY(int x, int y) { _subPlayer.x = x; _subPlayer.y = y; }
-	
+
 	void checkDistanceWithPlayer(float x);
 	void checkDistanceWithEnemy(float x);
 	//몹과 화살이 충돌했는지 확인하는 함수
