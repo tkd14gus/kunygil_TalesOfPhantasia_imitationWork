@@ -31,6 +31,10 @@ private:
 	int _saveDirect;				//player클래스의 _direct를 저장할 함수
 									//상태창에 들어갔다 나올때 같은 곳을 바라볼 수 있게 하기 위한 장치
 
+	bool _direct[4];					//지금 플레이어가 갈 수 있는지 없는지 확인
+
+	char _str[128];
+
 
 public:
 	HRESULT init();

@@ -111,7 +111,7 @@ void store::render()
 	frameBoxRender(backGroundRect[2].left - 10, backGroundRect[2].top - 10, WINSIZEX, 270, 1.0f);
 
 	IMAGEMANAGER->findImage("weapon_off")->render(getMemDC(), typeRect[0].left, typeRect[0].top);
-	IMAGEMANAGER->findImage("armer_off")->render(getMemDC(), typeRect[1].left, typeRect[1].top);
+	IMAGEMANAGER->findImage("armor_off")->render(getMemDC(), typeRect[1].left, typeRect[1].top);
 	IMAGEMANAGER->findImage("ring_off")->render(getMemDC(), typeRect[2].left, typeRect[2].top);
 	IMAGEMANAGER->findImage("portion_off")->render(getMemDC(), typeRect[3].left, typeRect[3].top);
 
@@ -125,7 +125,7 @@ void store::render()
 				IMAGEMANAGER->findImage("weapon")->render(getMemDC(), typeRect[0].left, typeRect[0].top);
 				break;
 			case 1:
-				IMAGEMANAGER->findImage("armer")->render(getMemDC(), typeRect[1].left, typeRect[1].top);
+				IMAGEMANAGER->findImage("armor")->render(getMemDC(), typeRect[1].left, typeRect[1].top);
 				break;
 			case 2:
 				IMAGEMANAGER->findImage("ring")->render(getMemDC(), typeRect[2].left, typeRect[2].top);

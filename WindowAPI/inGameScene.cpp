@@ -58,129 +58,162 @@ HRESULT inGameScene::init()
 
 void inGameScene::release()
 {
-//_player->release();
-//SAFE_DELETE(_player);
+	//_player->release();
+	//SAFE_DELETE(_player);
 }
 
 void inGameScene::update()
 {
+	POINT po = { IMAGEMANAGER->findImage("cress")->getX(), IMAGEMANAGER->findImage("cress")->getY() };
+	for (int i = 0; i < TILEX * TILEY; i++)
+	{
+		if (PtInRect(&_tiles[i].rc, po))
+		{
+			_direct[0] = _tiles[i].direct[0];
+			_direct[1] = _tiles[i].direct[1];
+			_direct[2] = _tiles[i].direct[2];
+			_direct[3] = _tiles[i].direct[3];
+			//break;
+		}
+	}
 	//상태창이 열리지 않은 상태라면.
 	if (!_isStateWinOpen)
 	{
+
 		//인게임에서 방향키를 누른다면 타일들도 같이 움직여준다.
 		if (INPUT->GetKey(VK_UP))
 		{
-			for (int i = 0; i < TILEX * TILEY; i++)
+			if (_direct[0])
 			{
-				_tiles[i].rc.top++;
-				_tiles[i].rc.bottom++;
-				//만약 플레이어의 Y좌표가 WINSIZEY / 2보다 위에 있으면 더이상 올라가면 안된다.
-				//그걸 계산해줘서 타일의 움직임을 제안한다.
-				//아래의 모든 타일의 움직임을 제안하는 if문은 같은 원리이다.
-				if (_player->getPlayerY() <= WINSIZEY / 2)
+				for (int i = 0; i < TILEX * TILEY; i++)
 				{
-					_tiles[i].rc.top--;
-					_tiles[i].rc.bottom--;
+					_tiles[i].rc.top += 10;
+					_tiles[i].rc.bottom += 10;
+					//만약 플레이어의 Y좌표가 WINSIZEY / 2보다 위에 있으면 더이상 올라가면 안된다.
+					//그걸 계산해줘서 타일의 움직임을 제안한다.
+					//아래의 모든 타일의 움직임을 제안하는 if문은 같은 원리이다.
+					if (_player->getPlayerY() < WINSIZEY / 2)
+					{
+						_tiles[i].rc.top -= 10;
+						_tiles[i].rc.bottom -= 10;
+					}
+					//만약 플레이어의 Y좌표가 (48 * 150 - WINSIZEY / 2)아래에 있으면 타일이 움직이면 안되기 때문에 1씩 빼준다.
+					if (_player->getPlayerY() > (48 * 150 - WINSIZEY / 2))
+					{
+						_tiles[i].rc.top -= 10;
+						_tiles[i].rc.bottom -= 10;
+					}
 				}
-				//만약 플레이어의 Y좌표가 (48 * 150 - WINSIZEY / 2)아래에 있으면 타일이 움직이면 안되기 때문에 1씩 빼준다.
-				if (_player->getPlayerY() >= (48 * 150 - WINSIZEY / 2))
+				//필드일때
+				if (_mapLocation == 1)
 				{
-					_tiles[i].rc.top--;
-					_tiles[i].rc.bottom--;
+					//걸음마다 배틀씬으로 바꿀건지 확인해준다.
+					this->changeBattleScene();
 				}
 			}
-			//필드일때
-			if (_mapLocation == 1)
-			{
-				//걸음마다 배틀씬으로 바꿀건지 확인해준다.
-				this->changeBattleScene();
-			}
+
 		}
 		//인게임에서 방향키를 누른다면 타일들도 같이 움직여준다.
 		if (INPUT->GetKey(VK_DOWN))
 		{
-			for (int i = 0; i < TILEX * TILEY; i++)
+			if (_direct[1])
 			{
-				_tiles[i].rc.top--;
-				_tiles[i].rc.bottom--;
-				//만약 플레이어의 Y좌표가 WINSIZEY / 2보다 위에 있으면 타일이 움직이면 안되기 때문에 1씩 더해준다.
-				if (_player->getPlayerY() <= WINSIZEY / 2)
+				for (int i = 0; i < TILEX * TILEY; i++)
 				{
-					_tiles[i].rc.top++;
-					_tiles[i].rc.bottom++;
-				}
-				//만약 플레이어의 Y좌표가 (48 * 150 - WINSIZEY / 2)이상이면 더이상 올라가면 안된다.
-				if (_player->getPlayerY() >= (48 * 150 - WINSIZEY / 2))
-				{
-					_tiles[i].rc.top++;
-					_tiles[i].rc.bottom++;
-				}
+					_tiles[i].rc.top -= 10;
+					_tiles[i].rc.bottom -= 10;
+					//만약 플레이어의 Y좌표가 WINSIZEY / 2보다 위에 있으면 타일이 움직이면 안되기 때문에 1씩 더해준다.
+					if (_player->getPlayerY() < WINSIZEY / 2)
+					{
+						_tiles[i].rc.top += 10;
+						_tiles[i].rc.bottom += 10;
+					}
+					//만약 플레이어의 Y좌표가 (48 * 150 - WINSIZEY / 2)이상이면 더이상 올라가면 안된다.
+					if (_player->getPlayerY() > (48 * 150 - WINSIZEY / 2))
+					{
+						_tiles[i].rc.top += 10;
+						_tiles[i].rc.bottom += 10;
+					}
 
+				}
+				//필드일때
+				if (_mapLocation == 1)
+				{
+					//걸음마다 배틀씬으로 바꿀건지 확인해준다.
+					this->changeBattleScene();
+				}
 			}
-			//필드일때
-			if (_mapLocation == 1)
-			{
-				//걸음마다 배틀씬으로 바꿀건지 확인해준다.
-				this->changeBattleScene();
-			}
+			_direct[0] = _direct[1];
+
 		}
 		//인게임에서 방향키를 누른다면 타일들도 같이 움직여준다.
 		if (INPUT->GetKey(VK_RIGHT))
 		{
-			for (int i = 0; i < TILEX * TILEY; i++)
+			if (_direct[3])
 			{
-				_tiles[i].rc.left--;
-				_tiles[i].rc.right--;
-				//만약 플레이어의 X좌표가 (48 * 120 - WINSIZEX / 2) - 40이상이면 더이상 이동하면 안된다.
-				if (_player->getPlayerX() >= (48 * 120 - WINSIZEX / 2))
+				for (int i = 0; i < TILEX * TILEY; i++)
 				{
-					_tiles[i].rc.left++;
-					_tiles[i].rc.right++;
+					_tiles[i].rc.left -= 10;
+					_tiles[i].rc.right -= 10;
+					//만약 플레이어의 X좌표가 (48 * 120 - WINSIZEX / 2) - 40이상이면 더이상 이동하면 안된다.
+					if (_player->getPlayerX() > (48 * 120 - WINSIZEX / 2))
+					{
+						_tiles[i].rc.left += 10;
+						_tiles[i].rc.right += 10;
+					}
+					//만약 플레이어의 X좌표가  WINSIZEX / 2 - 40보다 위에 있으면 타일이 움직이면 안되기 때문에 1씩 더해준다.
+					if (_player->getPlayerX() < WINSIZEX / 2)
+					{
+						_tiles[i].rc.left += 10;
+						_tiles[i].rc.right += 10;
+					}
 				}
-				//만약 플레이어의 X좌표가  WINSIZEX / 2 - 40보다 위에 있으면 타일이 움직이면 안되기 때문에 1씩 더해준다.
-				if (_player->getPlayerX() <= WINSIZEX / 2)
+				//필드일때
+				if (_mapLocation == 1)
 				{
-					_tiles[i].rc.left++;
-					_tiles[i].rc.right++;
+					//걸음마다 배틀씬으로 바꿀건지 확인해준다.
+					this->changeBattleScene();
 				}
 			}
-			//필드일때
-			if (_mapLocation == 1)
-			{
-				//걸음마다 배틀씬으로 바꿀건지 확인해준다.
-				this->changeBattleScene();
-			}
+
+			_direct[0] = _direct[3];
+
 		}
 		//인게임에서 방향키를 누른다면 타일들도 같이 움직여준다.
 		if (INPUT->GetKey(VK_LEFT))
 		{
-			for (int i = 0; i < TILEX * TILEY; i++)
+			if (_direct[2])
 			{
-				_tiles[i].rc.left++;
-				_tiles[i].rc.right++;
-				//만약 플레이어의 X좌표가  WINSIZEX / 2 - 40보다 위에 있으면 타일이 움직이면 안되기 때문에 1씩 더해준다.
-				if (_player->getPlayerX() <= WINSIZEX / 2)
+				for (int i = 0; i < TILEX * TILEY; i++)
 				{
-					_tiles[i].rc.left--;
-					_tiles[i].rc.right--;
+					_tiles[i].rc.left += 10;
+					_tiles[i].rc.right += 10;
+					//만약 플레이어의 X좌표가  WINSIZEX / 2 - 40보다 위에 있으면 타일이 움직이면 안되기 때문에 1씩 더해준다.
+					if (_player->getPlayerX() < WINSIZEX / 2)
+					{
+						_tiles[i].rc.left -= 10;
+						_tiles[i].rc.right -= 10;
+					}
+					//만약 플레이어의 X좌표가 (48 * 120 - WINSIZEX / 2) - 40이상이면 더이상 이동하면 안된다.
+					if (_player->getPlayerX() > (48 * 120 - WINSIZEX / 2))
+					{
+						_tiles[i].rc.left -= 10;
+						_tiles[i].rc.right -= 10;
+					}
 				}
-				//만약 플레이어의 X좌표가 (48 * 120 - WINSIZEX / 2) - 40이상이면 더이상 이동하면 안된다.
-				if (_player->getPlayerX() >= (48 * 120 - WINSIZEX / 2))
+				//필드일때
+				if (_mapLocation == 1)
 				{
-					_tiles[i].rc.left--;
-					_tiles[i].rc.right--;
+					//걸음마다 배틀씬으로 바꿀건지 확인해준다.
+					this->changeBattleScene();
 				}
 			}
-			//필드일때
-			if (_mapLocation == 1)
-			{
-				//걸음마다 배틀씬으로 바꿀건지 확인해준다.
-				this->changeBattleScene();
-			}
+
+			_direct[0] = _direct[2];
+
 		}
 
-
-		_player->update();
+		_player->update(_direct[0]);
 
 		//만약 마을일 때
 		if (_mapLocation == 0)
@@ -316,6 +349,7 @@ void inGameScene::render()
 
 		FrameRect(getMemDC(), _rcScreen, RGB(255, 0, 0));
 
+
 		_player->render();
 	}
 	//상태창이 열려있다면
@@ -338,7 +372,7 @@ void inGameScene::render()
 		_subPlayer->walkingInfo();
 		//위의 업데이트를 기반으로 이미지 출력
 		IMAGEMANAGER->findImage("chester")->scaleFrameRender(getMemDC(), _stateRC[1].right - 50, _stateRC[1].top + 20,
-		IMAGEMANAGER->findImage("chester")->getFrameX(), IMAGEMANAGER->findImage("chester")->getFrameY(), 1.0f);
+			IMAGEMANAGER->findImage("chester")->getFrameX(), IMAGEMANAGER->findImage("chester")->getFrameY(), 1.0f);
 
 		//TEXT의 색을 바꿔준다.
 		//하얀색
@@ -371,11 +405,14 @@ void inGameScene::mapSetting(int mapLocation)
 	DWORD read;
 
 	if (mapLocation == 0)
-		file = CreateFile("MapSave/save1.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		//file = CreateFile("MapSave/save1.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		file = CreateFile("save1.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	else if (mapLocation == 1)
-		file = CreateFile("MapSave/save2.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		//file = CreateFile("MapSave/save2.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		file = CreateFile("save2.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	else
-		file = CreateFile("MapSave/save3.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		//file = CreateFile("MapSave/save3.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		file = CreateFile("save3.mapsave", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
 	CloseHandle(file);
@@ -446,8 +483,8 @@ void inGameScene::changeBattleScene()
 {
 	//아직 전투씬이 완성 안 되어 있어서 일단 주석처리
 	int ran = RANDOM->Range(500);
-	
-	if(ran % 500 == 0)
+
+	if (ran % 500 == 0)
 	{
 		//배틀로 바꿔준다.
 		_player->setIsBattle(true);

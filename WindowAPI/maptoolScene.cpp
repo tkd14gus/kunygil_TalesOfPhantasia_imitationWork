@@ -60,7 +60,7 @@ void maptoolScene::update()
 		if (INPUT->GetKeyDown(VK_D))
 		{
 			_editMode = false;
-			sprintf(_dataName, "MapData/map%d.txt", _currentTile.pageNumber);
+			sprintf(_dataName, "MapData/map%d.txt", _palettePage);
 			saveMapData(_dataName);
 		}
 		if (INPUT->GetKeyDown(VK_1))
@@ -76,9 +76,9 @@ void maptoolScene::update()
 
 		if (_editCanMove)
 		{
-			for (int i = 0; i < SAMPLETILEX * SAMPLETILEY; i++)
+				if (INPUT->GetKeyDown(VK_LBUTTON) && _ptMouse.x<535)
 			{
-				if (INPUT->GetKeyDown(VK_LBUTTON))
+			for (int i = 0; i < SAMPLETILEX * SAMPLETILEY; i++)
 				{
 					if (PtInRect(&_sampleTile[i].rc, _ptMouse))
 					{
@@ -769,6 +769,10 @@ void maptoolScene::setMap()
 				for (int j = 0; j < _currentTile.sampleSizeY; j++) {
 					for (int n = 0; n < _currentTile.sampleSizeX; n++) {
 						_tiles[i + (j * TILEX + n)].canMove[0] = _canMove;
+						_tiles[i + (j * TILEX + n)].direct[0] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[0];
+						_tiles[i + (j * TILEX + n)].direct[1] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[1];
+						_tiles[i + (j * TILEX + n)].direct[2] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[2];
+						_tiles[i + (j * TILEX + n)].direct[3] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[3];
 						_tiles[i + (j * TILEX + n)].tileFrameX[0] = _currentTile.x[n];
 						_tiles[i + (j * TILEX + n)].tileFrameY[0] = _currentTile.y[j];
 						_tiles[i + (j * TILEX + n)].imagePage[0] = _currentTile.pageNumber;
@@ -782,6 +786,10 @@ void maptoolScene::setMap()
 				for (int j = 0; j < _currentTile.sampleSizeY; j++) {
 					for (int n = 0; n < _currentTile.sampleSizeX; n++) {
 						_tiles[i + (j * TILEX + n)].canMove[1] = _canMove;
+						_tiles[i + (j * TILEX + n)].direct[0] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[0];
+						_tiles[i + (j * TILEX + n)].direct[1] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[1];
+						_tiles[i + (j * TILEX + n)].direct[2] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[2];
+						_tiles[i + (j * TILEX + n)].direct[3] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[3];
 						_tiles[i + (j * TILEX + n)].tileFrameX[1] = _currentTile.x[n];
 						_tiles[i + (j * TILEX + n)].tileFrameY[1] = _currentTile.y[j];
 						_tiles[i + (j * TILEX + n)].imagePage[1] = _currentTile.pageNumber;
@@ -795,6 +803,10 @@ void maptoolScene::setMap()
 				for (int j = 0; j < _currentTile.sampleSizeY; j++) {
 					for (int n = 0; n < _currentTile.sampleSizeX; n++) {
 						_tiles[i + (j * TILEX + n)].canMove[2] = _canMove;
+						_tiles[i + (j * TILEX + n)].direct[0] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[0];
+						_tiles[i + (j * TILEX + n)].direct[1] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[1];
+						_tiles[i + (j * TILEX + n)].direct[2] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[2];
+						_tiles[i + (j * TILEX + n)].direct[3] = _sampleTile[_currentTile.y[j] * 10 + _currentTile.x[n]].direct[3];
 						_tiles[i + (j * TILEX + n)].tileFrameX[2] = _currentTile.x[n];
 						_tiles[i + (j * TILEX + n)].tileFrameY[2] = _currentTile.y[j];
 						_tiles[i + (j * TILEX + n)].imagePage[2] = _currentTile.pageNumber;
@@ -882,9 +894,18 @@ void maptoolScene::save(char* str)
 	HANDLE file;
 	DWORD write;
 
+	for (int i = 0; i < TILEY; i++)
+	{
+		for (int j = 0; j < TILEX; j++)
+		{
+			_saveTile[i * TILEX + j] = _tiles[i * TILEX + j];
+			_saveTile[i * TILEX + j].rc = RectMake(48 * j, 48 * i, 48, 48);
+		}
+	}
+
 	file = CreateFile(str, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &write, NULL);
+	WriteFile(file, _saveTile, sizeof(tagTile) * TILEX * TILEY, &write, NULL);
 	CloseHandle(file);
 }
 void maptoolScene::load(char* str)

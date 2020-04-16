@@ -21,7 +21,6 @@ struct ARROW	//화살 구조체
 	bool _flyDirect;	//화살이 날아가는 방향
 	float _speed;		//화살이 날아가는 속도
 	float _chargeTime;	//화살 장전 시간
-	int _attXK, _attYK;
 
 	POINT _point;	//화살의 초기 (x, y) 좌표
 	RECT _rc;		//화살 Rect
@@ -47,7 +46,7 @@ struct tagPlayer
 	image* run;		//달리기 이미지
 	image* guard;	//방어 이미지
 
-	image* atkSlash;	
+	image* atkSlash;
 	image* atkstab;
 	image* atkshot;		//원거리 공격 이미지
 	image* atkmelee;	//근접 공격 이미지
@@ -93,7 +92,7 @@ public:
 
 	HRESULT init();
 	void release();
-	void update();
+	void update(bool direct = true);
 	void render();
 
 
@@ -166,7 +165,6 @@ private:
 	bool _melee;			//근접공격여부
 	bool _isLeft;
 	int _direct = 0;
-	int _meleeCool = 0;
 	float _partyDistance;
 	//float _distance;		//ai와 적의 거리
 
@@ -183,12 +181,11 @@ public:
 	void animation();
 	//상태창에서 걷는 애니메이션 출력
 	void walkingInfo();
-	
+
 	tagPlayer* getSubPlayer() { return &_subPlayer; }					//서브플레이어의 정보를 얻는 함수
 	void setSubPlayer(tagPlayer subPlayer) { _subPlayer = subPlayer; }	//서브플레이어의 정보를 설정하는 함수
-	
-	ARROW getArrowInfo() { return _arrow; }		//화살의 모든 정보를 넘겨주는 함수
-	RECT getArrowRect() { return _arrow._rc; }
+
+	RECT getArrowInfo() { return _arrow._rc; }		//화살의 모든 정보를 넘겨주는 함수
 	//player setPlayer(player _playerAddress) { _player = _playerAddress; }
 	//
 	//
@@ -198,19 +195,14 @@ public:
 	int getDirect() { return _direct; }
 	void setDirect(int direct) { _direct = direct; }
 
-	void setSight(bool b) { _subPlayer.sight = b; }
-	void setState(tagstate state) { _subPlayer._state = state; }
 	//배틀씬이 시작할때마다 위치 초기화
 	void setSubPlayerXY(int x, int y) { _subPlayer.x = x; _subPlayer.y = y; }
-	
+
 	void checkDistanceWithPlayer(float x);
 	void checkDistanceWithEnemy(float x);
 	//몹과 화살이 충돌했는지 확인하는 함수
 	//battleScene에서 intersectRect 처리해주세요
 	void checkArrowHitTheEnemy(bool b);
-	void hitPlayerAttK();
-	void subPlayerWin();
-	void subPlayerHit();
 	subplayer() {}
 	~subplayer() {}
 };
